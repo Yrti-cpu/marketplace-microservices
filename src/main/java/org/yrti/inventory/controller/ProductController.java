@@ -2,10 +2,8 @@ package org.yrti.inventory.controller;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.yrti.inventory.exception.NotEnoughStockException;
 import org.yrti.inventory.model.Product;
 import org.yrti.inventory.service.ProductService;
 
