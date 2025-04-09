@@ -1,8 +1,11 @@
 package org.yrti.inventory.controller;
 
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.yrti.inventory.exception.NotEnoughStockException;
 import org.yrti.inventory.model.Product;
 import org.yrti.inventory.service.ProductService;
 
@@ -12,7 +15,34 @@ import java.util.List;
 @RequestMapping("/api/products")
 @RequiredArgsConstructor
 public class ProductController {
+
     private final ProductService productService;
+
+    @Data
+    @RequiredArgsConstructor
+    public static class ProductActionRequest {
+        private Long productId;
+        private Integer quantity;
+    }
+    @PostMapping("/reserve")
+    public ResponseEntity<?> reserve(@RequestBody ProductActionRequest request) {
+        productService.reserveProduct(request.getProductId(), request.getQuantity());
+        return ResponseEntity.ok("Product reserved");
+
+    }
+
+    @PostMapping("/release")
+    public ResponseEntity<?> release(@RequestBody ProductActionRequest request) {
+        productService.releaseItem(request.getProductId(), request.getQuantity());
+        return ResponseEntity.ok("Резерв снят");
+    }
+
+    @PostMapping("/decrease")
+    public ResponseEntity<?> decrease(@RequestBody ProductActionRequest request) {
+        productService.decreaseStock(request.getProductId(), request.getQuantity());
+        return ResponseEntity.ok("Товар списан со склада");
+    }
+
     @PostMapping
     public ResponseEntity<Product> create(@RequestBody Product product) {
         return ResponseEntity.ok(productService.createProduct(product));
@@ -38,4 +68,5 @@ public class ProductController {
         productService.deleteProduct(id);
         return ResponseEntity.noContent().build();
     }
+
 }

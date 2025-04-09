@@ -3,6 +3,8 @@ package org.yrti.inventory.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.yrti.inventory.DAO.ProductRepository;
+import org.yrti.inventory.exception.NotEnoughStockException;
+import org.yrti.inventory.exception.ProductNotFoundException;
 import org.yrti.inventory.model.Product;
 
 import java.util.List;
@@ -12,13 +14,40 @@ import java.util.List;
 public class ProductService {
     private final ProductRepository repository;
 
+    public void reserveProduct(Long id, int reservedQuantity) {
+        int updated = repository.tryReserveProduct(id, reservedQuantity);
+        if (updated == 0) {
+            throw new NotEnoughStockException("Not enough stock to reserve product");
+        }
+    }
+
+    public void releaseItem(Long id, int reservedQuantity) {
+        Product product = repository.findById(id)
+                .orElseThrow(() -> new ProductNotFoundException(id));
+
+        product.setReservedQuantity(Math.max(0, product.getReservedQuantity() - reservedQuantity));
+        repository.save(product);
+    }
+
+    public void decreaseStock(Long id, int reservedQuantity) {
+        Product product = repository.findById(id)
+                .orElseThrow(() -> new ProductNotFoundException(id));
+
+        if (product.getReservedQuantity() < reservedQuantity) {
+            throw new IllegalStateException("Списываем больше, чем зарезервировано");
+        }
+
+        product.setQuantity(product.getQuantity() - reservedQuantity);
+        product.setReservedQuantity(product.getReservedQuantity() - reservedQuantity);
+        repository.save(product);
+    }
     public Product createProduct(Product product) {
         return repository.save(product);
     }
 
     public Product getProduct(Long id) {
         return repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
+                .orElseThrow(() -> new ProductNotFoundException(id));
     }
 
     public List<Product> getAllProducts() {
@@ -31,6 +60,7 @@ public class ProductService {
         product.setDescription(updated.getDescription());
         product.setQuantity(updated.getQuantity());
         product.setSeller(updated.getSeller());
+        product.setReservedQuantity(updated.getReservedQuantity());
         return repository.save(product);
     }
 

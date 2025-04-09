@@ -22,5 +22,8 @@ public class Product {
 
     private Integer quantity;
 
+    @Column(nullable = false)
+    private Integer reservedQuantity = 0;
+
     private String seller;
 }
