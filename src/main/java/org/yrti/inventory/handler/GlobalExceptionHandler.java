@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.yrti.inventory.exception.InvalidArgumentException;
 import org.yrti.inventory.exception.NotEnoughStockException;
 import org.yrti.inventory.exception.ProductNotFoundException;
 
@@ -18,6 +19,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleProductNotFound(NotEnoughStockException ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
     }
+    @ExceptionHandler(InvalidArgumentException.class)
+    public ResponseEntity<String> handleProductNotFound(InvalidArgumentException ex) {
+        return ResponseEntity.badRequest().body(ex.getMessage());
+    }
+
 
 
 
