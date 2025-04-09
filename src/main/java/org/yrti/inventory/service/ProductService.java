@@ -2,7 +2,7 @@ package org.yrti.inventory.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.yrti.inventory.DAO.ProductRepository;
+import org.yrti.inventory.dao.ProductRepository;
 import org.yrti.inventory.exception.InvalidArgumentException;
 import org.yrti.inventory.exception.NotEnoughStockException;
 import org.yrti.inventory.exception.ProductNotFoundException;

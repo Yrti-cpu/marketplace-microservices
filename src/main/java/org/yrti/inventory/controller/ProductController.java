@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.yrti.inventory.model.Product;
 import org.yrti.inventory.service.ProductService;
+import org.yrti.inventory.dto.ProductActionRequest;
 
 import java.util.List;
 
@@ -19,14 +20,6 @@ public class ProductController {
 
     private final ProductService productService;
 
-    @Data
-    public static class ProductActionRequest {
-        @NotNull
-        private Long productId;
-
-        @Min(value = 1, message = "Quantity must be at least 1")
-        private Integer quantity;
-    }
     @PostMapping("/reserve")
     public ResponseEntity<?> reserve(@Valid @RequestBody ProductActionRequest request) {
         productService.reserveProduct(request.getProductId(), request.getQuantity());
@@ -37,17 +30,17 @@ public class ProductController {
     @PostMapping("/release")
     public ResponseEntity<?> release(@Valid @RequestBody ProductActionRequest request) {
         productService.releaseProduct(request.getProductId(), request.getQuantity());
-        return ResponseEntity.ok("Резерв снят");
+        return ResponseEntity.ok("Release successful");
     }
 
     @PostMapping("/decrease")
     public ResponseEntity<?> decrease(@Valid @RequestBody ProductActionRequest request) {
         productService.decreaseStock(request.getProductId(), request.getQuantity());
-        return ResponseEntity.ok("Товар списан со склада");
+        return ResponseEntity.ok("Product decreased");
     }
 
     @PostMapping
-    public ResponseEntity<Product> create(@RequestBody Product product) {
+    public ResponseEntity<Product> create(@Valid @RequestBody Product product) {
         return ResponseEntity.ok(productService.createProduct(product));
     }
 

@@ -5,7 +5,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.yrti.inventory.DAO.ProductRepository;
+import org.yrti.inventory.dao.ProductRepository;
 import org.yrti.inventory.exception.InvalidArgumentException;
 import org.yrti.inventory.exception.NotEnoughStockException;
 import org.yrti.inventory.model.Product;
