@@ -4,8 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f293a661-5ae6-4682-9354-8e64cd9717a1" name="Changes" comment="refactor: moved inventory-service to subfolder, preparing monorepo structure">
-      <change afterPath="$PROJECT_DIR$/settings.gradle" afterDir="false" />
+    <list default="true" id="f293a661-5ae6-4682-9354-8e64cd9717a1" name="Changes" comment="refactor: moved inventory-service to subfolder, preparing monorepo structure and fixed bug (@Min)">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/marketplace-inventory-service/settings.gradle" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -284,7 +285,7 @@
       <workItem from="1744265328399" duration="647000" />
       <workItem from="1744266006025" duration="299000" />
       <workItem from="1744278279592" duration="3521000" />
-      <workItem from="1744289215116" duration="3470000" />
+      <workItem from="1744289215116" duration="4096000" />
     </task>
     <task id="LOCAL-00001" summary="implemented CRUD operation">
       <option name="closed" value="true" />
@@ -342,7 +343,15 @@
       <option name="project" value="LOCAL" />
       <updated>1744290711577</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="refactor: moved inventory-service to subfolder, preparing monorepo structure and fixed bug (@Min)">
+      <option name="closed" value="true" />
+      <created>1744297128565</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1744297128565</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -379,6 +388,7 @@
     <MESSAGE value="added validation and separated DTO from controller" />
     <MESSAGE value="productController is fully covered with tests" />
     <MESSAGE value="refactor: moved inventory-service to subfolder, preparing monorepo structure" />
-    <option name="LAST_COMMIT_MESSAGE" value="refactor: moved inventory-service to subfolder, preparing monorepo structure" />
+    <MESSAGE value="refactor: moved inventory-service to subfolder, preparing monorepo structure and fixed bug (@Min)" />
+    <option name="LAST_COMMIT_MESSAGE" value="refactor: moved inventory-service to subfolder, preparing monorepo structure and fixed bug (@Min)" />
   </component>
 </project>
