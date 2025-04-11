@@ -1,7 +1,7 @@
 HELP.md
 .gradle
 build/
-!marketplace-inventory-service/gradle/wrapper/gradle-wrapper.jar
+!2025/gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
 
@@ -18,7 +18,7 @@ bin/
 !**/src/test/**/bin/
 
 ### IntelliJ IDEA ###
-marketplace-inventory-service/.idea
+2025/.idea
 *.iws
 *.iml
 *.ipr
