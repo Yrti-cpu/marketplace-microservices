@@ -5,8 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f293a661-5ae6-4682-9354-8e64cd9717a1" name="Changes" comment="refactor: moved inventory-service to subfolder, preparing monorepo structure and fixed bug (@Min)">
+      <change afterPath="$PROJECT_DIR$/marketplace-order-service/src/main/java/org/yrti/order/controller/OrderController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/marketplace-order-service/src/main/java/org/yrti/order/dao/OrderItemRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/marketplace-order-service/src/main/java/org/yrti/order/dao/OrderRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/marketplace-order-service/src/main/java/org/yrti/order/dto/CreateOrderRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/marketplace-order-service/src/main/java/org/yrti/order/model/Order.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/marketplace-order-service/src/main/java/org/yrti/order/model/OrderItem.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/marketplace-order-service/src/main/java/org/yrti/order/model/OrderStatus.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/marketplace-order-service/src/main/java/org/yrti/order/service/OrderService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/marketplace-order-service/src/main/resources/application.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/marketplace-inventory-service/settings.gradle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/marketplace-inventory-service/src/main/resources/application.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/marketplace-inventory-service/src/main/resources/application.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/settings.gradle" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,17 +34,22 @@
         <task path="$PROJECT_DIR$">
           <activation />
         </task>
-        <projects_view />
+        <projects_view>
+          <tree_state>
+            <expand />
+            <select />
+          </tree_state>
+        </projects_view>
       </state>
     </system>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Interface" />
         <option value="Exception" />
-        <option value="Class" />
         <option value="JUnit5 Test Class" />
+        <option value="Interface" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -62,7 +77,7 @@
 }</component>
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/Yrti-cpu/marketplace-inventory-service.git&quot;,
+    &quot;url&quot;: &quot;https://github.com/Yrti-cpu/marketplace-microservices&quot;,
     &quot;accountId&quot;: &quot;d7870685-6b0c-466b-bf7f-1bbd0f58672c&quot;
   }
 }</component>
@@ -80,6 +95,8 @@
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
+    &quot;Application.MarketplaceOrderServiceApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.Build 2025.executor&quot;: &quot;Run&quot;,
     &quot;Gradle.Build marketplace-inventory-service.executor&quot;: &quot;Run&quot;,
     &quot;Gradle.Build marketplace-microservices.executor&quot;: &quot;Run&quot;,
     &quot;Gradle.ProductControllerTest.executor&quot;: &quot;Run&quot;,
@@ -95,6 +112,7 @@
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;Spring Boot.MarketplaceInventoryServiceApplication (1).executor&quot;: &quot;Run&quot;,
     &quot;Spring Boot.MarketplaceInventoryServiceApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Spring Boot.MarketplaceOrderServiceApplication.executor&quot;: &quot;Run&quot;,
     &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary&quot;: &quot;JUnit5&quot;,
     &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5&quot;: &quot;&quot;,
     &quot;git-widget-placeholder&quot;: &quot;master&quot;,
@@ -110,6 +128,7 @@
 }</component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
+      <recent name="org.yrti.order.model" />
       <recent name="org.yrti.inventory.exception" />
     </key>
     <key name="CreateTestDialog.Recents.Supers">
@@ -123,7 +142,20 @@
       <recent name="org.yrti.inventory.service" />
     </key>
   </component>
-  <component name="RunManager" selected="Spring Boot.MarketplaceInventoryServiceApplication (1)">
+  <component name="RunManager" selected="Spring Boot.MarketplaceOrderServiceApplication">
+    <configuration name="MarketplaceOrderServiceApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="org.yrti.order.MarketplaceOrderServiceApplication" />
+      <module name="marketplace-microservices.marketplace-order-service.main" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.yrti.order.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="ProductControllerTest" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -162,30 +194,6 @@
             <option value=":test" />
             <option value="--tests" />
             <option value="&quot;org.yrti.inventory.service.ProductServiceTest&quot;" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>false</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <RunAsTest>true</RunAsTest>
-      <method v="2" />
-    </configuration>
-    <configuration name="ProductServiceTest.reserveProductShouldSucceedWhenStockAvailable" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value=":test" />
-            <option value="--tests" />
-            <option value="&quot;org.yrti.inventory.service.ProductServiceTest.reserveProductShouldSucceedWhenStockAvailable&quot;" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -247,19 +255,26 @@
     </configuration>
     <configuration name="MarketplaceInventoryServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
-      <module name="marketplace-inventory-service.main" />
+      <module name="marketplace-microservices.marketplace-inventory-service.main" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="org.yrti.inventory.MarketplaceInventoryServiceApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="MarketplaceOrderServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="marketplace-microservices.marketplace-order-service.main" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="org.yrti.order.MarketplaceOrderServiceApplication" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.MarketplaceOrderServiceApplication" />
         <item itemvalue="Spring Boot.MarketplaceInventoryServiceApplication (1)" />
         <item itemvalue="Gradle.ProductControllerTest" />
         <item itemvalue="Gradle.ProductServiceTest" />
         <item itemvalue="Gradle.ProductServiceTest.reserveProduct_shouldSucceed_whenStockAvailable" />
-        <item itemvalue="Gradle.ProductServiceTest.reserveProductShouldSucceedWhenStockAvailable" />
       </list>
     </recent_temporary>
   </component>
@@ -286,6 +301,8 @@
       <workItem from="1744266006025" duration="299000" />
       <workItem from="1744278279592" duration="3521000" />
       <workItem from="1744289215116" duration="4096000" />
+      <workItem from="1744303937221" duration="917000" />
+      <workItem from="1744353659793" duration="2715000" />
     </task>
     <task id="LOCAL-00001" summary="implemented CRUD operation">
       <option name="closed" value="true" />
