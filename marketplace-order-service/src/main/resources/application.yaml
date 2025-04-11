@@ -16,3 +16,6 @@ spring:
       hibernate:
         format_sql: true
         dialect: org.hibernate.dialect.PostgreSQLDialect
+
+inventory-service:
+  url: http://localhost:8080

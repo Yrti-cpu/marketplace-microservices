@@ -4,19 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f293a661-5ae6-4682-9354-8e64cd9717a1" name="Changes" comment="refactor: moved inventory-service to subfolder, preparing monorepo structure and fixed bug (@Min)">
-      <change afterPath="$PROJECT_DIR$/marketplace-order-service/src/main/java/org/yrti/order/controller/OrderController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/marketplace-order-service/src/main/java/org/yrti/order/dao/OrderItemRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/marketplace-order-service/src/main/java/org/yrti/order/dao/OrderRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/marketplace-order-service/src/main/java/org/yrti/order/dto/CreateOrderRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/marketplace-order-service/src/main/java/org/yrti/order/model/Order.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/marketplace-order-service/src/main/java/org/yrti/order/model/OrderItem.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/marketplace-order-service/src/main/java/org/yrti/order/model/OrderStatus.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/marketplace-order-service/src/main/java/org/yrti/order/service/OrderService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/marketplace-order-service/src/main/resources/application.yaml" afterDir="false" />
+    <list default="true" id="f293a661-5ae6-4682-9354-8e64cd9717a1" name="Changes" comment="new marketplace-order-service">
+      <change afterPath="$PROJECT_DIR$/marketplace-order-service/src/main/java/org/yrti/order/client/InventoryClient.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/marketplace-order-service/src/main/java/org/yrti/order/dto/ProductReserveRequest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/marketplace-inventory-service/src/main/resources/application.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/marketplace-inventory-service/src/main/resources/application.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/settings.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/marketplace-order-service/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/marketplace-order-service/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/marketplace-order-service/src/main/java/org/yrti/order/MarketplaceOrderServiceApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/marketplace-order-service/src/main/java/org/yrti/order/MarketplaceOrderServiceApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/marketplace-order-service/src/main/java/org/yrti/order/service/OrderService.java" beforeDir="false" afterPath="$PROJECT_DIR$/marketplace-order-service/src/main/java/org/yrti/order/service/OrderService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/marketplace-order-service/src/main/resources/application.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/marketplace-order-service/src/main/resources/application.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,8 +43,8 @@
       <list>
         <option value="Exception" />
         <option value="JUnit5 Test Class" />
-        <option value="Interface" />
         <option value="Class" />
+        <option value="Interface" />
       </list>
     </option>
   </component>
@@ -93,39 +88,39 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.MarketplaceOrderServiceApplication.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Build 2025.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Build marketplace-inventory-service.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.Build marketplace-microservices.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.ProductControllerTest.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.ProductServiceTest.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.ProductServiceTest.reserveProductShouldSucceedWhenStockAvailable.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.ProductServiceTest.reserveProduct_shouldSucceed_whenStockAvailable.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.marketplace-microservices [dependencies].executor&quot;: &quot;Run&quot;,
-    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
-    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
-    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
-    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;Spring Boot.MarketplaceInventoryServiceApplication (1).executor&quot;: &quot;Run&quot;,
-    &quot;Spring Boot.MarketplaceInventoryServiceApplication.executor&quot;: &quot;Run&quot;,
-    &quot;Spring Boot.MarketplaceOrderServiceApplication.executor&quot;: &quot;Run&quot;,
-    &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary&quot;: &quot;JUnit5&quot;,
-    &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5&quot;: &quot;&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/daniladotsenko/IdeaProjects/Pet-project/marketplace-microservices&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.MarketplaceOrderServiceApplication.executor": "Run",
+    "Gradle.Build 2025.executor": "Run",
+    "Gradle.Build marketplace-inventory-service.executor": "Run",
+    "Gradle.Build marketplace-microservices.executor": "Run",
+    "Gradle.ProductControllerTest.executor": "Run",
+    "Gradle.ProductServiceTest.executor": "Run",
+    "Gradle.ProductServiceTest.reserveProductShouldSucceedWhenStockAvailable.executor": "Run",
+    "Gradle.ProductServiceTest.reserveProduct_shouldSucceed_whenStockAvailable.executor": "Run",
+    "Gradle.marketplace-microservices [dependencies].executor": "Run",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "Spring Boot.MarketplaceInventoryServiceApplication (1).executor": "Run",
+    "Spring Boot.MarketplaceInventoryServiceApplication.executor": "Run",
+    "Spring Boot.MarketplaceOrderServiceApplication.executor": "Run",
+    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary": "JUnit5",
+    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5": "",
+    "git-widget-placeholder": "master",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/Users/daniladotsenko/IdeaProjects/2025",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
       <recent name="org.yrti.order.model" />
@@ -302,7 +297,7 @@
       <workItem from="1744278279592" duration="3521000" />
       <workItem from="1744289215116" duration="4096000" />
       <workItem from="1744303937221" duration="917000" />
-      <workItem from="1744353659793" duration="2715000" />
+      <workItem from="1744353659793" duration="6339000" />
     </task>
     <task id="LOCAL-00001" summary="implemented CRUD operation">
       <option name="closed" value="true" />
@@ -368,7 +363,15 @@
       <option name="project" value="LOCAL" />
       <updated>1744297128565</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="new marketplace-order-service">
+      <option name="closed" value="true" />
+      <created>1744356592757</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1744356592757</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -406,6 +409,7 @@
     <MESSAGE value="productController is fully covered with tests" />
     <MESSAGE value="refactor: moved inventory-service to subfolder, preparing monorepo structure" />
     <MESSAGE value="refactor: moved inventory-service to subfolder, preparing monorepo structure and fixed bug (@Min)" />
-    <option name="LAST_COMMIT_MESSAGE" value="refactor: moved inventory-service to subfolder, preparing monorepo structure and fixed bug (@Min)" />
+    <MESSAGE value="new marketplace-order-service" />
+    <option name="LAST_COMMIT_MESSAGE" value="new marketplace-order-service" />
   </component>
 </project>
