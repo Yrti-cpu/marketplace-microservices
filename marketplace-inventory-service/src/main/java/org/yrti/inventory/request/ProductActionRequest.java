@@ -1,4 +1,4 @@
-package org.yrti.inventory.dto;
+package org.yrti.inventory.request;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;

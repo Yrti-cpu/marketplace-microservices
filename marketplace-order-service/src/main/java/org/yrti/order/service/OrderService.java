@@ -6,15 +6,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.yrti.order.client.InventoryClient;
 import org.yrti.order.dao.OrderRepository;
-import org.yrti.order.dto.CreateOrderRequest;
+import org.yrti.order.event.OrderCreatedEvent;
+import org.yrti.order.kafka.OrderEventPublisher;
+import org.yrti.order.request.CreateOrderRequest;
 import org.yrti.order.exception.InventoryServiceException;
 import org.yrti.order.exception.OrderCreationException;
 import org.yrti.order.model.Order;
 import org.yrti.order.model.OrderItem;
-import org.yrti.order.dto.ProductReserveRequest;
+import org.yrti.order.request.ProductReserveRequest;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +23,7 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final InventoryClient inventoryClient;
+    private final OrderEventPublisher orderEventPublisher;
 
 
     @Transactional
@@ -50,7 +52,15 @@ public class OrderService {
         order.setItems(items);
 
         try {
-            return orderRepository.save(order);
+            Order saved = orderRepository.save(order);
+            OrderCreatedEvent event = new OrderCreatedEvent();
+            event.setOrderId(saved.getId());
+            event.setUserId(saved.getUserId());
+            event.setMessage("Заказ #" + saved.getId() + " успешно оформлен");
+
+            orderEventPublisher.publish(event);
+
+            return saved;
         } catch (Exception e) {
             throw new OrderCreationException("Failed to create order: " + e.getMessage());
         }

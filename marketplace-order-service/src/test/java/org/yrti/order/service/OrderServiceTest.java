@@ -1,16 +1,14 @@
 package org.yrti.order.service;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.yrti.order.client.InventoryClient;
 import org.yrti.order.dao.OrderRepository;
-import org.yrti.order.dto.CreateOrderRequest;
+import org.yrti.order.request.CreateOrderRequest;
 import org.yrti.order.exception.InventoryServiceException;
 import org.yrti.order.exception.OrderCreationException;
 import org.yrti.order.model.Order;
