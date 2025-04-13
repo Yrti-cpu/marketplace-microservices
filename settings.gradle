@@ -1,3 +1,4 @@
 rootProject.name = 'marketplace-microservices'
 include 'marketplace-inventory-service'
 include 'marketplace-order-service'
+include 'marketplace-notification-service'
