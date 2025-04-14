@@ -53,16 +53,18 @@ public class OrderService {
 
         try {
             Order saved = orderRepository.save(order);
-            OrderCreatedEvent event = new OrderCreatedEvent();
-            event.setOrderId(saved.getId());
-            event.setUserId(saved.getUserId());
-            event.setMessage("Заказ #" + saved.getId() + " успешно оформлен");
 
-            orderEventPublisher.publish(event);
-
+            publishOrderEvent(saved.getId(), saved.getUserId());
             return saved;
         } catch (Exception e) {
             throw new OrderCreationException("Failed to create order: " + e.getMessage());
         }
+    }
+    public void publishOrderEvent(Long orderId, Long userId) {
+        OrderCreatedEvent event = new OrderCreatedEvent();
+        event.setOrderId(orderId);
+        event.setUserId(userId);
+        event.setMessage("Заказ #" + orderId + " успешно оформлен");
+        orderEventPublisher.publish(event);
     }
 }
