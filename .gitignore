@@ -37,3 +37,7 @@ out/
 .vscode/
 # macOS system files
 .DS_Store
+#sensitive data
+/marketplace-inventory-service/src/main/resources/application.yaml
+/marketplace-notification-service/src/main/resources/application.yml
+/marketplace-order-service/src/main/resources/application.yaml
