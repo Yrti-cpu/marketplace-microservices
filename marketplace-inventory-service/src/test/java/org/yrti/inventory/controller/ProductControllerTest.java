@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.yrti.inventory.request.ProductActionRequest;
+import org.yrti.inventory.dto.ProductActionRequest;
 import org.yrti.inventory.model.Product;
 import org.yrti.inventory.service.ProductService;
 

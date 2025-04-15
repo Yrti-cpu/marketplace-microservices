@@ -9,13 +9,13 @@ import org.yrti.order.client.UserClient;
 import org.yrti.order.dao.OrderRepository;
 import org.yrti.order.event.OrderCreatedEvent;
 import org.yrti.order.kafka.OrderEventPublisher;
-import org.yrti.order.request.CreateOrderRequest;
+import org.yrti.order.dto.CreateOrderRequest;
 import org.yrti.order.exception.InventoryServiceException;
 import org.yrti.order.exception.OrderCreationException;
 import org.yrti.order.model.Order;
 import org.yrti.order.model.OrderItem;
-import org.yrti.order.request.ProductReserveRequest;
-import org.yrti.order.request.UserResponse;
+import org.yrti.order.dto.ProductReserveRequest;
+import org.yrti.order.dto.UserResponse;
 
 import java.util.List;
 

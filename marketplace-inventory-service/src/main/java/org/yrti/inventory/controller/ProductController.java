@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.yrti.inventory.model.Product;
 import org.yrti.inventory.service.ProductService;
-import org.yrti.inventory.request.ProductActionRequest;
+import org.yrti.inventory.dto.ProductActionRequest;
 
 import java.util.List;
 

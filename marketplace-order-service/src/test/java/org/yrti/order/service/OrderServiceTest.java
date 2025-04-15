@@ -8,7 +8,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.yrti.order.client.InventoryClient;
 import org.yrti.order.dao.OrderRepository;
-import org.yrti.order.request.CreateOrderRequest;
+import org.yrti.order.dto.CreateOrderRequest;
 import org.yrti.order.exception.InventoryServiceException;
 import org.yrti.order.exception.OrderCreationException;
 import org.yrti.order.model.Order;

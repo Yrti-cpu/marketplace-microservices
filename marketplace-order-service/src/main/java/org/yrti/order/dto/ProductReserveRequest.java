@@ -1,4 +1,4 @@
-package org.yrti.order.request;
+package org.yrti.order.dto;
 
 import lombok.Data;
 
