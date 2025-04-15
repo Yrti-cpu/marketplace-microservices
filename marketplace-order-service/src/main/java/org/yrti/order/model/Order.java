@@ -16,8 +16,6 @@ import java.util.List;
 @Builder
 public class Order {
 
-    @Getter
-    @Setter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -26,6 +24,8 @@ public class Order {
 
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
+
+    private Double totalAmount;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
@@ -44,6 +44,5 @@ public class Order {
     public void preUpdate() {
         updatedAt = LocalDateTime.now();
     }
-
 }
 
