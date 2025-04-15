@@ -41,3 +41,4 @@ out/
 /marketplace-inventory-service/src/main/resources/application.yaml
 /marketplace-notification-service/src/main/resources/application.yml
 /marketplace-order-service/src/main/resources/application.yaml
+/marketplace-user-service/src/main/resources/application.yaml
