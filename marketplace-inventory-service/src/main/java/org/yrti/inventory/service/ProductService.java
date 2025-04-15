@@ -1,6 +1,7 @@
 package org.yrti.inventory.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.yrti.inventory.dao.ProductRepository;
 import org.yrti.inventory.exception.InvalidArgumentException;
@@ -9,7 +10,7 @@ import org.yrti.inventory.exception.ProductNotFoundException;
 import org.yrti.inventory.model.Product;
 
 import java.util.List;
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ProductService {
@@ -20,6 +21,8 @@ public class ProductService {
             throw new InvalidArgumentException("Quantity must be greater than 0");
         }
         int updated = repository.tryReserveProduct(id, reservedQuantity);
+        log.info("📦 Резервируем товар: id={}, запрошено={}", id, reservedQuantity);
+
         if (updated == 0) {
             throw new NotEnoughStockException("Not enough stock to reserve product");
         }

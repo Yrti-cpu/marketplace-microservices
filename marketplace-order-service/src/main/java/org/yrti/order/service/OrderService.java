@@ -64,6 +64,7 @@ public class OrderService {
         return request.getItems().stream().map(i -> {
             try {
                 reserveProduct(i.getProductId(), i.getQuantity());
+
                 PricingResponse priceInfo = pricingClient.getProductPrice(i.getProductId());
 
                 double originalPrice = priceInfo.getOriginalPrice();
