@@ -2,6 +2,7 @@ package org.yrti.order.service;
 
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.yrti.order.client.InventoryClient;
@@ -18,9 +19,11 @@ import org.yrti.order.model.Order;
 import org.yrti.order.model.OrderItem;
 import org.yrti.order.dto.ProductReserveRequest;
 import org.yrti.order.dto.UserResponse;
+import org.yrti.order.model.OrderStatus;
 
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class OrderService {
@@ -111,5 +114,14 @@ public class OrderService {
                 .build();
 
         orderEventPublisher.publish(event);
+    }
+
+    public void markOrderAsPaid(Long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new OrderCreationException("Order not found"));
+
+        order.setStatus(OrderStatus.PAID);
+        orderRepository.save(order);
+        log.info("✅ Заказ #{} отмечен как оплаченный", orderId);
     }
 }

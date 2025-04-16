@@ -19,6 +19,7 @@ public class PaymentService {
                 .orderId(request.getOrderId())
                 .userId(request.getUserId())
                 .success(isSuccess)
+                .amount(request.getAmount())
                 .message(isSuccess ? "Оплата прошла успешно" : "Оплата не прошла")
                 .build();
 
