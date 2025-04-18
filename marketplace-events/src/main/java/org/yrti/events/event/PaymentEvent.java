@@ -1,4 +1,4 @@
-package org.yrti.notification.event;
+package org.yrti.events.event;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,9 +9,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderPaidEvent {
+public class PaymentEvent {
     private Long orderId;
     private Long userId;
-    private String email;
-    private Double amount;
+    private boolean success;
+    private double amount;
+    private String message;
 }

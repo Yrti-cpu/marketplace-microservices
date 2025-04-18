@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
-import org.yrti.notification.event.OrderCreatedEvent;
-import org.yrti.notification.event.OrderPaidEvent;
+import org.yrti.events.event.OrderCreatedEvent;
+import org.yrti.events.event.OrderPaidEvent;
 import org.yrti.notification.service.EmailService;
 
 @Slf4j

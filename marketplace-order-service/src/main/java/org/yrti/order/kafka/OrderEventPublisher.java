@@ -3,7 +3,8 @@ package org.yrti.order.kafka;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
-import org.yrti.order.event.OrderCreatedEvent;
+import org.yrti.events.event.OrderCreatedEvent;
+
 
 @Service
 @RequiredArgsConstructor

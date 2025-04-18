@@ -2,7 +2,7 @@ package org.yrti.payment.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.yrti.payment.dto.PaymentEvent;
+import org.yrti.events.event.PaymentEvent;
 import org.yrti.payment.dto.PaymentRequest;
 import org.yrti.payment.kafka.PaymentEventPublisher;
 

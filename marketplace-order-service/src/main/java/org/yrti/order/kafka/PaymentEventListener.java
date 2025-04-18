@@ -4,10 +4,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
+import org.yrti.events.event.OrderPaidEvent;
+import org.yrti.events.event.PaymentEvent;
 import org.yrti.order.client.UserClient;
 import org.yrti.order.dto.UserResponse;
-import org.yrti.order.event.OrderPaidEvent;
-import org.yrti.order.event.PaymentEvent;
 import org.yrti.order.service.OrderService;
 
 
