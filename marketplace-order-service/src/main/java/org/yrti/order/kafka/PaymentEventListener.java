@@ -20,7 +20,7 @@ public class PaymentEventListener {
     private final OrderPaidEventPublisher orderPaidEventPublisher;
     private final OrderService orderService;
 
-    @KafkaListener(topics = "payment-created", groupId = "order-group")
+    @KafkaListener(topics = "payment-events", groupId = "order-group")
     public void handlePaymentCreated(PaymentEvent event) {
         log.info("💳 Получено событие оплаты: {}", event);
 
