@@ -14,7 +14,7 @@ public class PaymentEventPublisher {
     private final KafkaTemplate<String, PaymentEvent> kafkaTemplate;
 
     public void publish(PaymentEvent event) {
-        log.info("📤 Отправка события оплаты: {}", event);
+        log.info("Отправка события оплаты: {}", event);
         kafkaTemplate.send("payment-events", event);
     }
 }

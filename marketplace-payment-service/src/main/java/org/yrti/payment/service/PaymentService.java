@@ -1,11 +1,13 @@
 package org.yrti.payment.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.yrti.events.event.PaymentEvent;
 import org.yrti.payment.dto.PaymentRequest;
 import org.yrti.payment.kafka.PaymentEventPublisher;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PaymentService {
@@ -13,6 +15,7 @@ public class PaymentService {
     private final PaymentEventPublisher eventPublisher;
 
     public boolean processPayment(PaymentRequest request) {
+        log.info("Оплата от клиента userId={} заказа orderId={} на сумму {}", request.getUserId(), request.getOrderId(), request.getAmount());
         boolean isSuccess = Math.random() > 0.05;
 
         PaymentEvent event = PaymentEvent.builder()

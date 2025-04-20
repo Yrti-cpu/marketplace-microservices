@@ -24,7 +24,7 @@ public class PricingService {
     );
 
     public PricingResponse getPrice(Long productId) {
-        log.info("🔍 Запрос цены: productId={}", productId);
+        log.info("Запрос цены: productId={}", productId);
         Double price = PRODUCT_PRICES.getOrDefault(productId, 999.0); // если нет цены — фиктивная
         Double finalPrice = DISCOUNTED_PRODUCTS.contains(productId)
                 ? price * 0.8  // 20%

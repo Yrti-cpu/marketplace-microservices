@@ -1,13 +1,11 @@
 package org.yrti.user.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.yrti.user.dto.UserResponse;
-import org.yrti.user.model.User;
-import org.yrti.user.repository.UserRepository;
-
-import java.util.Optional;
-
+import org.yrti.user.dao.UserRepository;
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -18,7 +16,8 @@ public class UserService {
 //    }
 
     public UserResponse getUserById(Long id) {
-        // Заглушка 💡
+        log.info("Запрос профиля клиента: userId={}", id);
+        // Заглушка
         return new UserResponse(id, "testuser" + id + "@mail.com", "Test User " + id);
     }
 }
