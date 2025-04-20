@@ -4,10 +4,7 @@ package org.yrti.order.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.yrti.order.dto.CreateOrderRequest;
 import org.yrti.order.model.Order;
 import org.yrti.order.service.OrderService;
@@ -23,6 +20,17 @@ public class OrderController {
     public ResponseEntity<Order> createOrder(@Valid @RequestBody CreateOrderRequest request) {
         Order order = orderService.createOrder(request);
         return ResponseEntity.ok(order);
+    }
+    @PostMapping("/{id}/dispatch")
+    public ResponseEntity<Void> dispatchOrder(@PathVariable Long id) {
+        orderService.dispatchOrder(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{id}/deliver")
+    public ResponseEntity<Void> deliverOrder(@PathVariable Long id) {
+        orderService.markOrderAsDelivered(id);
+        return ResponseEntity.ok().build();
     }
 
 }

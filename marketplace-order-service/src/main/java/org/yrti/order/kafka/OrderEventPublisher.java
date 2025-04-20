@@ -2,18 +2,16 @@ package org.yrti.order.kafka;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.yrti.events.event.OrderCreatedEvent;
 
 
-@Service
+@Component
 @RequiredArgsConstructor
 public class OrderEventPublisher {
     private final KafkaTemplate<String, OrderCreatedEvent> kafkaTemplate;
 
-    private static final String TOPIC = "order-created";
-
     public void publish(OrderCreatedEvent event) {
-        kafkaTemplate.send(TOPIC, event);
+        kafkaTemplate.send("order-created", event);
     }
 }

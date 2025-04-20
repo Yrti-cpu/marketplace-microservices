@@ -6,11 +6,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.yrti.events.event.OrderCreatedEvent;
+import org.yrti.events.event.OrderDeliveredEvent;
 import org.yrti.order.client.InventoryClient;
 import org.yrti.order.client.PricingClient;
 import org.yrti.order.client.UserClient;
 import org.yrti.order.dao.OrderRepository;
 import org.yrti.order.dto.PricingResponse;
+import org.yrti.order.exception.OrderNotFoundException;
+import org.yrti.order.kafka.OrderDeliveredEventPublisher;
 import org.yrti.order.kafka.OrderEventPublisher;
 import org.yrti.order.dto.CreateOrderRequest;
 import org.yrti.order.exception.InventoryServiceException;
@@ -33,6 +36,48 @@ public class OrderService {
     private final UserClient userClient;
     private final PricingClient pricingClient;
     private final OrderEventPublisher orderEventPublisher;
+    private final OrderDeliveredEventPublisher orderDeliveredEventPublisher;
+
+    @Transactional
+    public void dispatchOrder(Long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new OrderNotFoundException(orderId));
+
+        if (order.getStatus() != OrderStatus.PAID) {
+            throw new IllegalStateException("Заказ не может быть отгружен. Он не оплачен.");
+        }
+
+        order.getItems().forEach(item ->
+                inventoryClient.releaseProduct(new ProductReserveRequest(item.getProductId(), item.getQuantity()))
+        );
+
+        order.setStatus(OrderStatus.DISPATCHED);
+        log.info("Заказ #{} отправлен клиенту", orderId);
+    }
+
+    @Transactional
+    public void markOrderAsDelivered(Long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new OrderNotFoundException(orderId));
+
+        if (order.getStatus() != OrderStatus.DISPATCHED) {
+            throw new IllegalStateException("Невозможно доставить заказ, который ещё не отправлен.");
+        }
+
+        order.setStatus(OrderStatus.DELIVERED);
+        orderRepository.save(order);
+
+        UserResponse user = userClient.getUserById(order.getUserId());
+
+        OrderDeliveredEvent event = OrderDeliveredEvent.builder()
+                .orderId(order.getId())
+                .userId(order.getUserId())
+                .email(user.getEmail())
+                .build();
+
+        orderDeliveredEventPublisher.publish(event);
+        log.info("Заказ #{} доставлен. Событие отправлено в Kafka", order.getId());
+    }
 
     @Transactional
     public Order createOrder(CreateOrderRequest request) {
@@ -51,9 +96,10 @@ public class OrderService {
             UserResponse user = userClient.getUserById(order.getUserId());
 
             publishOrderEvent(savedOrder.getId(), order.getUserId(), user.getEmail());
+            log.info("Заказ #{} создан", order.getId());
             return savedOrder;
         } catch (Exception e) {
-            throw new OrderCreationException("Failed to create order: " + e.getMessage());
+            throw new OrderCreationException("Не удалось создать заказ: " + e.getMessage());
         }
     }
 
@@ -88,15 +134,13 @@ public class OrderService {
                         .build();
 
             } catch (Exception e) {
-                throw new InventoryServiceException("Failed to reserve product: " + i.getProductId());
+                throw new InventoryServiceException("Не удалось зарезервировать товар: " + i.getProductId());
             }
         }).toList();
     }
 
     private void reserveProduct(Long productId, int quantity) {
-        ProductReserveRequest reserveRequest = new ProductReserveRequest();
-        reserveRequest.setProductId(productId);
-        reserveRequest.setQuantity(quantity);
+        ProductReserveRequest reserveRequest = new ProductReserveRequest(productId, quantity);
         inventoryClient.reserveProduct(reserveRequest);
     }
 
@@ -118,10 +162,10 @@ public class OrderService {
 
     public void markOrderAsPaid(Long orderId) {
         Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new OrderCreationException("Order not found"));
+                .orElseThrow(() -> new OrderCreationException("Заказ не найден"));
 
         order.setStatus(OrderStatus.PAID);
         orderRepository.save(order);
-        log.info("✅ Заказ #{} отмечен как оплаченный", orderId);
+        log.info("Заказ #{} отмечен как оплаченный", orderId);
     }
 }

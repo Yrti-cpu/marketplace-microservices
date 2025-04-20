@@ -9,4 +9,9 @@ import org.yrti.order.dto.ProductReserveRequest;
 public interface InventoryClient {
     @PostMapping("/api/products/reserve")
     void reserveProduct(@RequestBody ProductReserveRequest request);
+
+    @PostMapping("/api/products/release")
+    void releaseProduct(@RequestBody ProductReserveRequest request);
+
+
 }
