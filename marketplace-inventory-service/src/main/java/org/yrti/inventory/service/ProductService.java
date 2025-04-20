@@ -18,13 +18,13 @@ public class ProductService {
 
     public void reserveProduct(Long id, int reservedQuantity) {
         if (reservedQuantity <= 0) {
-            throw new InvalidArgumentException("Quantity must be greater than 0");
+            throw new InvalidArgumentException("Количество должно быть  больше 0");
         }
         int updated = repository.tryReserveProduct(id, reservedQuantity);
-        log.info("📦 Резервируем товар: id={}, запрошено={}", id, reservedQuantity);
+        log.info("Резервируем товар: id={}, запрошено={}", id, reservedQuantity);
 
         if (updated == 0) {
-            throw new NotEnoughStockException("Not enough stock to reserve product");
+            throw new NotEnoughStockException("Недостаточное количество для резервирования товара");
         }
     }
 
@@ -33,7 +33,7 @@ public class ProductService {
                 .orElseThrow(() -> new ProductNotFoundException(id));
 
         if (reservedQuantity <= 0 || product.getReservedQuantity() < reservedQuantity) {
-            throw new InvalidArgumentException("Invalid quantity to release");
+            throw new InvalidArgumentException("Неверное количество резерва");
         }
 
         product.setReservedQuantity(Math.max(0, product.getReservedQuantity() - reservedQuantity));
@@ -45,7 +45,7 @@ public class ProductService {
                 .orElseThrow(() -> new ProductNotFoundException(id));
 
         if (reservedQuantity <= 0 || product.getReservedQuantity() < reservedQuantity) {
-            throw new InvalidArgumentException("Invalid quantity to release");
+            throw new InvalidArgumentException("Неверное количество резерва");
         }
 
         product.setQuantity(product.getQuantity() - reservedQuantity);
@@ -53,15 +53,18 @@ public class ProductService {
         repository.save(product);
     }
     public Product createProduct(Product product) {
+        log.info("Создание товара: {}", product.getName());
         return repository.save(product);
     }
 
     public Product getProduct(Long id) {
+        log.info("Получение товара по id: {}", id);
         return repository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException(id));
     }
 
     public List<Product> getAllProducts() {
+        log.info("Получение всех товаров");
         return repository.findAll();
     }
 
@@ -72,10 +75,12 @@ public class ProductService {
         product.setQuantity(updated.getQuantity());
         product.setSeller(updated.getSeller());
         product.setReservedQuantity(updated.getReservedQuantity());
+        log.info("Обновление товара: {} ", updated.getName());
         return repository.save(product);
     }
 
     public void deleteProduct(Long id) {
+        log.info("Удаление товара: {} ", id);
         repository.deleteById(id);
     }
 }
