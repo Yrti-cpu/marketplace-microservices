@@ -33,7 +33,7 @@
 - **PostgreSQL**
 - **Docker + docker-compose**
 - **Kafka + Zookeeper**
-- **Lombok, MapStruct, SLF4J**
+- **Lombok, SLF4J**
 - **Kafka UI (provectuslabs/kafka-ui)**
 
 ---
