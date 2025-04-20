@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
+import org.yrti.events.event.OrderCancelledEvent;
 import org.yrti.events.event.OrderCreatedEvent;
 import org.yrti.events.event.OrderDeliveredEvent;
 import org.yrti.events.event.OrderPaidEvent;
@@ -63,5 +64,16 @@ public class OrderEventListener {
         } catch (Exception e) {
             log.error("Ошибка отправки письма о доставке: {}", e.getMessage(), e);
         }
+    }
+
+    @KafkaListener(topics = "order-cancelled", groupId = "notification-group")
+    public void handleOrderCancelled(OrderCancelledEvent event) {
+        log.info("Получено событие отмены заказа: {}", event);
+
+        String to = event.getEmail();
+        String subject = "Отмена заказа";
+        String body = event.getMessage();
+
+        emailService.send(to, subject, body);
     }
 }

@@ -50,6 +50,7 @@ public class ProductService {
 
         product.setQuantity(product.getQuantity() - reservedQuantity);
         product.setReservedQuantity(product.getReservedQuantity() - reservedQuantity);
+        log.info("Отмена резерва товара id: {}, количество: {}", id, reservedQuantity);
         repository.save(product);
     }
     public Product createProduct(Product product) {

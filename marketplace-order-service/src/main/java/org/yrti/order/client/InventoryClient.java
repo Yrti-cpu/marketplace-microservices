@@ -13,5 +13,6 @@ public interface InventoryClient {
     @PostMapping("/api/products/release")
     void releaseProduct(@RequestBody ProductReserveRequest request);
 
-
+    @PostMapping("/api/products/decrease")
+    void decreaseProduct(@RequestBody ProductReserveRequest request);
 }
