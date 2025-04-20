@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 
@@ -35,14 +36,12 @@ public class Order {
 
     @PrePersist
     public void prePersist() {
-        createdAt = LocalDateTime.now();
+        createdAt = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
         updatedAt = createdAt;
         status = OrderStatus.NEW;
     }
 
     @PreUpdate
-    public void preUpdate() {
-        updatedAt = LocalDateTime.now();
-    }
+    public void preUpdate() {updatedAt = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS); }
 }
 
