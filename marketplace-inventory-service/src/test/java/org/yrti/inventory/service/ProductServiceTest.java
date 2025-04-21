@@ -25,7 +25,7 @@ class ProductServiceTest {
 
     @Test
     void reserveProduct_shouldSucceed_whenStockAvailable() {
-
+        //TODO-Крит хорошим тоном является прописывание этапов //Подготовка //Выполнение //Проверка
         Long productId = 1L;
         int quantity = 5;
 

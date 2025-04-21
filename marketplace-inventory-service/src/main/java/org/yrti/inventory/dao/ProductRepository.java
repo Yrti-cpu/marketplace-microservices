@@ -10,7 +10,8 @@ import org.yrti.inventory.model.Product;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
-    @Modifying
+
+    @Modifying // TODO-минор - вообще эту аннотацию юзают с парметром clearAutomatically = true. Изучи тему L1 cache и L2 cache хибернейта.
     @Transactional
     @Query("UPDATE Product p " +
             "SET p.reservedQuantity = p.reservedQuantity + :reserveQty " +

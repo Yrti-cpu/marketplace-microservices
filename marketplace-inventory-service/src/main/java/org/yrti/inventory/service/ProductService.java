@@ -21,8 +21,8 @@ public class ProductService {
             throw new InvalidArgumentException("Количество должно быть  больше 0");
         }
         int updated = repository.tryReserveProduct(id, reservedQuantity);
-        log.info("Резервируем товар: id={}, запрошено={}", id, reservedQuantity);
-
+        log.info("Резервируем товар: id={}, запрошено={}", id, reservedQuantity); //TODO-минор достойна ли эта информация INFO уровня логирования ? Пользователи это не увидят, а логи в проде будут засираться. Возможно это должен быть уровень debug
+        //TODO-минор аналогичное замечание насчет всех остальных логов
         if (updated == 0) {
             throw new NotEnoughStockException("Недостаточное количество для резервирования товара");
         }

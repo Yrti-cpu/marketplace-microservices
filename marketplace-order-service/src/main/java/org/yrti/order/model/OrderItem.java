@@ -20,7 +20,7 @@ public class OrderItem {
     private Long productId;
     private Integer quantity;
 
-    private Double originalPrice;      // Без скидки
+    private Double originalPrice;      // Без скидки //TODO-Крит все бабосики в BigDecimal
     private Double price;              // С учётом скидки
     private Double totalPrice;         // price * quantity
     private Double discountPercentage; // Сколько % было скинуто

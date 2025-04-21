@@ -11,3 +11,5 @@ public class MarketplaceEventsApplication {
 	}
 
 }
+
+// TODO-Крит Странный модуль. По сути содержит только DTO-шки. Зачем ему @SpringBootApplication ?

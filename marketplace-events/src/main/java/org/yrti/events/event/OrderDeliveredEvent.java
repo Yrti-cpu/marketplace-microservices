@@ -14,3 +14,5 @@ public class OrderDeliveredEvent {
     private Long userId;
     private String email;
 }
+
+// TODO-Минор почему не используешь record классы ?

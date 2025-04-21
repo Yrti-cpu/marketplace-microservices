@@ -32,7 +32,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class OrderService {
-
+//TODO-Крит Сервис перегружен, раздели их по зоне отвественности: DispatchOrderService, DeliveredOrderService и так далее
     private final OrderRepository orderRepository;
     private final InventoryClient inventoryClient;
     private final UserClient userClient;

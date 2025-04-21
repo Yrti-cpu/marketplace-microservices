@@ -15,3 +15,5 @@ public class OrderCancelledEvent {
     private String email;
     private String message;
 }
+
+// TODO-Минор почему не используешь record классы ?

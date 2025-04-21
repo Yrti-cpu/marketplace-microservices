@@ -10,6 +10,8 @@ import org.yrti.inventory.dto.ProductActionRequest;
 
 import java.util.List;
 
+// TODO-Крит Добавить документацию Swagger Open Api
+
 @RestController
 @RequestMapping("/api/products")
 @RequiredArgsConstructor
@@ -20,7 +22,7 @@ public class ProductController {
     @PostMapping("/reserve")
     public ResponseEntity<?> reserve(@Valid @RequestBody ProductActionRequest request) {
         productService.reserveProduct(request.getProductId(), request.getQuantity());
-        return ResponseEntity.ok("Product reserved");
+        return ResponseEntity.ok("Product reserved"); // TODO-Минор можно что интереснее возвращать. Например дату брони. Тож самое для других методов с ResponseEntity.ok("какая то строка")
 
     }
 

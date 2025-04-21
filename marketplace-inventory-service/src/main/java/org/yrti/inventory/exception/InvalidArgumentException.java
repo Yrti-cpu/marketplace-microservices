@@ -5,3 +5,5 @@ public class InvalidArgumentException extends RuntimeException {
         super(message);
     }
 }
+
+// TODO-крит чем джавовский IllegalArgumentException не угодил ?

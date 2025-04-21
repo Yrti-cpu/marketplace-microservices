@@ -19,7 +19,7 @@ public class PaymentEventListener {
     private final UserClient userClient;
     private final OrderPaidEventPublisher orderPaidEventPublisher;
     private final OrderService orderService;
-
+    //TODO-крит делегируй детальную логику другому сервису
     @KafkaListener(topics = "payment-events", groupId = "order-group")
     public void handlePaymentCreated(PaymentEvent event) {
         log.info("💳 Получено событие оплаты: {}", event);

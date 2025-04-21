@@ -16,3 +16,5 @@ public class PaymentEvent {
     private double amount;
     private String message;
 }
+
+// TODO почему не используешь record классы ?

@@ -14,9 +14,12 @@ import org.yrti.notification.service.EmailService;
 @Service
 @RequiredArgsConstructor
 public class OrderEventListener {
-
+    //TODO-Крит ты прям в этом классе ловишь сообщения, лепишь новые и отправляешь сообщения на почту. У тебя класс слишком перегружен ответственностью
+    // Во-первых - на один топик один класс.
+    // Во-вторых - метод с аннотацией @KafkaListener обычно хватает сообщение и далее передает его на обработку другому сервису. Тут прослеживается потенциал для паттерна Стратегия. В зависимости от класса сообщения будет вызываться тот или иной сервис, которые зашлет сообщение на почту.
     private final EmailService emailService;
 
+    // TODO-Минор лучше для разных топиков иметь уникальный groupId, что бы можно было удобно отслеживать лаг консьюмера в рамках одного топика на всю группу, а не в рамках нескольких топиков на всю группу.
     @KafkaListener(topics = "order-created", groupId = "notification-group")
     public void handleOrderCreated(OrderCreatedEvent event) {
         log.info("Получено событие: {}", event);
