@@ -18,8 +18,7 @@ public class OrderController {
 
     @PostMapping
     public ResponseEntity<Order> createOrder(@Valid @RequestBody CreateOrderRequest request) {
-        Order order = orderService.createOrder(request);
-        return ResponseEntity.ok(order);
+        return ResponseEntity.ok(orderService.createOrder(request));
     }
     @PostMapping("/{id}/dispatch")
     public ResponseEntity<Void> dispatchOrder(@PathVariable Long id) {
