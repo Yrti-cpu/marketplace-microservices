@@ -4,213 +4,39 @@ package org.yrti.order.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.yrti.events.event.OrderCancelledEvent;
-import org.yrti.events.event.OrderCreatedEvent;
-import org.yrti.events.event.OrderDeliveredEvent;
-import org.yrti.order.client.InventoryClient;
-import org.yrti.order.client.PricingClient;
-import org.yrti.order.client.UserClient;
-import org.yrti.order.dao.OrderRepository;
-import org.yrti.order.dto.PricingResponse;
-import org.yrti.order.exception.OrderNotFoundException;
-import org.yrti.order.kafka.OrderCancelledEventPublisher;
-import org.yrti.order.kafka.OrderDeliveredEventPublisher;
-import org.yrti.order.kafka.OrderEventPublisher;
 import org.yrti.order.dto.CreateOrderRequest;
-import org.yrti.order.exception.InventoryServiceException;
-import org.yrti.order.exception.OrderCreationException;
 import org.yrti.order.model.Order;
-import org.yrti.order.model.OrderItem;
-import org.yrti.order.dto.ProductReserveRequest;
-import org.yrti.order.dto.UserResponse;
-import org.yrti.order.model.OrderStatus;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.List;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class OrderService {
 
-    private final OrderRepository orderRepository;
-    private final InventoryClient inventoryClient;
-    private final UserClient userClient;
-    private final PricingClient pricingClient;
-    private final OrderEventPublisher orderEventPublisher;
-    private final OrderDeliveredEventPublisher orderDeliveredEventPublisher;
-    private final OrderCancelledEventPublisher orderCancelledEventPublisher;
+    private final OrderCreationService orderCreationService;
+    private final OrderPaymentService orderPaymentService;
+    private final OrderDispatchService orderDispatchService;
+    private final OrderDeliveryService orderDeliveryService;
+    private final OrderCancellationService orderCancellationService;
 
-    @Transactional
-    public void dispatchOrder(Long orderId) {
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new OrderNotFoundException(orderId));
-
-        if (order.getStatus() != OrderStatus.PAID) {
-            throw new IllegalStateException("Заказ не может быть отгружен. Он не оплачен.");
-        }
-
-        order.getItems().forEach(item ->
-                inventoryClient.releaseProduct(new ProductReserveRequest(item.getProductId(), item.getQuantity()))
-        );
-
-        order.setStatus(OrderStatus.DISPATCHED);
-        log.info("Заказ #{} отправлен клиенту", orderId);
-    }
-
-    @Transactional
-    public void markOrderAsDelivered(Long orderId) {
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new OrderNotFoundException(orderId));
-
-        if (order.getStatus() != OrderStatus.DISPATCHED) {
-            throw new IllegalStateException("Невозможно доставить заказ, который ещё не отправлен.");
-        }
-
-        order.setStatus(OrderStatus.DELIVERED);
-        orderRepository.save(order);
-
-        UserResponse user = userClient.getUserById(order.getUserId());
-
-        OrderDeliveredEvent event = OrderDeliveredEvent.builder()
-                .orderId(order.getId())
-                .userId(order.getUserId())
-                .email(user.getEmail())
-                .build();
-
-        orderDeliveredEventPublisher.publish(event);
-        log.info("Заказ #{} доставлен. Событие отправлено в Kafka", order.getId());
-    }
-
-    @Transactional
-    public void cancelOrder(Long orderId) {
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new OrderNotFoundException(orderId));
-
-        if (order.getStatus() != OrderStatus.NEW) {
-            throw new IllegalStateException("Заказ можно отменить только до оплаты");
-        }
-
-        // Снимаем резерв
-        for (OrderItem item : order.getItems()) {
-            inventoryClient.decreaseProduct(new ProductReserveRequest(item.getProductId(), item.getQuantity()));
-        }
-
-        order.setStatus(OrderStatus.CANCELLED);
-        orderRepository.save(order);
-        log.info("Заказ #{} успешно отменён и сохранён со статусом CANCELLED", order.getId());
-
-
-        UserResponse user = userClient.getUserById(order.getUserId());
-
-        OrderCancelledEvent event = OrderCancelledEvent.builder()
-                .orderId(order.getId())
-                .userId(order.getUserId())
-                .email(user.getEmail())
-                .message("Ваш заказ #" + order.getId() + " был отменён.")
-                .build();
-
-        orderCancelledEventPublisher.publish(event);
-        log.info("Отправлено Kafka-событие об отмене заказа: {}", event);
-    }
-    @Transactional
     public Order createOrder(CreateOrderRequest request) {
-        Order order = initializeOrder(request);
-
-        List<OrderItem> items = createAndReserveOrderItems(request, order);
-        order.setItems(items);
-
-        BigDecimal totalAmount = items.stream()
-                .map(OrderItem::getTotalPrice)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-        order.setTotalAmount(totalAmount);
-
-        try {
-            Order savedOrder = orderRepository.save(order);
-            UserResponse user = userClient.getUserById(order.getUserId());
-
-            publishOrderEvent(savedOrder.getId(), order.getUserId(), user.getEmail());
-            log.info("Заказ #{} создан", order.getId());
-            return savedOrder;
-        } catch (Exception e) {
-            throw new OrderCreationException("Не удалось создать заказ: " + e.getMessage());
-        }
-    }
-
-    private Order initializeOrder(CreateOrderRequest request) {
-        return Order.builder()
-                .userId(request.getUserId())
-                .build();
-    }
-
-    private List<OrderItem> createAndReserveOrderItems(CreateOrderRequest request, Order order) {
-        return request.getItems().stream().map(i -> {
-            try {
-                reserveProduct(i.getProductId(), i.getQuantity());
-
-                PricingResponse priceInfo = pricingClient.getProductPrice(i.getProductId());
-
-                BigDecimal originalPrice = priceInfo.getOriginalPrice();
-                BigDecimal discountedPrice = priceInfo.getDiscountedPrice();
-                BigDecimal discount = BigDecimal.ZERO;
-
-                if (originalPrice.compareTo(BigDecimal.ZERO) > 0) {
-                    discount = originalPrice
-                            .subtract(discountedPrice)
-                            .divide(originalPrice, 4, RoundingMode.HALF_UP)
-                            .multiply(BigDecimal.valueOf(100));
-                }
-
-                BigDecimal totalPrice = discountedPrice.multiply(
-                        BigDecimal.valueOf(i.getQuantity())
-                );
-
-                return OrderItem.builder()
-                        .productId(i.getProductId())
-                        .quantity(i.getQuantity())
-                        .originalPrice(originalPrice)
-                        .price(discountedPrice)
-                        .totalPrice(totalPrice)
-                        .discountPercentage(discount)
-                        .order(order)
-                        .build();
-
-            } catch (Exception e) {
-                throw new InventoryServiceException("Не удалось зарезервировать товар: " + i.getProductId());
-            }
-        }).toList();
-    }
-
-    private void reserveProduct(Long productId, int quantity) {
-        ProductReserveRequest reserveRequest = new ProductReserveRequest(productId, quantity);
-        inventoryClient.reserveProduct(reserveRequest);
-    }
-
-    private BigDecimal fetchDiscountedPrice(Long productId) {
-        PricingResponse response = pricingClient.getProductPrice(productId);
-        return response.getDiscountedPrice();
-    }
-
-    private void publishOrderEvent(Long orderId, Long userId, String email) {
-        OrderCreatedEvent event = OrderCreatedEvent.builder()
-                .orderId(orderId)
-                .userId(userId)
-                .email(email)
-                .message("Заказ #" + orderId + " успешно оформлен")
-                .build();
-
-        orderEventPublisher.publish(event);
+        return orderCreationService.createOrder(request);
     }
 
     public void markOrderAsPaid(Long orderId) {
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new OrderCreationException("Заказ не найден"));
-
-        order.setStatus(OrderStatus.PAID);
-        orderRepository.save(order);
-        log.debug("Заказ #{} отмечен как оплаченный", orderId);
+        orderPaymentService.markOrderAsPaid(orderId);
     }
+
+    public void dispatchOrder(Long orderId) {
+        orderDispatchService.dispatchOrder(orderId);
+    }
+
+    public void markOrderAsDelivered(Long orderId) {
+        orderDeliveryService.markOrderAsDelivered(orderId);
+    }
+
+    public void cancelOrder(Long orderId) {
+        orderCancellationService.cancelOrder(orderId);
+    }
+
 }
