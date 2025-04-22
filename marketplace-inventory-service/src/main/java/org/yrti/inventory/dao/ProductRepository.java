@@ -10,7 +10,7 @@ import org.yrti.inventory.model.Product;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Transactional
     @Query("UPDATE Product p " +
             "SET p.reservedQuantity = p.reservedQuantity + :reserveQty " +
