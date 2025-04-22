@@ -1,17 +1,8 @@
 package org.yrti.events.event;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@Data
+import java.math.BigDecimal;
+
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class OrderPaidEvent {
-    private Long orderId;
-    private Long userId;
-    private String email;
-    private Double amount;
-}
+public record OrderPaidEvent(Long orderId,Long userId, String email, BigDecimal amount) {}
