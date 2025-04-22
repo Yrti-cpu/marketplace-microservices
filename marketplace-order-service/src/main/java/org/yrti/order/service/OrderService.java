@@ -26,6 +26,8 @@ import org.yrti.order.dto.ProductReserveRequest;
 import org.yrti.order.dto.UserResponse;
 import org.yrti.order.model.OrderStatus;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 @Slf4j
@@ -120,9 +122,10 @@ public class OrderService {
         List<OrderItem> items = createAndReserveOrderItems(request, order);
         order.setItems(items);
 
-        double totalAmount = items.stream()
-                .mapToDouble(OrderItem::getTotalPrice)
-                .sum();
+        BigDecimal totalAmount = items.stream()
+                .map(OrderItem::getTotalPrice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
         order.setTotalAmount(totalAmount);
 
         try {
@@ -150,12 +153,20 @@ public class OrderService {
 
                 PricingResponse priceInfo = pricingClient.getProductPrice(i.getProductId());
 
-                double originalPrice = priceInfo.getOriginalPrice();
-                double discountedPrice = priceInfo.getDiscountedPrice();
-                double discount = originalPrice > 0
-                        ? ((originalPrice - discountedPrice) / originalPrice) * 100
-                        : 0.0;
-                double totalPrice = discountedPrice * i.getQuantity();
+                BigDecimal originalPrice = priceInfo.getOriginalPrice();
+                BigDecimal discountedPrice = priceInfo.getDiscountedPrice();
+                BigDecimal discount = BigDecimal.ZERO;
+
+                if (originalPrice.compareTo(BigDecimal.ZERO) > 0) {
+                    discount = originalPrice
+                            .subtract(discountedPrice)
+                            .divide(originalPrice, 4, RoundingMode.HALF_UP)
+                            .multiply(BigDecimal.valueOf(100));
+                }
+
+                BigDecimal totalPrice = discountedPrice.multiply(
+                        BigDecimal.valueOf(i.getQuantity())
+                );
 
                 return OrderItem.builder()
                         .productId(i.getProductId())
@@ -178,7 +189,7 @@ public class OrderService {
         inventoryClient.reserveProduct(reserveRequest);
     }
 
-    private Double fetchDiscountedPrice(Long productId) {
+    private BigDecimal fetchDiscountedPrice(Long productId) {
         PricingResponse response = pricingClient.getProductPrice(productId);
         return response.getDiscountedPrice();
     }
