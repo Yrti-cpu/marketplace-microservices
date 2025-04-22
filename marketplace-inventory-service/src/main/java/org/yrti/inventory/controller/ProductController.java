@@ -8,6 +8,8 @@ import org.yrti.inventory.model.Product;
 import org.yrti.inventory.service.ProductService;
 import org.yrti.inventory.dto.ProductActionRequest;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @RestController
@@ -20,20 +22,20 @@ public class ProductController {
     @PostMapping("/reserve")
     public ResponseEntity<?> reserve(@Valid @RequestBody ProductActionRequest request) {
         productService.reserveProduct(request.getProductId(), request.getQuantity());
-        return ResponseEntity.ok("Product reserved");
+        return ResponseEntity.ok("Дата брони: " + LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
 
     }
 
     @PostMapping("/release")
     public ResponseEntity<?> release(@Valid @RequestBody ProductActionRequest request) {
         productService.releaseProduct(request.getProductId(), request.getQuantity());
-        return ResponseEntity.ok("Release successful");
+        return ResponseEntity.ok("Дата выгрузки со склада: " + LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
     }
 
     @PostMapping("/decrease")
     public ResponseEntity<?> decrease(@Valid @RequestBody ProductActionRequest request) {
         productService.decreaseStock(request.getProductId(), request.getQuantity());
-        return ResponseEntity.ok("Product decreased");
+        return ResponseEntity.ok("Дата отмены брони: " + LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
     }
 
     @PostMapping
