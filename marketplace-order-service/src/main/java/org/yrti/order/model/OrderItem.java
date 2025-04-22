@@ -4,6 +4,8 @@ package org.yrti.order.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
+
 @Entity
 @Table(name = "order_items")
 @Getter
@@ -20,10 +22,10 @@ public class OrderItem {
     private Long productId;
     private Integer quantity;
 
-    private Double originalPrice;      // Без скидки
-    private Double price;              // С учётом скидки
-    private Double totalPrice;         // price * quantity
-    private Double discountPercentage; // Сколько % было скинуто
+    private BigDecimal originalPrice;      // Без скидки
+    private BigDecimal price;              // С учётом скидки
+    private BigDecimal totalPrice;         // price * quantity
+    private BigDecimal discountPercentage; // Сколько % было скинуто
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")

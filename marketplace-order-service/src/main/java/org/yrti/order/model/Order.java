@@ -3,6 +3,7 @@ package org.yrti.order.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -26,7 +27,7 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
-    private Double totalAmount;
+    private BigDecimal totalAmount;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
