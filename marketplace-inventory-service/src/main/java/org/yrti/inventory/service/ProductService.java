@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.yrti.inventory.dao.ProductRepository;
-import org.yrti.inventory.exception.InvalidArgumentException;
 import org.yrti.inventory.exception.NotEnoughStockException;
 import org.yrti.inventory.exception.ProductNotFoundException;
 import org.yrti.inventory.model.Product;
@@ -18,7 +17,7 @@ public class ProductService {
 
     public void reserveProduct(Long id, int reservedQuantity) {
         if (reservedQuantity <= 0) {
-            throw new InvalidArgumentException("Количество должно быть  больше 0");
+            throw new IllegalArgumentException("Количество должно быть  больше 0");
         }
         int updated = repository.tryReserveProduct(id, reservedQuantity);
         log.info("Резервируем товар: id={}, запрошено={}", id, reservedQuantity);
@@ -33,7 +32,7 @@ public class ProductService {
                 .orElseThrow(() -> new ProductNotFoundException(id));
 
         if (reservedQuantity <= 0 || product.getReservedQuantity() < reservedQuantity) {
-            throw new InvalidArgumentException("Неверное количество резерва");
+            throw new IllegalArgumentException("Неверное количество резерва");
         }
 
         product.setReservedQuantity(Math.max(0, product.getReservedQuantity() - reservedQuantity));
@@ -45,7 +44,7 @@ public class ProductService {
                 .orElseThrow(() -> new ProductNotFoundException(id));
 
         if (reservedQuantity <= 0 || product.getReservedQuantity() < reservedQuantity) {
-            throw new InvalidArgumentException("Неверное количество резерва");
+            throw new IllegalArgumentException("Неверное количество резерва");
         }
 
         product.setQuantity(product.getQuantity() - reservedQuantity);
