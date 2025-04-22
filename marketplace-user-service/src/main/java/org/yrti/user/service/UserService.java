@@ -16,7 +16,7 @@ public class UserService {
 //    }
 
     public UserResponse getUserById(Long id) {
-        log.info("Запрос профиля клиента: userId={}", id);
+        log.debug("Запрос профиля клиента: userId={}", id);
         // Заглушка
         return new UserResponse(id, "testuser" + id + "@mail.com", "Test User " + id);
     }

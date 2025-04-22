@@ -200,6 +200,6 @@ public class OrderService {
 
         order.setStatus(OrderStatus.PAID);
         orderRepository.save(order);
-        log.info("Заказ #{} отмечен как оплаченный", orderId);
+        log.debug("Заказ #{} отмечен как оплаченный", orderId);
     }
 }

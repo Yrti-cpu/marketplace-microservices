@@ -20,7 +20,7 @@ public class ProductService {
             throw new IllegalArgumentException("Количество должно быть  больше 0");
         }
         int updated = repository.tryReserveProduct(id, reservedQuantity);
-        log.info("Резервируем товар: id={}, запрошено={}", id, reservedQuantity);
+        log.debug("Резервируем товар: id={}, запрошено={}", id, reservedQuantity);
 
         if (updated == 0) {
             throw new NotEnoughStockException("Недостаточное количество для резервирования товара");
@@ -34,7 +34,7 @@ public class ProductService {
         if (reservedQuantity <= 0 || product.getReservedQuantity() < reservedQuantity) {
             throw new IllegalArgumentException("Неверное количество резерва");
         }
-
+        log.debug("Отправка товара со склада: id={}, запрошено={}", id, reservedQuantity);
         product.setReservedQuantity(Math.max(0, product.getReservedQuantity() - reservedQuantity));
         repository.save(product);
     }
@@ -49,22 +49,22 @@ public class ProductService {
 
         product.setQuantity(product.getQuantity() - reservedQuantity);
         product.setReservedQuantity(product.getReservedQuantity() - reservedQuantity);
-        log.info("Отмена резерва товара id: {}, количество: {}", id, reservedQuantity);
+        log.debug("Отмена резерва товара id: {}, количество: {}", id, reservedQuantity);
         repository.save(product);
     }
     public Product createProduct(Product product) {
-        log.info("Создание товара: {}", product.getName());
+        log.debug("Создание товара: {}", product.getName());
         return repository.save(product);
     }
 
     public Product getProduct(Long id) {
-        log.info("Получение товара по id: {}", id);
+        log.debug("Получение товара по id: {}", id);
         return repository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException(id));
     }
 
     public List<Product> getAllProducts() {
-        log.info("Получение всех товаров");
+        log.debug("Получение всех товаров");
         return repository.findAll();
     }
 
@@ -75,12 +75,12 @@ public class ProductService {
         product.setQuantity(updated.getQuantity());
         product.setSeller(updated.getSeller());
         product.setReservedQuantity(updated.getReservedQuantity());
-        log.info("Обновление товара: {} ", updated.getName());
+        log.debug("Обновление товара: {} ", updated.getName());
         return repository.save(product);
     }
 
     public void deleteProduct(Long id) {
-        log.info("Удаление товара: {} ", id);
+        log.debug("Удаление товара: {} ", id);
         repository.deleteById(id);
     }
 }

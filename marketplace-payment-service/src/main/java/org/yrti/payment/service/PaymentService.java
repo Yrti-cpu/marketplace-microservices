@@ -15,7 +15,7 @@ public class PaymentService {
     private final PaymentEventPublisher eventPublisher;
 
     public boolean processPayment(PaymentRequest request) {
-        log.info("Оплата от клиента userId={} заказа orderId={} на сумму {}", request.getUserId(), request.getOrderId(), request.getAmount());
+        log.debug("Оплата от клиента userId={} заказа orderId={} на сумму {}", request.getUserId(), request.getOrderId(), request.getAmount());
         boolean isSuccess = Math.random() > 0.05;
 
         PaymentEvent event = PaymentEvent.builder()
