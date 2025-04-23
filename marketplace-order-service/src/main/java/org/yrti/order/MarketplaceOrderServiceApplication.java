@@ -8,8 +8,8 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @SpringBootApplication
 public class MarketplaceOrderServiceApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(MarketplaceOrderServiceApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(MarketplaceOrderServiceApplication.class, args);
+    }
 
 }

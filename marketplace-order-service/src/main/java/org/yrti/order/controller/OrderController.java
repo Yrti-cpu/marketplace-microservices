@@ -20,6 +20,7 @@ public class OrderController {
     public ResponseEntity<Order> createOrder(@Valid @RequestBody CreateOrderRequest request) {
         return ResponseEntity.ok(orderService.createOrder(request));
     }
+
     @PostMapping("/{id}/dispatch")
     public ResponseEntity<Void> dispatchOrder(@PathVariable Long id) {
         orderService.dispatchOrder(id);

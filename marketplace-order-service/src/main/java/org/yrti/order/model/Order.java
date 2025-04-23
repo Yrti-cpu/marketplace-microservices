@@ -45,6 +45,8 @@ public class Order {
     }
 
     @PreUpdate
-    public void preUpdate() {updatedAt = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS); }
+    public void preUpdate() {
+        updatedAt = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
+    }
 }
 

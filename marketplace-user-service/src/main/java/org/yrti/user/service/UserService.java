@@ -3,8 +3,9 @@ package org.yrti.user.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.yrti.user.dto.UserResponse;
 import org.yrti.user.dao.UserRepository;
+import org.yrti.user.dto.UserResponse;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor

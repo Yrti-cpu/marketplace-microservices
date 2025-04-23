@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class MarketplacePaymentServiceApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(MarketplacePaymentServiceApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(MarketplacePaymentServiceApplication.class, args);
+    }
 
 }

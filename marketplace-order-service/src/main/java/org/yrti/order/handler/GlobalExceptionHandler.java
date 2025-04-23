@@ -23,6 +23,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> handleOrderError(OrderCreationException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error(ex.getMessage(), HttpStatus.BAD_REQUEST));
     }
+
     @ExceptionHandler(OrderNotFoundException.class)
     public ResponseEntity<?> handleOrderError(OrderNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error(ex.getMessage(), HttpStatus.BAD_REQUEST));

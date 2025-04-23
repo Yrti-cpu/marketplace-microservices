@@ -24,7 +24,7 @@ public class OrderPaidEmailStrategy implements EmailStrategy<OrderPaidEvent> {
     public void sendEmail(OrderPaidEvent event) {
         String to = event.email();
         String subject = "Заказ оплачен";
-        String body = "Ваш заказ №" + event.orderId() + " успешно оплачен на сумму: "+ event.amount() +". Спасибо за покупку!";
+        String body = "Ваш заказ №" + event.orderId() + " успешно оплачен на сумму: " + event.amount() + ". Спасибо за покупку!";
         emailService.send(to, subject, body);
         log.debug("Отправлено уведомление об оплате заказа на {}", to);
 

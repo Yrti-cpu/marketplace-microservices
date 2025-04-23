@@ -25,6 +25,6 @@ public class EmailService {
         message.setText(text);
 
         mailSender.send(message);
-        log.info("📨 Email отправлен на {}", to);
+        log.info("Email отправлен на {}", to);
     }
 }

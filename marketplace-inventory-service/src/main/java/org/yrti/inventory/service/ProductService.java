@@ -9,6 +9,7 @@ import org.yrti.inventory.exception.ProductNotFoundException;
 import org.yrti.inventory.model.Product;
 
 import java.util.List;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -52,6 +53,7 @@ public class ProductService {
         log.debug("Отмена резерва товара id: {}, количество: {}", id, reservedQuantity);
         repository.save(product);
     }
+
     public Product createProduct(Product product) {
         log.debug("Создание товара: {}", product.getName());
         return repository.save(product);
