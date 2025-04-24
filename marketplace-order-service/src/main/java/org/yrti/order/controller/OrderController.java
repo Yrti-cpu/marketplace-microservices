@@ -9,6 +9,9 @@ import org.yrti.order.dto.CreateOrderRequest;
 import org.yrti.order.model.Order;
 import org.yrti.order.service.OrderService;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+
 @RestController
 @RequestMapping("/api/orders")
 @RequiredArgsConstructor
@@ -22,21 +25,21 @@ public class OrderController {
     }
 
     @PostMapping("/{id}/dispatch")
-    public ResponseEntity<Void> dispatchOrder(@PathVariable Long id) {
+    public ResponseEntity<?> dispatchOrder(@PathVariable Long id) {
         orderService.dispatchOrder(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok("Дата выгрузки со склада: " + LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
     }
 
     @PostMapping("/{id}/deliver")
-    public ResponseEntity<Void> deliverOrder(@PathVariable Long id) {
+    public ResponseEntity<?> deliverOrder(@PathVariable Long id) {
         orderService.markOrderAsDelivered(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok("Дата доставки: " + LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
     }
 
     @PostMapping("/{id}/cancel")
-    public ResponseEntity<Void> cancelOrder(@PathVariable Long id) {
+    public ResponseEntity<?> cancelOrder(@PathVariable Long id) {
         orderService.cancelOrder(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok("Дата отмены заказа: " + LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
     }
 
 }

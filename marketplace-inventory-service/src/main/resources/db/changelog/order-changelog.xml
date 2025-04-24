@@ -1,0 +1,44 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.29.xsd">
+
+    <changeSet id="create-orders-table" author="daniladotsenko">
+        <createTable tableName="orders">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="orders_pkey"/>
+            </column>
+            <column name="created_at" type="timestamp"/>
+            <column name="status" type="VARCHAR(255)"/>
+            <column name="total_amount" type="NUMBER(38, 2)"/>
+            <column name="updated_at" type="timestamp"/>
+            <column name="user_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-order-items-table" author="daniladotsenko">
+        <createTable tableName="order_items">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="order_items_pkey"/>
+            </column>
+            <column name="discount_percentage" type="NUMBER(38, 2)"/>
+            <column name="original_price" type="NUMBER(38, 2)"/>
+            <column name="price" type="NUMBER(38, 2)"/>
+            <column name="product_id" type="BIGINT"/>
+            <column name="quantity" type="INT"/>
+            <column name="total_price" type="NUMBER(38, 2)"/>
+            <column name="order_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="add-fk-orderitems-order" author="daniladotsenko">
+        <addForeignKeyConstraint
+                baseTableName="order_items"
+                baseColumnNames="order_id"
+                referencedTableName="orders"
+                referencedColumnNames="id"
+                constraintName="fk_order_items_order"/>
+    </changeSet>
+
+</databaseChangeLog>
