@@ -44,3 +44,4 @@ out/
 /marketplace-user-service/src/main/resources/application.yaml
 /marketplace-pricing-service/src/main/resources/application.yml
 /marketplace-payment-service/src/main/resources/application.yml
+/rollback.sql
