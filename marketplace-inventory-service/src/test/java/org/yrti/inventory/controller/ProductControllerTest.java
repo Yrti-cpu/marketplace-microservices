@@ -15,6 +15,9 @@ import org.yrti.inventory.dto.ProductActionRequest;
 import org.yrti.inventory.model.Product;
 import org.yrti.inventory.service.ProductService;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -42,26 +45,30 @@ class ProductControllerTest {
     private ObjectMapper objectMapper;
 
     @Test
-    @DisplayName("POST /api/products/reserve - reserve success")
+    @DisplayName("POST /api/products/reserve - успешный резерв")
     void reserveProduct_shouldReturn200_whenValidRequest() throws Exception {
+        //Подготовка
         ProductActionRequest request = new ProductActionRequest();
         request.setProductId(1L);
         request.setQuantity(5);
 
+        // Проверка
         mockMvc.perform(post("/api/products/reserve")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
-                .andExpect(content().string("Product reserved"));
+                .andExpect(content().string("Дата брони: " + LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS)));
     }
 
     @Test
-    @DisplayName("POST /api/products/reserve - 400 unacceptable quantity")
+    @DisplayName("POST /api/products/reserve - 400 неприемлемое количество")
     void reserveProduct_shouldReturn400_whenInvalidQuantity() throws Exception {
+        //Подготовка
         ProductActionRequest request = new ProductActionRequest();
         request.setProductId(1L);
         request.setQuantity(0);
 
+        // Проверка
         mockMvc.perform(post("/api/products/reserve")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
@@ -69,16 +76,51 @@ class ProductControllerTest {
     }
 
     @Test
-    @DisplayName("POST /api/products - create product")
+    @DisplayName("POST /api/products - создание товара")
     void createProduct_shouldReturn200() throws Exception {
+        //Подготовка
         Product productRequest = new Product();
         productRequest.setName("Test Product");
         productRequest.setQuantity(100);
 
+        // Проверка
         mockMvc.perform(post("/api/products")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(productRequest)))
                 .andExpect(status().isOk());
     }
-  
+
+    @Test
+    @DisplayName("POST /api/products/release - успешная отправка со склада")
+    void releaserProduct_shouldReturn200_whenValidRequest() throws Exception {
+        ProductActionRequest request = new ProductActionRequest();
+        request.setProductId(1L);
+        request.setQuantity(5);
+
+        // Проверка
+        mockMvc.perform(post("/api/products/release")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Дата выгрузки со склада: " + LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS)));
+
+    }
+
+    @Test
+    @DisplayName("POST /api/products/decrease - успешная отмена")
+    void decrease() throws Exception {
+        ProductActionRequest request = new ProductActionRequest();
+        request.setProductId(1L);
+        request.setQuantity(5);
+
+        // Проверка
+        mockMvc.perform(post("/api/products/release")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Дата выгрузки со склада: " + LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS)));
+
+    }
+
+
 }
