@@ -25,6 +25,6 @@ public class OrderCreatedEmailStrategy implements EmailStrategy<OrderCreatedEven
         String subject = "Заказ оформлен";
         String body = "Ваш заказ №" + event.orderId() + " успешно оформлен. Спасибо за покупку!";
         emailService.send(to, subject, body);
-        log.info("Отправлено уведомление о создании заказа на {}", to);
+        log.debug("Отправлено уведомление о создании заказа на {}", to);
     }
 }
