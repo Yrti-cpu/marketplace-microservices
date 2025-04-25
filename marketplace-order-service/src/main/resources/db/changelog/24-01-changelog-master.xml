@@ -6,9 +6,9 @@
         http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.29.xsd">
 
-    <include file="db/changelog/sequences-changelog.xml"/>
-    <include file="db/changelog/product-changelog.xml"/>
-    <include file="db/changelog/order-changelog.xml"/>
-    <include file="db/changelog/user-changelog.xml"/>
+    <include file="/db/changelog/sequences-changelog.xml"/>
+    <include file="/db/changelog/product-changelog.xml"/>
+    <include file="/db/changelog/order-changelog.xml"/>
+    <include file="/db/changelog/user-changelog.xml"/>
 
 </databaseChangeLog>
