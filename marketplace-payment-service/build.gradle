@@ -52,7 +52,7 @@ pmd {
 }
 
 jacoco {
-	toolVersion = "1.1"
+	toolVersion = "0.8.13"
 }
 
 tasks.named('test') {
