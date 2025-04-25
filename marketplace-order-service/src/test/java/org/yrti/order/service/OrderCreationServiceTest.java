@@ -8,7 +8,6 @@ import org.yrti.order.client.UserClient;
 import org.yrti.order.dao.OrderRepository;
 import org.yrti.order.dto.CreateOrderRequest;
 import org.yrti.order.dto.PricingResponse;
-import org.yrti.order.dto.ProductReserveRequest;
 import org.yrti.order.dto.UserResponse;
 import org.yrti.order.kafka.OrderEventPublisher;
 import org.yrti.order.model.Order;
@@ -58,4 +57,5 @@ class OrderCreationServiceTest {
         verify(orderRepository).save(any());
         verify(orderEventPublisher).publish(any());
     }
+
 }

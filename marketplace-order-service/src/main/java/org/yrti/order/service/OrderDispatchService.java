@@ -33,6 +33,7 @@ public class OrderDispatchService {
         );
 
         order.setStatus(OrderStatus.DISPATCHED);
+        orderRepository.save(order);
         log.info("Заказ #{} отправлен клиенту", orderId);
     }
 }
