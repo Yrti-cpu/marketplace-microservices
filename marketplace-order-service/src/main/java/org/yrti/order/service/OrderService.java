@@ -27,8 +27,8 @@ public class OrderService {
         orderPaymentService.markOrderAsPaid(orderId);
     }
 
-    public void dispatchOrder(Long orderId) {
-        orderDispatchService.dispatchOrder(orderId);
+    public String dispatchOrder(Long orderId) {
+        return orderDispatchService.dispatchOrder(orderId);
     }
 
     public void markOrderAsDelivered(Long orderId) {

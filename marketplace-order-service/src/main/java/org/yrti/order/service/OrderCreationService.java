@@ -33,7 +33,7 @@ public class OrderCreationService {
 
     @Transactional
     public Order createOrder(CreateOrderRequest request) {
-        Order order = Order.builder().userId(request.getUserId()).build();
+        Order order = Order.builder().userId(request.getUserId()).address(request.getAddress()).build();
 
         List<OrderItem> items = request.getItems().stream().map(i -> {
             inventoryClient.reserveProduct(new ProductReserveRequest(i.getProductId(), i.getQuantity()));
@@ -60,6 +60,7 @@ public class OrderCreationService {
 
         order.setItems(items);
         order.setTotalAmount(items.stream().map(OrderItem::getTotalPrice).reduce(BigDecimal.ZERO, BigDecimal::add));
+
 
         Order savedOrder = orderRepository.save(order);
         UserResponse user = userClient.getUserById(order.getUserId());

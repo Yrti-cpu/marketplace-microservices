@@ -37,6 +37,8 @@ public class Order {
     @JsonManagedReference
     private List<OrderItem> items;
 
+    private String address;
+
     @PrePersist
     public void prePersist() {
         createdAt = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);

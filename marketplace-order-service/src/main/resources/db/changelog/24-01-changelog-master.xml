@@ -10,5 +10,7 @@
     <include file="/db/changelog/product-changelog.xml"/>
     <include file="/db/changelog/order-changelog.xml"/>
     <include file="/db/changelog/user-changelog.xml"/>
+    <include file="db/changelog/add-order-address-column.xml"/>
+    <include file="db/changelog/data/products-data.xml"/>
 
 </databaseChangeLog>

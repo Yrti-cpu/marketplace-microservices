@@ -26,8 +26,7 @@ public class OrderController {
 
     @PostMapping("/{id}/dispatch")
     public ResponseEntity<?> dispatchOrder(@PathVariable Long id) {
-        orderService.dispatchOrder(id);
-        return ResponseEntity.ok("Дата выгрузки со склада: " + LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
+        return ResponseEntity.ok("Адрес доставки: " + orderService.dispatchOrder(id));
     }
 
     @PostMapping("/{id}/deliver")

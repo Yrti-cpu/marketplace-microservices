@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="init-products" author="daniladotsenko">
+        <insert tableName="products">
+            <column name="id" valueNumeric="1"/>
+            <column name="name" value="Apple iPhone 15 Pro"/>
+            <column name="description" value="256GB, Titanium"/>
+            <column name="quantity" valueNumeric="100"/>
+            <column name="reserved_quantity" valueNumeric="0"/>
+            <column name="seller" value="AppleStore"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="id" valueNumeric="2"/>
+            <column name="name" value="PlayStation 5"/>
+            <column name="description" value="Sony, 1TB"/>
+            <column name="quantity" valueNumeric="50"/>
+            <column name="reserved_quantity" valueNumeric="0"/>
+            <column name="seller" value="SonyCenter"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="id" valueNumeric="3"/>
+            <column name="name" value="MacBook Air M2"/>
+            <column name="description" value="13'', 512GB"/>
+            <column name="quantity" valueNumeric="30"/>
+            <column name="reserved_quantity" valueNumeric="0"/>
+            <column name="seller" value="AppleStore"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="id" valueNumeric="4"/>
+            <column name="name" value="Samsung Galaxy S24"/>
+            <column name="description" value="256GB, Phantom Black"/>
+            <column name="quantity" valueNumeric="60"/>
+            <column name="reserved_quantity" valueNumeric="0"/>
+            <column name="seller" value="SamsungStore"/>
+        </insert>
+
+        <insert tableName="products">
+            <column name="id" valueNumeric="5"/>
+            <column name="name" value="Monitor LG UltraGear"/>
+            <column name="description" value="27'' QHD, 165Hz"/>
+            <column name="quantity" valueNumeric="20"/>
+            <column name="reserved_quantity" valueNumeric="0"/>
+            <column name="seller" value="LG"/>
+        </insert>
+
+        <rollback>
+            <delete tableName="products">
+                <where>id IN (1, 2, 3, 4, 5)</where>
+            </delete>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

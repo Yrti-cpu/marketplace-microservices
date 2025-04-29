@@ -20,7 +20,7 @@ public class OrderDispatchService {
     private final InventoryClient inventoryClient;
 
     @Transactional
-    public void dispatchOrder(Long orderId) {
+    public String dispatchOrder(Long orderId) {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new OrderNotFoundException(orderId));
 
@@ -35,5 +35,6 @@ public class OrderDispatchService {
         order.setStatus(OrderStatus.DISPATCHED);
         orderRepository.save(order);
         log.info("Заказ #{} отправлен клиенту", orderId);
+        return order.getAddress();
     }
 }

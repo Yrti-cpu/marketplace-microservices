@@ -36,7 +36,7 @@ class OrderCreationServiceTest {
         // Подготовка
         CreateOrderRequest request = new CreateOrderRequest(1L,
                 List.of(new CreateOrderRequest.OrderItemRequest(1L, 1),
-                        new CreateOrderRequest.OrderItemRequest(2L, 2)));
+                        new CreateOrderRequest.OrderItemRequest(2L, 2)), "test address");
 
         when(pricingClient.getProductPrice(1L)).thenReturn(new PricingResponse(1L, new BigDecimal("100.00"), new BigDecimal("80.00")));
         when(pricingClient.getProductPrice(2L)).thenReturn(new PricingResponse(2L, new BigDecimal("150.00"), new BigDecimal("145.00")));
