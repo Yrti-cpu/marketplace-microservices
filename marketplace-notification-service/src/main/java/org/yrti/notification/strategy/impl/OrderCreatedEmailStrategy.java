@@ -2,9 +2,9 @@ package org.yrti.notification.strategy.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 import org.yrti.events.event.OrderCreatedEvent;
 import org.yrti.notification.service.EmailService;
-import org.springframework.stereotype.Component;
 import org.yrti.notification.strategy.EmailStrategy;
 
 @Slf4j

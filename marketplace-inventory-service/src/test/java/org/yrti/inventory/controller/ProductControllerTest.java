@@ -32,15 +32,6 @@ class ProductControllerTest {
     @SuppressWarnings("unused")
     @Autowired
     private ProductService productService;
-
-    @TestConfiguration
-    static class TestConfig {
-        @Bean
-        public ProductService productService() {
-            return Mockito.mock(ProductService.class);
-        }
-    }
-
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -120,6 +111,14 @@ class ProductControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string("Дата выгрузки со склада: " + LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS)));
 
+    }
+
+    @TestConfiguration
+    static class TestConfig {
+        @Bean
+        public ProductService productService() {
+            return Mockito.mock(ProductService.class);
+        }
     }
 
 

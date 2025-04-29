@@ -1,72 +1,72 @@
 plugins {
-	id 'java'
-	id 'org.springframework.boot' version '3.4.4'
-	id 'io.spring.dependency-management' version '1.1.7'
-	id 'checkstyle'
-	id 'pmd'
-	id 'jacoco'
+    id 'java'
+    id 'org.springframework.boot' version '3.4.4'
+    id 'io.spring.dependency-management' version '1.1.7'
+    id 'checkstyle'
+    id 'pmd'
+    id 'jacoco'
 }
 
 group = 'org.yrti'
 version = '0.0.1-SNAPSHOT'
 
 java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(17)
-	}
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
 }
 
 configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-validation'
-	compileOnly 'org.projectlombok:lombok'
-	runtimeOnly 'org.postgresql:postgresql'
-	annotationProcessor 'org.projectlombok:lombok'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'org.mockito:mockito-core'
-	testImplementation 'org.mockito:mockito-junit-jupiter'
-	testImplementation 'org.testcontainers:junit-jupiter'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    compileOnly 'org.projectlombok:lombok'
+    runtimeOnly 'org.postgresql:postgresql'
+    annotationProcessor 'org.projectlombok:lombok'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.mockito:mockito-core'
+    testImplementation 'org.mockito:mockito-junit-jupiter'
+    testImplementation 'org.testcontainers:junit-jupiter'
 }
 
 checkstyle {
-	toolVersion = '10.23.0'
-	config = resources.text.fromUri('https://raw.githubusercontent.com/checkstyle/checkstyle/master/src/main/resources/google_checks.xml')
+    toolVersion = '10.23.0'
+    config = resources.text.fromUri('https://raw.githubusercontent.com/checkstyle/checkstyle/master/src/main/resources/google_checks.xml')
 }
 
 pmd {
-	toolVersion = '7.12.0'
-	ruleSets = [] // отключаем дефолтные
-	ruleSetFiles = files("${rootDir}/config/pmd-ruleset.xml")
+    toolVersion = '7.12.0'
+    ruleSets = [] // отключаем дефолтные
+    ruleSetFiles = files("${rootDir}/config/pmd-ruleset.xml")
 }
 
 jacoco {
-	toolVersion = "0.8.13"
+    toolVersion = "0.8.13"
 }
 
 test {
-	useJUnitPlatform()
-	finalizedBy jacocoTestReport
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport
 }
 
 jacocoTestReport {
-	dependsOn test
-	reports {
-		xml.required = true
-		html.required = true
-	}
+    dependsOn test
+    reports {
+        xml.required = true
+        html.required = true
+    }
 }
 tasks.named('test') {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }

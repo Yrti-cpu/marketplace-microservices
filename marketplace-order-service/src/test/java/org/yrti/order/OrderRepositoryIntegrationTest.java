@@ -7,7 +7,7 @@ import org.yrti.order.dao.OrderRepository;
 import org.yrti.order.model.Order;
 import org.yrti.order.model.OrderStatus;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class OrderRepositoryIntegrationTest extends IntegrationTestBase {
 
