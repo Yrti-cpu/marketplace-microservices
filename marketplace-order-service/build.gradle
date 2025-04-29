@@ -48,7 +48,7 @@ dependencies {
 
 checkstyle {
     toolVersion = '10.23.0'
-    config = resources.text.fromUri('https://raw.githubusercontent.com/checkstyle/checkstyle/master/src/main/resources/google_checks.xml')
+    config = resources.text.fromUri("${rootDir}/config/checkstyle/google_checks.xml")
 }
 
 pmd {
