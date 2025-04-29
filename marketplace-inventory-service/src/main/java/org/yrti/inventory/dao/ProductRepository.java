@@ -19,3 +19,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     int tryReserveProduct(@Param("productId") Long productId, @Param("reserveQty") int reserveQty);
 
 }
+
+
+qhgwqefhwquidhquwi
