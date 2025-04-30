@@ -50,7 +50,7 @@
 
 ---
 
-## 🚀 Запуск Kafka
+## 🚀 Полный запуск
 
 ```bash
-docker-compose -f docker-compose.kafka.yml up -d
+docker-compose -f docker-compose.full.yml up -d
