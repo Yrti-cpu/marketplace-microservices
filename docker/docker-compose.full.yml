@@ -1,0 +1,143 @@
+services:
+  # БД PostgreSQL
+  postgres:
+    image: postgres:16
+    container_name: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: tufido85
+      POSTGRES_DB: marketplace_inventory
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+  #Kafka
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.9.0
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  kafka:
+    image: confluentinc/cp-kafka:7.9.0
+    container_name: kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    healthcheck:
+      test: ["CMD-SHELL", "kafka-topics --bootstrap-server kafka:9092 --list"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  kafka-ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: kafka-ui
+    ports:
+      - "8085:8085"
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
+    depends_on:
+      - kafka
+
+  # Микросервисы
+  inventory-service:
+    image: inventory-service:latest
+    container_name: inventory-service
+    restart: unless-stopped
+    build:
+      context: ./marketplace-inventory-service
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+
+  notification-service:
+    image: notification-service:latest
+    container_name: notification-service
+    restart: unless-stopped
+    build:
+      context: ./marketplace-notification-service
+    ports:
+      - "8082:8082"
+    depends_on:
+      - kafka
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+
+  order-service:
+    image: order-service:latest
+    container_name: order-service
+    restart: unless-stopped
+    build:
+      context: ./marketplace-order-service
+    ports:
+      - "8081:8081"
+    depends_on:
+      - postgres
+      - kafka
+      - inventory-service
+      - user-service
+      - pricing-service
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+
+  payment-service:
+    image: payment-service:latest
+    container_name: payment-service
+    restart: unless-stopped
+    build:
+      context: ./marketplace-payment-service
+    ports:
+      - "8086:8086"
+    depends_on:
+      - kafka
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+
+  pricing-service:
+    image: pricing-service:latest
+    container_name: pricing-service
+    restart: unless-stopped
+    build:
+      context: ./marketplace-pricing-service
+    ports:
+      - "8084:8084"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+
+  user-service:
+    image: user-service:latest
+    container_name: user-service
+    restart: unless-stopped
+    build:
+      context: ./marketplace-user-service
+    ports:
+      - "8083:8083"
+    depends_on:
+      - postgres
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+
+volumes:
+  pgdata:
+  kafka-data:
+  zookeeper-data:
