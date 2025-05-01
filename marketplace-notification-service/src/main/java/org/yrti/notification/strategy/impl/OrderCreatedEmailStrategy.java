@@ -12,19 +12,19 @@ import org.yrti.notification.strategy.EmailStrategy;
 @RequiredArgsConstructor
 public class OrderCreatedEmailStrategy implements EmailStrategy<OrderCreatedEvent> {
 
-  private final EmailService emailService;
+    private final EmailService emailService;
 
-  @Override
-  public boolean supports(Class<?> eventType) {
-    return OrderCreatedEvent.class.equals(eventType);
-  }
+    @Override
+    public boolean supports(Class<?> eventType) {
+        return OrderCreatedEvent.class.equals(eventType);
+    }
 
-  @Override
-  public void sendEmail(OrderCreatedEvent event) {
-    String to = event.email();
-    String subject = "Заказ оформлен";
-    String body = "Ваш заказ №" + event.orderId() + " успешно оформлен. Спасибо за покупку!";
-    emailService.send(to, subject, body);
-    log.debug("Отправлено уведомление о создании заказа на {}", to);
-  }
+    @Override
+    public void sendEmail(OrderCreatedEvent event) {
+        String to = event.email();
+        String subject = "Заказ оформлен";
+        String body = "Ваш заказ №" + event.orderId() + " успешно оформлен. Спасибо за покупку!";
+        emailService.send(to, subject, body);
+        log.debug("Отправлено уведомление о создании заказа на {}", to);
+    }
 }
