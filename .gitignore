@@ -52,3 +52,7 @@ out/
 /marketplace-payment-service/src/main/resources/application-docker.yml
 /marketplace-pricing-service/src/main/resources/application-docker.yml
 /marketplace-user-service/src/main/resources/application-docker.yml
+/config/
+/docker/docker-compose.kafka.yml
+**/gradle-wrapper.jar
+Makefile
