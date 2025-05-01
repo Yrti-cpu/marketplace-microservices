@@ -7,12 +7,13 @@ import org.yrti.order.dto.ProductReserveRequest;
 
 @FeignClient(name = "inventory-service", url = "${inventory-service.url}")
 public interface InventoryClient {
-    @PostMapping("/api/products/reserve")
-    void reserveProduct(@RequestBody ProductReserveRequest request);
 
-    @PostMapping("/api/products/release")
-    void releaseProduct(@RequestBody ProductReserveRequest request);
+  @PostMapping("/api/products/reserve")
+  void reserveProduct(@RequestBody ProductReserveRequest request);
 
-    @PostMapping("/api/products/decrease")
-    void decreaseProduct(@RequestBody ProductReserveRequest request);
+  @PostMapping("/api/products/release")
+  void releaseProduct(@RequestBody ProductReserveRequest request);
+
+  @PostMapping("/api/products/decrease")
+  void decreaseProduct(@RequestBody ProductReserveRequest request);
 }

@@ -13,30 +13,30 @@ import org.yrti.order.model.Order;
 @RequiredArgsConstructor
 public class OrderService {
 
-    private final OrderCreationService orderCreationService;
-    private final OrderPaymentService orderPaymentService;
-    private final OrderDispatchService orderDispatchService;
-    private final OrderDeliveryService orderDeliveryService;
-    private final OrderCancellationService orderCancellationService;
+  private final OrderCreationService orderCreationService;
+  private final OrderPaymentService orderPaymentService;
+  private final OrderDispatchService orderDispatchService;
+  private final OrderDeliveryService orderDeliveryService;
+  private final OrderCancellationService orderCancellationService;
 
-    public Order createOrder(CreateOrderRequest request) {
-        return orderCreationService.createOrder(request);
-    }
+  public Order createOrder(CreateOrderRequest request) {
+    return orderCreationService.createOrder(request);
+  }
 
-    public void markOrderAsPaid(Long orderId) {
-        orderPaymentService.markOrderAsPaid(orderId);
-    }
+  public void markOrderAsPaid(Long orderId) {
+    orderPaymentService.markOrderAsPaid(orderId);
+  }
 
-    public String dispatchOrder(Long orderId) {
-        return orderDispatchService.dispatchOrder(orderId);
-    }
+  public String dispatchOrder(Long orderId) {
+    return orderDispatchService.dispatchOrder(orderId);
+  }
 
-    public void markOrderAsDelivered(Long orderId) {
-        orderDeliveryService.markOrderAsDelivered(orderId);
-    }
+  public void markOrderAsDelivered(Long orderId) {
+    orderDeliveryService.markOrderAsDelivered(orderId);
+  }
 
-    public void cancelOrder(Long orderId) {
-        orderCancellationService.cancelOrder(orderId);
-    }
+  public void cancelOrder(Long orderId) {
+    orderCancellationService.cancelOrder(orderId);
+  }
 
 }

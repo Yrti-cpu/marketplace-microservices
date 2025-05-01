@@ -12,21 +12,22 @@ import org.yrti.payment.kafka.PaymentEventPublisher;
 @RequiredArgsConstructor
 public class PaymentService {
 
-    private final PaymentEventPublisher eventPublisher;
+  private final PaymentEventPublisher eventPublisher;
 
-    public boolean processPayment(PaymentRequest request) {
-        log.debug("Оплата от клиента userId={} заказа orderId={} на сумму {}", request.getUserId(), request.getOrderId(), request.getAmount());
-        boolean isSuccess = Math.random() > 0.05;
+  public boolean processPayment(PaymentRequest request) {
+    log.debug("Оплата от клиента userId={} заказа orderId={} на сумму {}", request.getUserId(),
+        request.getOrderId(), request.getAmount());
+    boolean isSuccess = Math.random() > 0.05;
 
-        PaymentEvent event = PaymentEvent.builder()
-                .orderId(request.getOrderId())
-                .userId(request.getUserId())
-                .success(isSuccess)
-                .amount(request.getAmount())
-                .message(isSuccess ? "Оплата прошла успешно" : "Оплата не прошла")
-                .build();
+    PaymentEvent event = PaymentEvent.builder()
+        .orderId(request.getOrderId())
+        .userId(request.getUserId())
+        .success(isSuccess)
+        .amount(request.getAmount())
+        .message(isSuccess ? "Оплата прошла успешно" : "Оплата не прошла")
+        .build();
 
-        eventPublisher.publish(event);
-        return isSuccess;
-    }
+    eventPublisher.publish(event);
+    return isSuccess;
+  }
 }

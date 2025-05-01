@@ -1,14 +1,14 @@
 <databaseChangeLog
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.29.xsd">
 
-    <changeSet id="create-sequences" author="daniladotsenko">
-        <createSequence incrementBy="1" sequenceName="order_items_id_seq" startValue="1"/>
-        <createSequence incrementBy="1" sequenceName="orders_id_seq" startValue="1"/>
-        <createSequence incrementBy="1" sequenceName="products_id_seq" startValue="1"/>
-        <createSequence incrementBy="1" sequenceName="users_id_seq" startValue="1"/>
-    </changeSet>
+  <changeSet author="daniladotsenko" id="create-sequences">
+    <createSequence incrementBy="1" sequenceName="order_items_id_seq" startValue="1"/>
+    <createSequence incrementBy="1" sequenceName="orders_id_seq" startValue="1"/>
+    <createSequence incrementBy="1" sequenceName="products_id_seq" startValue="1"/>
+    <createSequence incrementBy="1" sequenceName="users_id_seq" startValue="1"/>
+  </changeSet>
 
 </databaseChangeLog>

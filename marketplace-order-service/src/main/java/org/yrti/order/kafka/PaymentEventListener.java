@@ -13,11 +13,11 @@ import org.yrti.order.service.PaymentProcessingService;
 @RequiredArgsConstructor
 public class PaymentEventListener {
 
-    private final PaymentProcessingService paymentProcessingService;
+  private final PaymentProcessingService paymentProcessingService;
 
-    @KafkaListener(topics = "payment-events", groupId = "order-payment-group")
-    public void handlePaymentCreated(PaymentEvent event) {
-        log.info("Получено событие оплаты: {}", event);
-        paymentProcessingService.processPaymentEvent(event);
-    }
+  @KafkaListener(topics = "payment-events", groupId = "order-payment-group")
+  public void handlePaymentCreated(PaymentEvent event) {
+    log.info("Получено событие оплаты: {}", event);
+    paymentProcessingService.processPaymentEvent(event);
+  }
 }

@@ -15,11 +15,11 @@ import org.yrti.payment.service.PaymentService;
 @RequiredArgsConstructor
 public class PaymentController {
 
-    private final PaymentService paymentService;
+  private final PaymentService paymentService;
 
-    @PostMapping
-    public ResponseEntity<PaymentResponse> pay(@RequestBody PaymentRequest request) {
-        boolean success = paymentService.processPayment(request);
-        return ResponseEntity.ok(new PaymentResponse(success ? "SUCCESS" : "FAILED"));
-    }
+  @PostMapping
+  public ResponseEntity<PaymentResponse> pay(@RequestBody PaymentRequest request) {
+    boolean success = paymentService.processPayment(request);
+    return ResponseEntity.ok(new PaymentResponse(success ? "SUCCESS" : "FAILED"));
+  }
 }

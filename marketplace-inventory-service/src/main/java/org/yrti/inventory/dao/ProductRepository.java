@@ -10,12 +10,13 @@ import org.yrti.inventory.model.Product;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
-    @Modifying(clearAutomatically = true)
-    @Transactional
-    @Query("UPDATE Product p " +
-            "SET p.reservedQuantity = p.reservedQuantity + :reserveQty " +
-            "WHERE p.id = :productId " +
-            "AND (p.quantity - p.reservedQuantity) >= :reserveQty")
-    int tryReserveProduct(@Param("productId") Long productId, @Param("reserveQty") int reserveQty);
+
+  @Modifying(clearAutomatically = true)
+  @Transactional
+  @Query("UPDATE Product p " +
+      "SET p.reservedQuantity = p.reservedQuantity + :reserveQty " +
+      "WHERE p.id = :productId " +
+      "AND (p.quantity - p.reservedQuantity) >= :reserveQty")
+  int tryReserveProduct(@Param("productId") Long productId, @Param("reserveQty") int reserveQty);
 
 }

@@ -16,25 +16,26 @@ import org.yrti.order.model.OrderStatus;
 @Slf4j
 public class OrderDispatchService {
 
-    private final OrderRepository orderRepository;
-    private final InventoryClient inventoryClient;
+  private final OrderRepository orderRepository;
+  private final InventoryClient inventoryClient;
 
-    @Transactional
-    public String dispatchOrder(Long orderId) {
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new OrderNotFoundException(orderId));
+  @Transactional
+  public String dispatchOrder(Long orderId) {
+    Order order = orderRepository.findById(orderId)
+        .orElseThrow(() -> new OrderNotFoundException(orderId));
 
-        if (order.getStatus() != OrderStatus.PAID) {
-            throw new IllegalStateException("Заказ не может быть отгружен. Он не оплачен.");
-        }
-
-        order.getItems().forEach(item ->
-                inventoryClient.releaseProduct(new ProductReserveRequest(item.getProductId(), item.getQuantity()))
-        );
-
-        order.setStatus(OrderStatus.DISPATCHED);
-        orderRepository.save(order);
-        log.info("Заказ #{} отправлен клиенту", orderId);
-        return order.getAddress();
+    if (order.getStatus() != OrderStatus.PAID) {
+      throw new IllegalStateException("Заказ не может быть отгружен. Он не оплачен.");
     }
+
+    order.getItems().forEach(item ->
+        inventoryClient.releaseProduct(
+            new ProductReserveRequest(item.getProductId(), item.getQuantity()))
+    );
+
+    order.setStatus(OrderStatus.DISPATCHED);
+    orderRepository.save(order);
+    log.info("Заказ #{} отправлен клиенту", orderId);
+    return order.getAddress();
+  }
 }

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <databaseChangeLog
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.29.xsd">
 
-    <changeSet id="add-address-to-orders" author="daniladotsenko">
-        <addColumn tableName="orders">
-            <column name="address" type="VARCHAR(255)"/>
-        </addColumn>
-    </changeSet>
+  <changeSet author="daniladotsenko" id="add-address-to-orders">
+    <addColumn tableName="orders">
+      <column name="address" type="VARCHAR(255)"/>
+    </addColumn>
+  </changeSet>
 
 </databaseChangeLog>

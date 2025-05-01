@@ -14,15 +14,15 @@ import org.yrti.order.model.OrderStatus;
 @Slf4j
 public class OrderPaymentService {
 
-    private final OrderRepository orderRepository;
+  private final OrderRepository orderRepository;
 
-    @Transactional
-    public void markOrderAsPaid(Long orderId) {
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new OrderCreationException("Заказ не найден"));
+  @Transactional
+  public void markOrderAsPaid(Long orderId) {
+    Order order = orderRepository.findById(orderId)
+        .orElseThrow(() -> new OrderCreationException("Заказ не найден"));
 
-        order.setStatus(OrderStatus.PAID);
-        orderRepository.save(order);
-        log.debug("Заказ #{} отмечен как оплаченный", orderId);
-    }
+    order.setStatus(OrderStatus.PAID);
+    orderRepository.save(order);
+    log.debug("Заказ #{} отмечен как оплаченный", orderId);
+  }
 }

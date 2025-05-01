@@ -13,7 +13,8 @@ import org.yrti.user.service.UserService;
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class UserController {
-    private final UserService userService;
+
+  private final UserService userService;
 
 //    @GetMapping("/{id}")
 //    public ResponseEntity<User> getUser(@PathVariable Long id) {
@@ -22,8 +23,8 @@ public class UserController {
 //                .orElse(ResponseEntity.notFound().build());
 //    }
 
-    @GetMapping("/{id}")
-    public UserResponse getUserById(@PathVariable Long id) {
-        return userService.getUserById(id);
-    }
+  @GetMapping("/{id}")
+  public UserResponse getUserById(@PathVariable Long id) {
+    return userService.getUserById(id);
+  }
 }

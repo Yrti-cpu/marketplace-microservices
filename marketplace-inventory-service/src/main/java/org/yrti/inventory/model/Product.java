@@ -1,9 +1,18 @@
 package org.yrti.inventory.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "products")
@@ -14,21 +23,21 @@ import lombok.*;
 @Builder
 public class Product {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @NotBlank
-    private String name;
+  @NotBlank
+  private String name;
 
-    private String description;
+  private String description;
 
-    @Min(0)
-    private Integer quantity;
+  @Min(0)
+  private Integer quantity;
 
-    @Column(nullable = false)
-    @Min(0)
-    private Integer reservedQuantity = 0;
+  @Column(nullable = false)
+  @Min(0)
+  private Integer reservedQuantity = 0;
 
-    private String seller;
+  private String seller;
 }

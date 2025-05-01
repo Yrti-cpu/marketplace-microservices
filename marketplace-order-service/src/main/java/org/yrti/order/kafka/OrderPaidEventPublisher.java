@@ -10,9 +10,9 @@ import org.yrti.events.event.OrderPaidEvent;
 @RequiredArgsConstructor
 public class OrderPaidEventPublisher {
 
-    private final KafkaTemplate<String, OrderPaidEvent> kafkaTemplate;
+  private final KafkaTemplate<String, OrderPaidEvent> kafkaTemplate;
 
-    public void publish(OrderPaidEvent event) {
-        kafkaTemplate.send("order-paid", event);
-    }
+  public void publish(OrderPaidEvent event) {
+    kafkaTemplate.send("order-paid", event);
+  }
 }

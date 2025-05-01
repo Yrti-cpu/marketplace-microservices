@@ -8,6 +8,6 @@ import org.yrti.order.dto.PricingResponse;
 @FeignClient(name = "pricing-service", url = "${pricing-service.url}")
 public interface PricingClient {
 
-    @GetMapping("/api/pricing/{productId}")
-    PricingResponse getProductPrice(@PathVariable Long productId);
+  @GetMapping("/api/pricing/{productId}")
+  PricingResponse getProductPrice(@PathVariable Long productId);
 }

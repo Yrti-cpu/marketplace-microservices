@@ -7,6 +7,7 @@ import org.yrti.order.dto.UserResponse;
 
 @FeignClient(name = "user-service", url = "${user-service.url}")
 public interface UserClient {
-    @GetMapping("/api/users/{userId}")
-    UserResponse getUserById(@PathVariable("userId") Long userId);
+
+  @GetMapping("/api/users/{userId}")
+  UserResponse getUserById(@PathVariable("userId") Long userId);
 }

@@ -9,9 +9,10 @@ import org.yrti.events.event.OrderCreatedEvent;
 @Component
 @RequiredArgsConstructor
 public class OrderEventPublisher {
-    private final KafkaTemplate<String, OrderCreatedEvent> kafkaTemplate;
 
-    public void publish(OrderCreatedEvent event) {
-        kafkaTemplate.send("order-created", event);
-    }
+  private final KafkaTemplate<String, OrderCreatedEvent> kafkaTemplate;
+
+  public void publish(OrderCreatedEvent event) {
+    kafkaTemplate.send("order-created", event);
+  }
 }

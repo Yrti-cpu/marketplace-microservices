@@ -12,11 +12,11 @@ import org.yrti.notification.strategy.EmailEventDispatcher;
 @RequiredArgsConstructor
 public class OrderPaidListener {
 
-    private final EmailEventDispatcher dispatcher;
+  private final EmailEventDispatcher dispatcher;
 
-    @KafkaListener(topics = "order-paid", groupId = "notification-order-paid")
-    public void listen(OrderPaidEvent event) {
-        log.debug("[order-paid] Получено событие: {}", event);
-        dispatcher.dispatchEmail(event);
-    }
+  @KafkaListener(topics = "order-paid", groupId = "notification-order-paid")
+  public void listen(OrderPaidEvent event) {
+    log.debug("[order-paid] Получено событие: {}", event);
+    dispatcher.dispatchEmail(event);
+  }
 }

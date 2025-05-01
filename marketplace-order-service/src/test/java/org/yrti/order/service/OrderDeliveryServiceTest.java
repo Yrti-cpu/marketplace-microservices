@@ -1,5 +1,13 @@
 package org.yrti.order.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.yrti.order.client.UserClient;
@@ -9,51 +17,47 @@ import org.yrti.order.kafka.OrderDeliveredEventPublisher;
 import org.yrti.order.model.Order;
 import org.yrti.order.model.OrderStatus;
 
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.*;
-
 class OrderDeliveryServiceTest {
-    private final OrderRepository orderRepository = mock(OrderRepository.class);
-    private final UserClient userClient = mock(UserClient.class);
-    private final OrderDeliveredEventPublisher publisher = mock(OrderDeliveredEventPublisher.class);
 
-    private final OrderDeliveryService service = new OrderDeliveryService(orderRepository, userClient, publisher);
+  private final OrderRepository orderRepository = mock(OrderRepository.class);
+  private final UserClient userClient = mock(UserClient.class);
+  private final OrderDeliveredEventPublisher publisher = mock(OrderDeliveredEventPublisher.class);
 
-    @Test
-    @DisplayName("Успешная доставка заказа")
-    void testMarkDelivered_success() {
-        Order order = Order.builder()
-                .id(1L)
-                .userId(1L)
-                .status(OrderStatus.DISPATCHED)
-                .build();
+  private final OrderDeliveryService service = new OrderDeliveryService(orderRepository, userClient,
+      publisher);
 
-        when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
-        when(userClient.getUserById(1L)).thenReturn(new UserResponse(1L, "email@mail.com", "User"));
+  @Test
+  @DisplayName("Успешная доставка заказа")
+  void testMarkDelivered_success() {
+    Order order = Order.builder()
+        .id(1L)
+        .userId(1L)
+        .status(OrderStatus.DISPATCHED)
+        .build();
 
-        service.markOrderAsDelivered(1L);
+    when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
+    when(userClient.getUserById(1L)).thenReturn(new UserResponse(1L, "email@mail.com", "User"));
 
-        assertThat(order.getStatus()).isEqualTo(OrderStatus.DELIVERED);
-        verify(orderRepository).save(order);
-        verify(publisher).publish(any());
-    }
+    service.markOrderAsDelivered(1L);
 
-    @Test
-    @DisplayName("Ошибка доставки, если заказ не отправлен")
-    void testMarkDelivered_invalidStatus() {
-        Order order = Order.builder()
-                .id(1L)
-                .userId(1L)
-                .status(OrderStatus.NEW)
-                .build();
+    assertThat(order.getStatus()).isEqualTo(OrderStatus.DELIVERED);
+    verify(orderRepository).save(order);
+    verify(publisher).publish(any());
+  }
 
-        when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
+  @Test
+  @DisplayName("Ошибка доставки, если заказ не отправлен")
+  void testMarkDelivered_invalidStatus() {
+    Order order = Order.builder()
+        .id(1L)
+        .userId(1L)
+        .status(OrderStatus.NEW)
+        .build();
 
-        assertThatThrownBy(() -> service.markOrderAsDelivered(1L))
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessageContaining("Невозможно доставить заказ");
-    }
+    when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
+
+    assertThatThrownBy(() -> service.markOrderAsDelivered(1L))
+        .isInstanceOf(IllegalStateException.class)
+        .hasMessageContaining("Невозможно доставить заказ");
+  }
 }

@@ -11,11 +11,12 @@ import org.yrti.notification.strategy.EmailEventDispatcher;
 @Component
 @RequiredArgsConstructor
 public class OrderDeliveredListener {
-    private final EmailEventDispatcher dispatcher;
 
-    @KafkaListener(topics = "order-delivered", groupId = "notification-order-delivered")
-    public void listen(OrderDeliveredEvent event) {
-        log.debug("[order-delivered] Получено событие: {}", event);
-        dispatcher.dispatchEmail(event);
-    }
+  private final EmailEventDispatcher dispatcher;
+
+  @KafkaListener(topics = "order-delivered", groupId = "notification-order-delivered")
+  public void listen(OrderDeliveredEvent event) {
+    log.debug("[order-delivered] Получено событие: {}", event);
+    dispatcher.dispatchEmail(event);
+  }
 }

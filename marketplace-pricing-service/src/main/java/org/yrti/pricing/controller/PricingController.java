@@ -13,10 +13,10 @@ import org.yrti.pricing.service.PricingService;
 @RequiredArgsConstructor
 public class PricingController {
 
-    private final PricingService pricingService;
+  private final PricingService pricingService;
 
-    @GetMapping("/{productId}")
-    public PricingResponse getProductPrice(@PathVariable Long productId) {
-        return pricingService.getPrice(productId);
-    }
+  @GetMapping("/{productId}")
+  public PricingResponse getProductPrice(@PathVariable Long productId) {
+    return pricingService.getPrice(productId);
+  }
 }
