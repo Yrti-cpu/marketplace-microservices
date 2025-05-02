@@ -59,13 +59,6 @@ class AuthServiceTest {
         .password("123456")
         .build();
 
-    User savedUser = User.builder()
-        .name("yrti")
-        .email("yrti@example.com")
-        .password("encoded-pass")
-        .role(Role.CUSTOMER)
-        .build();
-
     when(passwordEncoder.encode("123456")).thenReturn("encoded-pass");
     when(jwtService.generateToken(any(User.class))).thenReturn("jwt-token");
 

@@ -25,6 +25,9 @@ public class AuthService {
   private final AuthenticationManager authenticationManager;
 
   public AuthResponse register(RegisterRequest request) {
+    if (userRepository.existsByEmail(request.getEmail())) {
+      throw new IllegalArgumentException("Пользователь с таким email уже существует");
+    }
     var user = User.builder()
         .name(request.getName())
         .email(request.getEmail())
@@ -45,7 +48,8 @@ public class AuthService {
     );
 
     var user = userRepository.findByEmail(request.getEmail())
-        .orElseThrow();
+        .orElseThrow(() -> new IllegalArgumentException("Пользователь не найден"));
+
     log.debug("Авторизация пользователя: email={}", request.getEmail());
 
     var jwtToken = jwtService.generateToken(user);
