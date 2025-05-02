@@ -12,5 +12,6 @@
   <include file="/db/changelog/user-changelog.xml"/>
   <include file="db/changelog/add-order-address-column.xml"/>
   <include file="db/changelog/data/products-data.xml"/>
+  <include file="/db/changelog/add-user-constraints.xml"/>
 
 </databaseChangeLog>
