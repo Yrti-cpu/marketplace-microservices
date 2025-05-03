@@ -38,20 +38,9 @@ out/
 # macOS system files
 .DS_Store
 #sensitive data
-/marketplace-inventory-service/src/main/resources/application.yaml
-/marketplace-notification-service/src/main/resources/application.yml
-/marketplace-order-service/src/main/resources/application.yaml
-/marketplace-user-service/src/main/resources/application.yaml
-/marketplace-pricing-service/src/main/resources/application.yml
-/marketplace-payment-service/src/main/resources/application.yml
+**/application.yml
 /marketplace-order-service/rollback.sql
 /rollback.sql
-/marketplace-inventory-service/src/main/resources/application-docker.yml
-/marketplace-notification-service/src/main/resources/application-docker.yml
-/marketplace-order-service/src/main/resources/application-docker.yml
-/marketplace-payment-service/src/main/resources/application-docker.yml
-/marketplace-pricing-service/src/main/resources/application-docker.yml
-/marketplace-user-service/src/main/resources/application-docker.yml
 /config/
 /docker/docker-compose.kafka.yml
 **/gradle-wrapper.jar

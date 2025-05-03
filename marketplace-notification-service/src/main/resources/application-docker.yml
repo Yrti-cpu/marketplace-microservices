@@ -1,0 +1,15 @@
+server:
+  port: 8082
+
+spring:
+  kafka:
+    bootstrap-servers: kafka:9092
+    consumer:
+      group-id: notification-group
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: yrtitestproject@gmail.com
+    password: pnxnuruizcxzeejf
