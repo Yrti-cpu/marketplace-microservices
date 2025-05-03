@@ -42,6 +42,6 @@ out/
 /marketplace-order-service/rollback.sql
 /rollback.sql
 /config/
-/docker/docker-compose.kafka.yml
+/docker-compose.kafka.yml
 **/gradle-wrapper.jar
 Makefile
