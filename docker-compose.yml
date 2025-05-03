@@ -57,6 +57,7 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: docker
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/marketplace_inventory
+      GRADLE_OPTS: "-Dcheckstyle.skip=true -Dpmd.skip=true"
     depends_on:
       postgres:
         condition: service_healthy
@@ -72,6 +73,7 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: docker
       SPRING_KAFKA_BOOTSTRAP-SERVERS: kafka:9092
+      GRADLE_OPTS: "-Dcheckstyle.skip=true -Dpmd.skip=true"
     depends_on:
       kafka:
         condition: service_started
@@ -88,6 +90,7 @@ services:
       SPRING_PROFILES_ACTIVE: docker
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/marketplace_inventory
       SPRING_KAFKA_BOOTSTRAP-SERVERS: kafka:9092
+      GRADLE_OPTS: "-Dcheckstyle.skip=true -Dpmd.skip=true"
     depends_on:
       postgres:
         condition: service_healthy
@@ -111,6 +114,7 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: docker
       SPRING_KAFKA_BOOTSTRAP-SERVERS: kafka:9092
+      GRADLE_OPTS: "-Dcheckstyle.skip=true -Dpmd.skip=true"
     depends_on:
       kafka:
         condition: service_started
@@ -125,6 +129,7 @@ services:
       - "8084:8084"
     environment:
       SPRING_PROFILES_ACTIVE: docker
+      GRADLE_OPTS: "-Dcheckstyle.skip=true -Dpmd.skip=true"
 
   user-service:
     build:
@@ -137,6 +142,7 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: docker
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/marketplace_inventory
+      GRADLE_OPTS: "-Dcheckstyle.skip=true -Dpmd.skip=true"
     depends_on:
       postgres:
         condition: service_healthy

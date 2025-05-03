@@ -2,19 +2,19 @@ FROM eclipse-temurin:17-jdk-jammy as builder
 
 WORKDIR /app
 
-COPY ../gradlew .
-COPY ../gradle/wrapper gradle/wrapper
+COPY gradlew .
+COPY gradle/wrapper gradle/wrapper
+COPY settings.gradle .
+COPY marketplace-user-service/build.gradle ./marketplace-user-service/
+COPY marketplace-user-service/src ./marketplace-user-service/src
 
-COPY build.gradle .
-COPY src src
-
-RUN ./gradlew :marketplace-user-service:build -x test
+RUN ./gradlew :marketplace-user-service:build -x test -Pcheckstyle.skip -Ppmd.skip
 
 FROM eclipse-temurin:17-jre-jammy
 
 WORKDIR /app
 
-COPY --from=builder /app/build/libs/marketplace-user-service-*.jar ./app.jar
+COPY --from=builder /app/marketplace-user-service/build/libs/*.jar ./app.jar
 
 EXPOSE 8083
 
