@@ -1,0 +1,24 @@
+server:
+  port: 8082
+
+spring:
+  kafka:
+    bootstrap-servers: kafka:9092
+    consumer:
+      group-id: notification-group
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      auto-offset-reset: latest
+      properties:
+        spring.json.trusted.packages: ""
+        spring.json.use.type.headers: true
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: yrtitestproject@gmail.com
+    password: pnxnuruizcxzeejf
+    protocol: smtp
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+      mail.smtp.starttls.required: true

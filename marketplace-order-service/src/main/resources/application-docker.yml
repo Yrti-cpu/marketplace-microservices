@@ -1,0 +1,36 @@
+server:
+  port: 8081
+
+spring:
+  datasource:
+    url: jdbc:postgresql://postgres:5432/marketplace_inventory
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+  kafka:
+    bootstrap-servers: kafka:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      auto-offset-reset: latest
+      group-id: order-group
+    properties:
+      spring.json.trusted.packages: "*"
+      spring.json.use.type.headers: true
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog/24-01-changelog-master.xml
+    default-schema: public
+
+inventory-service:
+  url: http://inventory-service:8080
+user-service:
+  url: http://user-service:8083
+pricing-service:
+  url: http://pricing-service:8084
