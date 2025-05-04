@@ -6,6 +6,10 @@ spring:
     url: jdbc:postgresql://postgres:5432/marketplace_inventory
     username: postgres
     password: postgres
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
   kafka:
     bootstrap-servers: kafka:9092
     producer:
@@ -20,7 +24,9 @@ spring:
       spring.json.trusted.packages: "*"
       spring.json.use.type.headers: true
   liquibase:
+    enabled: true
     change-log: classpath:db/changelog/24-01-changelog-master.xml
+    default-schema: public
 
 inventory-service:
   url: http://inventory-service:8080
