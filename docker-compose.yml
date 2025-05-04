@@ -44,6 +44,15 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+  # Eureka
+  eureka-server:
+    image: eureka-server:latest
+    build:
+      context: ./eureka-server
+    ports:
+      - "8761:8761"
+    networks:
+      - microservices
 
   # Микросервисы
   inventory-service:
@@ -52,8 +61,8 @@ services:
       dockerfile: marketplace-inventory-service/Dockerfile
     container_name: inventory-service
     restart: unless-stopped
-    ports:
-      - "8080:8080"
+    expose:
+      - "8080"
     environment:
       SPRING_PROFILES_ACTIVE: docker
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/marketplace_inventory
@@ -61,6 +70,10 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+      eureka-server:
+        condition: service_started
+    networks:
+      - microservices
 
   notification-service:
     build:
@@ -147,7 +160,29 @@ services:
       postgres:
         condition: service_healthy
 
+  gateway-service:
+    build:
+      context: .
+      dockerfile: marketplace-gateway-service/Dockerfile
+    container_name: gateway-service
+    restart: unless-stopped
+    ports:
+      - "8085:8085"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      GRADLE_OPTS: "-Dcheckstyle.skip=true -Dpmd.skip=true"
+    depends_on:
+      - eureka-server
+    networks:
+      - microservices
+
+
+
 volumes:
   pgdata:
   kafka-data:
   zookeeper-data:
+
+networks:
+  microservices:
+    driver: bridge

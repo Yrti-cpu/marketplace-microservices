@@ -2,6 +2,8 @@ server:
   port: 8080
 
 spring:
+  application:
+    name: inventory-service
   datasource:
     url: jdbc:postgresql://postgres:5432/marketplace_inventory
     username: postgres
@@ -10,3 +12,12 @@ spring:
   jpa:
     hibernate:
       ddl-auto: none
+  cloud:
+    discovery:
+      enabled: true
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka-server:8761/eureka
+    register-with-eureka: true
+    fetch-registry: true
