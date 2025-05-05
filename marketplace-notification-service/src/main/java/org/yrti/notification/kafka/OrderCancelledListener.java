@@ -12,11 +12,11 @@ import org.yrti.notification.strategy.EmailEventDispatcher;
 @RequiredArgsConstructor
 public class OrderCancelledListener {
 
-    private final EmailEventDispatcher dispatcher;
+  private final EmailEventDispatcher dispatcher;
 
-    @KafkaListener(topics = "order-cancelled", groupId = "notification-order-cancelled")
-    public void listen(OrderCancelledEvent event) {
-        log.debug("[order-cancelled] Получено событие: {}", event);
-        dispatcher.dispatchEmail(event);
-    }
+  @KafkaListener(topics = "order-cancelled", groupId = "notification-order-cancelled")
+  public void listen(OrderCancelledEvent event) {
+    log.debug("[order-cancelled] Получено событие: {}", event);
+    dispatcher.dispatchEmail(event);
+  }
 }
