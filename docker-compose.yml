@@ -16,6 +16,8 @@ services:
       retries: 5
     volumes:
       - pgdata:/var/lib/postgresql/data
+    networks:
+      - microservices
   #Kafka
   zookeeper:
     image: confluentinc/cp-zookeeper:7.9.0
@@ -25,6 +27,8 @@ services:
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
+    networks:
+      - microservices
 
   kafka:
     image: confluentinc/cp-kafka:7.9.0
@@ -44,13 +48,18 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - microservices
   # Eureka
   eureka-server:
-    image: eureka-server:latest
     build:
-      context: ./eureka-server
+      context: .
+      dockerfile: marketplace-eureka-service/Dockerfile
+    container_name: eureka-server
     ports:
       - "8761:8761"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
     networks:
       - microservices
 
@@ -65,7 +74,6 @@ services:
       - "8080"
     environment:
       SPRING_PROFILES_ACTIVE: docker
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/marketplace_inventory
       GRADLE_OPTS: "-Dcheckstyle.skip=true -Dpmd.skip=true"
     depends_on:
       postgres:
@@ -81,8 +89,8 @@ services:
       dockerfile: marketplace-notification-service/Dockerfile
     container_name: notification-service
     restart: unless-stopped
-    ports:
-      - "8082:8082"
+    expose:
+      - "8082"
     environment:
       SPRING_PROFILES_ACTIVE: docker
       SPRING_KAFKA_BOOTSTRAP-SERVERS: kafka:9092
@@ -90,6 +98,8 @@ services:
     depends_on:
       kafka:
         condition: service_started
+    networks:
+      - microservices
 
   order-service:
     build:
@@ -97,8 +107,8 @@ services:
       dockerfile: marketplace-order-service/Dockerfile
     container_name: order-service
     restart: unless-stopped
-    ports:
-      - "8081:8081"
+    expose:
+      - "8081"
     environment:
       SPRING_PROFILES_ACTIVE: docker
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/marketplace_inventory
@@ -109,12 +119,10 @@ services:
         condition: service_healthy
       kafka:
         condition: service_started
-      inventory-service:
+      eureka-server:
         condition: service_started
-      user-service:
-        condition: service_started
-      pricing-service:
-        condition: service_started
+    networks:
+      - microservices
 
   payment-service:
     build:
@@ -122,8 +130,8 @@ services:
       dockerfile: marketplace-payment-service/Dockerfile
     container_name: payment-service
     restart: unless-stopped
-    ports:
-      - "8086:8086"
+    expose:
+      - "8086"
     environment:
       SPRING_PROFILES_ACTIVE: docker
       SPRING_KAFKA_BOOTSTRAP-SERVERS: kafka:9092
@@ -131,6 +139,10 @@ services:
     depends_on:
       kafka:
         condition: service_started
+      eureka-server:
+        condition: service_started
+    networks:
+      - microservices
 
   pricing-service:
     build:
@@ -138,11 +150,16 @@ services:
       dockerfile: marketplace-pricing-service/Dockerfile
     container_name: pricing-service
     restart: unless-stopped
-    ports:
-      - "8084:8084"
+    expose:
+      - "8084"
     environment:
       SPRING_PROFILES_ACTIVE: docker
       GRADLE_OPTS: "-Dcheckstyle.skip=true -Dpmd.skip=true"
+    depends_on:
+      eureka-server:
+        condition: service_started
+    networks:
+      - microservices
 
   user-service:
     build:
@@ -150,8 +167,8 @@ services:
       dockerfile: marketplace-user-service/Dockerfile
     container_name: user-service
     restart: unless-stopped
-    ports:
-      - "8083:8083"
+    expose:
+      - "8083"
     environment:
       SPRING_PROFILES_ACTIVE: docker
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/marketplace_inventory
@@ -159,6 +176,10 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+      eureka-server:
+        condition: service_started
+    networks:
+      - microservices
 
   gateway-service:
     build:
@@ -172,7 +193,8 @@ services:
       SPRING_PROFILES_ACTIVE: docker
       GRADLE_OPTS: "-Dcheckstyle.skip=true -Dpmd.skip=true"
     depends_on:
-      - eureka-server
+      eureka-server:
+        condition: service_started
     networks:
       - microservices
 

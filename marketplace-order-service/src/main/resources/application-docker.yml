@@ -2,6 +2,8 @@ server:
   port: 8081
 
 spring:
+  application:
+    name: order-service
   datasource:
     url: jdbc:postgresql://postgres:5432/marketplace_inventory
     username: postgres
@@ -21,16 +23,16 @@ spring:
       auto-offset-reset: latest
       group-id: order-group
     properties:
-      spring.json.trusted.packages: "*"
+      spring.json.trusted.packages: "org.yrti.events.event,java.util,java.lang"
       spring.json.use.type.headers: true
   liquibase:
     enabled: true
     change-log: classpath:db/changelog/24-01-changelog-master.xml
     default-schema: public
 
-inventory-service:
-  url: http://inventory-service:8080
-user-service:
-  url: http://user-service:8083
-pricing-service:
-  url: http://pricing-service:8084
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://eureka-server:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true

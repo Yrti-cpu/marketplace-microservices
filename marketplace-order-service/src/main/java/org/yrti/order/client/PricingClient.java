@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.yrti.order.dto.PricingResponse;
 
-@FeignClient(name = "pricing-service", url = "${pricing-service.url}")
+@FeignClient(name = "PRICING-SERVICE")
 public interface PricingClient {
 
   @GetMapping("/api/pricing/{productId}")

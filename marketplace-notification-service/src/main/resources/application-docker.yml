@@ -10,7 +10,7 @@ spring:
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       auto-offset-reset: latest
       properties:
-        spring.json.trusted.packages: ""
+        spring.json.trusted.packages: "org.yrti.events.event,java.util,java.lang"
         spring.json.use.type.headers: true
   mail:
     host: smtp.gmail.com

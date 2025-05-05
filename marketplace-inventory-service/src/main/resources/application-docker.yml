@@ -10,14 +10,16 @@ spring:
     password: postgres
     driver-class-name: org.postgresql.Driver
   jpa:
-    hibernate:
-      ddl-auto: none
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        ddl-auto: none
   cloud:
     discovery:
       enabled: true
 eureka:
   client:
-    service-url:
-      defaultZone: http://eureka-server:8761/eureka
+    serviceUrl:
+      defaultZone: http://eureka-server:8761/eureka/
     register-with-eureka: true
-    fetch-registry: true
+    fetch-registry: false

@@ -2,10 +2,20 @@ server:
   port: 8086
 
 spring:
+  application:
+    name: payment-service
   kafka:
     bootstrap-servers: kafka:9092
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
     properties:
+        spring.json.trusted.packages: "org.yrti.events.event,java.util,java.lang"
         spring.json.add.type.headers: true
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://eureka-server:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: false
