@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.yrti.order.dto.ProductReserveRequest;
 
-@FeignClient(name = "inventory-service", url = "${inventory-service.url}")
+@FeignClient(name = "INVENTORY-SERVICE")
 public interface InventoryClient {
 
   @PostMapping("/api/products/reserve")

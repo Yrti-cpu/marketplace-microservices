@@ -1,4 +1,4 @@
-FROM eclipse-temurin:17-jdk-jammy as builder
+FROM eclipse-temurin:17-jdk-jammy AS builder
 
 WORKDIR /app
 
@@ -7,11 +7,8 @@ COPY gradle/wrapper gradle/wrapper
 COPY settings.gradle .
 COPY marketplace-notification-service/build.gradle ./marketplace-notification-service/
 COPY marketplace-notification-service/src ./marketplace-notification-service/src
-COPY marketplace-events/build.gradle ./marketplace-events/
-COPY marketplace-events/src ./marketplace-events/src
 
-RUN ./gradlew :marketplace-events:build && \
-    ./gradlew :marketplace-notification-service:build -x test -Pcheckstyle.skip -Ppmd.skip
+RUN ./gradlew :marketplace-notification-service:build -x test -Pcheckstyle.skip -Ppmd.skip
 
 FROM eclipse-temurin:17-jre-jammy
 

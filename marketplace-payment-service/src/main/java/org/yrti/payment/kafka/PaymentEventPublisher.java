@@ -4,7 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
-import org.yrti.events.event.PaymentEvent;
+import org.yrti.payment.events.PaymentEvent;
+
 
 @Slf4j
 @Component
