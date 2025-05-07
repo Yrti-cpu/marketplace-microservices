@@ -3,7 +3,7 @@
 ![Java](https://img.shields.io/badge/Java-17-red)
 ![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.4-green)
 ![Spring Cloud](https://img.shields.io/badge/Spring_Cloud-2024.0-blue)
-![Kafka](https://img.shields.io/badge/Kafka-7.9-purple)
+![Kafka](https://img.shields.io/badge/Kafka-3.8-purple)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-blue)
 
 ---
@@ -28,7 +28,7 @@
 | **inventory-service**    | Резервация и списание товаров со склада        |
 | **user-service**         | Управление пользователями                      |
 | **pricing-service**      | Расчет цен и скидок на товары                  |
-| **payment-service**      | Обработка платежей через внешние системы       |
+| **payment-service**      | Обработка платежей                             |
 | **notification-service** | Отправка email                                 |
 | **gateway-service**      | Единая точка входа (API Gateway)               |
 | **eureka-service**       | Service Discovery (централизованный реестр)    |

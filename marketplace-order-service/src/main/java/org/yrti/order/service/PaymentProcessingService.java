@@ -3,10 +3,10 @@ package org.yrti.order.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.yrti.events.event.OrderPaidEvent;
-import org.yrti.events.event.PaymentEvent;
 import org.yrti.order.client.UserClient;
 import org.yrti.order.dto.UserResponse;
+import org.yrti.order.events.OrderPaidEvent;
+import org.yrti.order.events.PaymentEvent;
 import org.yrti.order.kafka.OrderPaidEventPublisher;
 
 @Slf4j

@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
-import org.yrti.events.event.OrderPaidEvent;
+import org.yrti.notification.events.OrderPaidEvent;
 import org.yrti.notification.strategy.EmailEventDispatcher;
 
 @Slf4j

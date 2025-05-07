@@ -7,12 +7,10 @@ spring:
   kafka:
     bootstrap-servers: kafka:9092
     producer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
     properties:
-      spring.json.trusted.packages: "org.yrti.events.event,java.util,java.lang"
-      spring.json.add.type.headers: true
-
+      spring.json.type.headers: false
+      spring.json.trusted.packages: "org.yrti.order.events, org.yrti.payment.events"
 eureka:
   client:
     serviceUrl:

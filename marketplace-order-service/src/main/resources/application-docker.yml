@@ -18,13 +18,13 @@ spring:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
     consumer:
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      value-deserializer: org.yrti.order.kafka.config.KafkaTopicDeserializer
       auto-offset-reset: latest
       group-id: order-group
     properties:
-      spring.json.trusted.packages: "org.yrti.events.event,java.util,java.lang"
-      spring.json.use.type.headers: true
+      spring.json.type.headers: false
+      spring.json.trusted.packages: "org.yrti.order.events,org.yrti.payment.events, org.yrti.notification.events"
+
   liquibase:
     enabled: true
     change-log: classpath:db/changelog/24-01-changelog-master.xml
