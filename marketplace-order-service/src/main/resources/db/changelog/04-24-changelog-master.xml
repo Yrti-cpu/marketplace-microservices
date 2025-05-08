@@ -17,5 +17,7 @@
   <include file="db/changelog/05-08-discount-changelog.xml"/>
   <include file="/db/changelog/data/05-08-discount-data.xml"/>
   <include file="db/changelog/data/05-08-prices-data.xml"/>
+  <include file="db/changelog/data/05-08-users-data.xml"/>
+  <include file="db/changelog/05-08-add-seller-to-products.xml"/>
 
 </databaseChangeLog>

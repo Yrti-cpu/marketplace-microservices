@@ -35,11 +35,5 @@
             <column name="start_date" valueDate="2025-01-01"/>
             <column name="is_active" valueBoolean="true"/>
         </insert>
-
-        <rollback>
-            <delete tableName="discounts">
-                <where>product_id IN (1, 2, 4, 5)</where>
-            </delete>
-        </rollback>
     </changeSet>
 </databaseChangeLog>

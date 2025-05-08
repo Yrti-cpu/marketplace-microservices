@@ -29,11 +29,5 @@
       <column name="product_id" valueNumeric="5"/>
       <column name="amount" valueNumeric="349.00"/>
     </insert>
-
-    <rollback>
-      <delete tableName="prices">
-        <where>product_id IN (1, 2, 3, 4, 5)</where>
-      </delete>
-    </rollback>
   </changeSet>
 </databaseChangeLog>
