@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "dicounts",
+@Table(name = "discounts",
     indexes = @Index(name = "idx_discount_product", columnList = "product_id"))
 @Getter
 @Setter
