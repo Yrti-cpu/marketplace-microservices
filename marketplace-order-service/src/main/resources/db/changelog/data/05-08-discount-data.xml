@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                  https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet author="daniladotsenko" id="insert-discounts-data">
+        <insert tableName="discounts">
+            <column name="product_id" valueNumeric="1"/>
+            <column name="percent" valueNumeric="0.20"/>
+            <column name="start_date" valueDate="2025-01-01"/>
+            <column name="end_date" valueDate="2026-12-31"/>
+            <column name="is_active" valueBoolean="true"/>
+        </insert>
+
+        <insert tableName="discounts">
+            <column name="product_id" valueNumeric="2"/>
+            <column name="percent" valueNumeric="0.15"/>
+            <column name="start_date" valueDate="2025-06-01"/>
+            <column name="end_date" valueDate="2027-06-01"/>
+            <column name="is_active" valueBoolean="true"/>
+        </insert>
+
+        <insert tableName="discounts">
+            <column name="product_id" valueNumeric="4"/>
+            <column name="percent" valueNumeric="0.10"/>
+            <column name="start_date" valueDate="2025-01-01"/>
+            <column name="end_date" valueDate="2028-03-31"/>
+            <column name="is_active" valueBoolean="true"/>
+        </insert>
+
+        <insert tableName="discounts">
+            <column name="product_id" valueNumeric="5"/>
+            <column name="percent" valueNumeric="0.05"/>
+            <column name="start_date" valueDate="2025-01-01"/>
+            <column name="is_active" valueBoolean="true"/>
+        </insert>
+
+        <rollback>
+            <delete tableName="discounts">
+                <where>product_id IN (1, 2, 4, 5)</where>
+            </delete>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>

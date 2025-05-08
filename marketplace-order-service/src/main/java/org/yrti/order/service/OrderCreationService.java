@@ -41,10 +41,7 @@ public class OrderCreationService {
 
       BigDecimal originalPrice = priceInfo.getOriginalPrice();
       BigDecimal discountedPrice = priceInfo.getDiscountedPrice();
-      BigDecimal discount = originalPrice.compareTo(BigDecimal.ZERO) > 0
-          ? originalPrice.subtract(discountedPrice).divide(originalPrice, 4, RoundingMode.HALF_UP)
-          .multiply(BigDecimal.valueOf(100))
-          : BigDecimal.ZERO;
+      BigDecimal discount = priceInfo.getDiscountPercent();
 
       BigDecimal totalPrice = discountedPrice.multiply(BigDecimal.valueOf(i.getQuantity()));
 

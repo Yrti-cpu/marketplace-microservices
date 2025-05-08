@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                  https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+  <changeSet author="daniladotsenko" id="insert-prices-data">
+    <insert tableName="prices">
+      <column name="product_id" valueNumeric="1"/>
+      <column name="amount" valueNumeric="999.00"/>
+    </insert>
+
+    <insert tableName="prices">
+      <column name="product_id" valueNumeric="2"/>
+      <column name="amount" valueNumeric="499.00"/>
+    </insert>
+
+    <insert tableName="prices">
+      <column name="product_id" valueNumeric="3"/>
+      <column name="amount" valueNumeric="1299.00"/>
+    </insert>
+
+    <insert tableName="prices">
+      <column name="product_id" valueNumeric="4"/>
+      <column name="amount" valueNumeric="799.00"/>
+    </insert>
+
+    <insert tableName="prices">
+      <column name="product_id" valueNumeric="5"/>
+      <column name="amount" valueNumeric="349.00"/>
+    </insert>
+
+    <rollback>
+      <delete tableName="prices">
+        <where>product_id IN (1, 2, 3, 4, 5)</where>
+      </delete>
+    </rollback>
+  </changeSet>
+</databaseChangeLog>
