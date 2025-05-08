@@ -74,4 +74,8 @@ public class OrderCreationService {
 
     return savedOrder;
   }
+
+  public Order getOrderById(Long orderId) {
+    return orderRepository.findById(orderId).orElse(null);
+  }
 }
