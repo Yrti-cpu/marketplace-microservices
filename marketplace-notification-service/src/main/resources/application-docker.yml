@@ -11,6 +11,11 @@ spring:
       properties:
         spring.json.trusted.packages: "org.yrti.order.events,org.yrti.notification.events"
         spring.json.type.headers: false
+        session.timeout.ms: 25000
+        heartbeat.interval.ms: 8000
+        max.poll.interval.ms: 300000
+        request.timeout.ms: 35000
+        retry.backoff.ms: 1000
 
   mail:
     host: smtp.gmail.com

@@ -8,7 +8,7 @@
     <changeSet author="daniladotsenko" id="insert-users-data">
         <!-- Администратор -->
         <insert tableName="users">
-            <column name="email" value="admin@example.com"/>
+            <column name="email" value="admin@gmail.com"/>
             <column name="name" value="Admin"/>
             <column name="password" value="$2a$12$X1x5YzW8UoN5p3VvQWqjOeY6d7r8S9aT0bN1c2d3e4f5g6h7i8j9k"/>
             <column name="role" value="ADMIN"/>
@@ -16,7 +16,7 @@
 
         <!-- Продавец -->
         <insert tableName="users">
-            <column name="email" value="seller@example.com"/>
+            <column name="email" value="seller@gmail.com"/>
             <column name="name" value="Seller"/>
             <column name="password" value="$2a$12$K2l3M4n5O6p7Q8r9S0t1Uv2W3x4Y5z6A7B8C9D0E1F2G3H4I5J6K"/>
             <column name="role" value="SELLER"/>
@@ -24,7 +24,7 @@
 
         <!-- Покупатель -->
         <insert tableName="users">
-            <column name="email" value="customer@example.com"/>
+            <column name="email" value="customer@gmail.com"/>
             <column name="name" value="Customer"/>
             <column name="password" value="$2a$12$L3M4N5O6P7Q8R9S0T1Uv2W3X4Y5Z6A7B8C9D0E1F2G3H4I5J6K7L"/>
             <column name="role" value="CUSTOMER"/>

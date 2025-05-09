@@ -17,12 +17,13 @@ public class OrderPaymentService {
   private final OrderRepository orderRepository;
 
   @Transactional
-  public void markOrderAsPaid(Long orderId) {
+  public Order markOrderAsPaid(Long orderId) {
     Order order = orderRepository.findById(orderId)
         .orElseThrow(() -> new OrderCreationException("Заказ не найден"));
 
     order.setStatus(OrderStatus.PAID);
     orderRepository.save(order);
     log.debug("Заказ #{} отмечен как оплаченный", orderId);
+    return order;
   }
 }

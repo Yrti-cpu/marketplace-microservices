@@ -24,6 +24,6 @@ public class UserService {
     log.debug("Запрос профиля клиента: userId={}", id);
     User user = userRepository.findById(id)
         .orElseThrow(() -> new RuntimeException("Клиент с id: " + id + " не найден"));
-    return new UserResponse(id, user.getName(), user.getEmail());
+    return new UserResponse(id, user.getEmail(), user.getName());
   }
 }

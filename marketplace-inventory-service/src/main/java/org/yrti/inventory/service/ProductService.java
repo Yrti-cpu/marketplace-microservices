@@ -85,4 +85,11 @@ public class ProductService {
     log.debug("Удаление товара: {} ", id);
     repository.deleteById(id);
   }
+
+  public Long getProductSeller(Long id) {
+    log.debug("Получение информации о продавце товара: {} ", id);
+    Product product = getProduct(id);
+    return product.getSeller();
+
+  }
 }
