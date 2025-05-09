@@ -1,7 +1,6 @@
 package org.yrti.order.service;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,10 +40,7 @@ public class OrderCreationService {
 
       BigDecimal originalPrice = priceInfo.getOriginalPrice();
       BigDecimal discountedPrice = priceInfo.getDiscountedPrice();
-      BigDecimal discount = originalPrice.compareTo(BigDecimal.ZERO) > 0
-          ? originalPrice.subtract(discountedPrice).divide(originalPrice, 4, RoundingMode.HALF_UP)
-          .multiply(BigDecimal.valueOf(100))
-          : BigDecimal.ZERO;
+      BigDecimal discount = priceInfo.getDiscountPercent();
 
       BigDecimal totalPrice = discountedPrice.multiply(BigDecimal.valueOf(i.getQuantity()));
 
@@ -77,5 +73,9 @@ public class OrderCreationService {
     log.info("Заказ #{} создан", order.getId());
 
     return savedOrder;
+  }
+
+  public Order getOrderById(Long orderId) {
+    return orderRepository.findById(orderId).orElse(null);
   }
 }

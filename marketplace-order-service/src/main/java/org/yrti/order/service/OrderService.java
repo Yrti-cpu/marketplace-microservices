@@ -22,9 +22,12 @@ public class OrderService {
   public Order createOrder(CreateOrderRequest request) {
     return orderCreationService.createOrder(request);
   }
+  public Order getOrder(Long orderId) {
+    return orderCreationService.getOrderById(orderId);
+  }
 
-  public void markOrderAsPaid(Long orderId) {
-    orderPaymentService.markOrderAsPaid(orderId);
+  public Order markOrderAsPaid(Long orderId) {
+    return orderPaymentService.markOrderAsPaid(orderId);
   }
 
   public String dispatchOrder(Long orderId) {

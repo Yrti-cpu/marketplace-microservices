@@ -1,13 +1,13 @@
-package org.yrti.inventory.model;
+package org.yrti.pricing.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
+import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,30 +15,22 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "products")
+@Table(name = "prices",
+    indexes = @Index(name = "idx_price_product", columnList = "product_id"))
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Product {
-
+public class Price {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @NotBlank
-  private String name;
+  @Column(name = "product_id", nullable = false)
+  private Long productId;
 
-  private String description;
+  @Column(nullable = false, precision = 10, scale = 2)
+  private BigDecimal amount;
 
-  @Min(0)
-  private Integer quantity;
-
-  @Column(nullable = false)
-  @Min(0)
-  private Integer reservedQuantity = 0;
-
-  @Column(name = "seller_id", nullable = false)
-  private Long seller;
 }

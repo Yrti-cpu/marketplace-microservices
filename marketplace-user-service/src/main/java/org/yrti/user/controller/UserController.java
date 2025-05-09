@@ -16,12 +16,10 @@ public class UserController {
 
   private final UserService userService;
 
-//    @GetMapping("/{id}")
-//    public ResponseEntity<User> getUser(@PathVariable Long id) {
-//        return userService.getUserById(id)
-//                .map(ResponseEntity::ok)
-//                .orElse(ResponseEntity.notFound().build());
-//    }
+//  @GetMapping("/me")
+//  public ResponseEntity<User> getCurrentUser() {
+//    return ResponseEntity.ok(userService.getCurrentUser());
+//  }
 
   @GetMapping("/{id}")
   public UserResponse getUserById(@PathVariable Long id) {

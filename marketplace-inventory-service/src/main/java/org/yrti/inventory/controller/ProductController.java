@@ -71,5 +71,10 @@ public class ProductController {
     productService.deleteProduct(id);
     return ResponseEntity.noContent().build();
   }
+  
+  @GetMapping("/{id}/seller-id")
+  public Long getSeller(@PathVariable Long id) {
+    return productService.getProductSeller(id);
+  }
 
 }

@@ -6,12 +6,14 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.yrti.order.dto.CreateOrderRequest;
+import org.yrti.order.dto.OrderResponse;
 import org.yrti.order.model.Order;
 import org.yrti.order.service.OrderService;
 
@@ -46,4 +48,9 @@ public class OrderController {
         "Дата отмены заказа: " + LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
   }
 
+  @GetMapping("/{id}")
+  public OrderResponse getOrder(@PathVariable Long id) {
+    Order order = orderService.getOrder(id);
+    return new OrderResponse(order.getId(), order.getUserId(), order.getStatus(),order.getTotalAmount());
+  }
 }

@@ -49,12 +49,6 @@
       <column name="reserved_quantity" valueNumeric="0"/>
       <column name="seller" value="LG"/>
     </insert>
-
-    <rollback>
-      <delete tableName="products">
-        <where>id IN (1, 2, 3, 4, 5)</where>
-      </delete>
-    </rollback>
   </changeSet>
 
 </databaseChangeLog>
