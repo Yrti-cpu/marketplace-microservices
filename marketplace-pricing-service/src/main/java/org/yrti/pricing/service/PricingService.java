@@ -1,39 +1,51 @@
 package org.yrti.pricing.service;
 
 import java.math.BigDecimal;
-import java.util.List;
-import java.util.Map;
+import java.math.RoundingMode;
+import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.yrti.pricing.dao.DiscountRepository;
+import org.yrti.pricing.dao.PriceRepository;
 import org.yrti.pricing.dto.PricingResponse;
+import org.yrti.pricing.exception.PriceNotFoundException;
+import org.yrti.pricing.model.Discount;
+import org.yrti.pricing.model.Price;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class PricingService {
 
-  // Заглушка на скидочные товары
-  private static final List<Long> DISCOUNTED_PRODUCTS = List.of(1L, 2L, 3L, 4L, 5L);
-
-  // Заглушка на цены товаров
-  private static final Map<Long, BigDecimal> PRODUCT_PRICES = Map.of(
-      1L, BigDecimal.valueOf(100.0),
-      2L, BigDecimal.valueOf(150.0),
-      3L, BigDecimal.valueOf(200.0),
-      4L, BigDecimal.valueOf(300.0),
-      5L, BigDecimal.valueOf(500.0)
-  );
+  private final PriceRepository priceRepository;
+  private final DiscountRepository discountRepository;
 
   public PricingResponse getPrice(Long productId) {
     log.debug("Запрос цены: productId={}", productId);
+    Price price = priceRepository.findByProductId(productId)
+        .orElseThrow(() -> new PriceNotFoundException(productId));
 
-    BigDecimal defaultPrice = BigDecimal.valueOf(999.0);
-    BigDecimal price = PRODUCT_PRICES.getOrDefault(productId, defaultPrice);
+    Optional<Discount> activeDiscount = discountRepository.findByProductId(productId)
+        .stream()
+        .filter(Discount::isCurrentlyActive)
+        .findFirst();
 
-    BigDecimal discountMultiplier = BigDecimal.valueOf(0.8);
-    BigDecimal finalPrice = DISCOUNTED_PRODUCTS.contains(productId)
-        ? price.multiply(discountMultiplier)
-        : price;
+    BigDecimal finalPrice = activeDiscount
+        .map(discount -> applyDiscount(price.getAmount(), discount.getDiscount()))
+        .orElse(price.getAmount());
 
-    return new PricingResponse(productId, price, finalPrice);
+    return PricingResponse.builder()
+        .productId(productId)
+        .originalPrice(price.getAmount())
+        .discountedPrice(finalPrice)
+        .discount(activeDiscount.map(Discount::getDiscount).orElse(null))
+        .build();
+
+  }
+
+  private BigDecimal applyDiscount(BigDecimal price, BigDecimal discountPercent) {
+    return price.multiply(BigDecimal.ONE.subtract(discountPercent))
+        .setScale(2, RoundingMode.HALF_UP);
   }
 }

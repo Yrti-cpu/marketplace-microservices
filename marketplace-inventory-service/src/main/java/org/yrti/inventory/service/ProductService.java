@@ -1,9 +1,12 @@
 package org.yrti.inventory.service;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.yrti.inventory.dao.ProductRepository;
 import org.yrti.inventory.exception.NotEnoughStockException;
 import org.yrti.inventory.exception.ProductNotFoundException;
@@ -37,6 +40,7 @@ public class ProductService {
     }
     log.debug("Отправка товара со склада: id={}, запрошено={}", id, reservedQuantity);
     product.setReservedQuantity(Math.max(0, product.getReservedQuantity() - reservedQuantity));
+    product.setQuantity(product.getQuantity() - reservedQuantity);
     repository.save(product);
   }
 
@@ -47,8 +51,6 @@ public class ProductService {
     if (reservedQuantity <= 0 || product.getReservedQuantity() < reservedQuantity) {
       throw new IllegalArgumentException("Неверное количество резерва");
     }
-
-    product.setQuantity(product.getQuantity() - reservedQuantity);
     product.setReservedQuantity(product.getReservedQuantity() - reservedQuantity);
     log.debug("Отмена резерва товара id: {}, количество: {}", id, reservedQuantity);
     repository.save(product);
@@ -75,7 +77,7 @@ public class ProductService {
     product.setName(updated.getName());
     product.setDescription(updated.getDescription());
     product.setQuantity(updated.getQuantity());
-    product.setSeller(updated.getSeller());
+    product.setSellerId(updated.getSellerId());
     product.setReservedQuantity(updated.getReservedQuantity());
     log.debug("Обновление товара: {} ", updated.getName());
     return repository.save(product);
@@ -84,5 +86,14 @@ public class ProductService {
   public void deleteProduct(Long id) {
     log.debug("Удаление товара: {} ", id);
     repository.deleteById(id);
+  }
+
+  @Transactional
+  public Set<Long> getSellersId(List<Long> productIds) {
+    log.debug("Получение sellerIds  товаров: {} ", productIds);
+    if (productIds == null || productIds.isEmpty()) {
+      return Collections.emptySet();
+    }
+    return repository.findSellerIdsByProductIds(productIds);
   }
 }

@@ -21,7 +21,7 @@ public class PaymentController {
   @PostMapping("/{id}")
   public ResponseEntity<PaymentResponse> pay(@PathVariable Long id,
       @RequestBody PaymentRequest request) {
-    boolean success = paymentService.processPayment(request);
+    boolean success = paymentService.processPayment(request, id);
     return ResponseEntity.ok(new PaymentResponse(success ? "SUCCESS" : "FAILED"));
   }
 }

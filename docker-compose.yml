@@ -154,6 +154,7 @@ services:
       - "8084"
     environment:
       SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/marketplace_inventory
       GRADLE_OPTS: "-Dcheckstyle.skip=true -Dpmd.skip=true"
     depends_on:
       eureka-server:

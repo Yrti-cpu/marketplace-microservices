@@ -1,7 +1,6 @@
 package org.yrti.order.service;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,10 +11,12 @@ import org.yrti.order.client.PricingClient;
 import org.yrti.order.client.UserClient;
 import org.yrti.order.dao.OrderRepository;
 import org.yrti.order.dto.CreateOrderRequest;
+import org.yrti.order.dto.OrderResponse;
 import org.yrti.order.dto.PricingResponse;
 import org.yrti.order.dto.ProductReserveRequest;
 import org.yrti.order.dto.UserResponse;
 import org.yrti.order.events.OrderCreatedEvent;
+import org.yrti.order.exception.OrderNotFoundException;
 import org.yrti.order.kafka.OrderEventPublisher;
 import org.yrti.order.model.Order;
 import org.yrti.order.model.OrderItem;
@@ -41,10 +42,7 @@ public class OrderCreationService {
 
       BigDecimal originalPrice = priceInfo.getOriginalPrice();
       BigDecimal discountedPrice = priceInfo.getDiscountedPrice();
-      BigDecimal discount = originalPrice.compareTo(BigDecimal.ZERO) > 0
-          ? originalPrice.subtract(discountedPrice).divide(originalPrice, 4, RoundingMode.HALF_UP)
-          .multiply(BigDecimal.valueOf(100))
-          : BigDecimal.ZERO;
+      BigDecimal discount = priceInfo.getDiscount();
 
       BigDecimal totalPrice = discountedPrice.multiply(BigDecimal.valueOf(i.getQuantity()));
 
@@ -54,7 +52,7 @@ public class OrderCreationService {
           .originalPrice(originalPrice)
           .price(discountedPrice)
           .totalPrice(totalPrice)
-          .discountPercentage(discount)
+          .discount(discount)
           .order(order)
           .build();
     }).toList();
@@ -77,5 +75,12 @@ public class OrderCreationService {
     log.info("Заказ #{} создан", order.getId());
 
     return savedOrder;
+  }
+
+  public OrderResponse getOrderById(Long orderId) {
+    Order order = orderRepository.findById(orderId)
+        .orElseThrow(() -> new OrderNotFoundException(orderId));
+    return new OrderResponse(order.getId(), order.getUserId(), order.getStatus(),
+        order.getTotalAmount());
   }
 }

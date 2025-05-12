@@ -32,13 +32,27 @@
     </createTable>
   </changeSet>
 
-  <changeSet author="daniladotsenko" id="add-fk-orderitems-order">
+  <changeSet author="daniladotsenko" id="add-fk-order-items-order">
     <addForeignKeyConstraint
       baseColumnNames="order_id"
       baseTableName="order_items"
       constraintName="fk_order_items_order"
       referencedColumnNames="id"
       referencedTableName="orders"/>
+  </changeSet>
+
+  <changeSet author="daniladotsenko" id="add-address-to-orders">
+    <addColumn tableName="orders">
+      <column name="address" type="VARCHAR(255)"/>
+    </addColumn>
+  </changeSet>
+
+  <changeSet author="daniladotsenko" id="rename-order-items-discount-column">
+    <renameColumn
+      tableName="order_items"
+      oldColumnName="discount_percentage"
+      newColumnName="discount"
+      columnDataType="NUMBER(38, 2)"/>
   </changeSet>
 
 </databaseChangeLog>

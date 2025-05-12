@@ -36,7 +36,7 @@ public class OrderItem {
   private BigDecimal originalPrice;      // Без скидки
   private BigDecimal price;              // С учётом скидки
   private BigDecimal totalPrice;         // price * quantity
-  private BigDecimal discountPercentage; // Сколько % было скинуто
+  private BigDecimal discount; // Сколько было скинуто
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "order_id")

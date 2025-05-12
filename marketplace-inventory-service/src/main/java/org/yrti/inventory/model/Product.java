@@ -39,5 +39,6 @@ public class Product {
   @Min(0)
   private Integer reservedQuantity = 0;
 
-  private String seller;
+  @Column(name = "seller_id", nullable = false)
+  private Long sellerId;
 }
