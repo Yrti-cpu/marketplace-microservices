@@ -23,6 +23,7 @@ public class OrderService {
   public Order createOrder(CreateOrderRequest request) {
     return orderCreationService.createOrder(request);
   }
+
   public OrderResponse getOrder(Long orderId) {
     return orderCreationService.getOrderById(orderId);
   }

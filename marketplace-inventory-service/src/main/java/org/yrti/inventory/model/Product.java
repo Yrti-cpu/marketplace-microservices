@@ -40,5 +40,5 @@ public class Product {
   private Integer reservedQuantity = 0;
 
   @Column(name = "seller_id", nullable = false)
-  private Long seller;
+  private Long sellerId;
 }

@@ -32,14 +32,14 @@ public class PricingService {
         .findFirst();
 
     BigDecimal finalPrice = activeDiscount
-        .map(discount -> applyDiscount(price.getAmount(), discount.getPercent()))
+        .map(discount -> applyDiscount(price.getAmount(), discount.getDiscount()))
         .orElse(price.getAmount());
 
     return PricingResponse.builder()
         .productId(productId)
         .originalPrice(price.getAmount())
         .discountedPrice(finalPrice)
-        .discountPercent(activeDiscount.map(Discount::getPercent).orElse(null))
+        .discount(activeDiscount.map(Discount::getDiscount).orElse(null))
         .build();
 
   }

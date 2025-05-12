@@ -13,5 +13,5 @@ public class PricingResponse {
   private Long productId;
   private BigDecimal originalPrice;
   private BigDecimal discountedPrice;
-  private BigDecimal discountPercent;
+  private BigDecimal discount;
 }

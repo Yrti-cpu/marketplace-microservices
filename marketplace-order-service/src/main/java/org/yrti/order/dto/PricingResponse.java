@@ -16,5 +16,5 @@ public class PricingResponse {
   private BigDecimal originalPrice;
   @Min(value = 1, message = "Price must be at least 1")
   private BigDecimal discountedPrice;
-  private BigDecimal discountPercent;
+  private BigDecimal discount;
 }

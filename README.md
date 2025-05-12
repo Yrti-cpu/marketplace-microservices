@@ -53,6 +53,7 @@
 ```bash
 docker-compose up -d --build
 ```
+
 ## 🚪 Доступ к сервисам
 
 `API Gateway` → http://localhost:8085/api/...  

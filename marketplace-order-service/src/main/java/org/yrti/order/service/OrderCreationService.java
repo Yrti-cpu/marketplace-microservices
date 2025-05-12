@@ -42,7 +42,7 @@ public class OrderCreationService {
 
       BigDecimal originalPrice = priceInfo.getOriginalPrice();
       BigDecimal discountedPrice = priceInfo.getDiscountedPrice();
-      BigDecimal discount = priceInfo.getDiscountPercent();
+      BigDecimal discount = priceInfo.getDiscount();
 
       BigDecimal totalPrice = discountedPrice.multiply(BigDecimal.valueOf(i.getQuantity()));
 
@@ -52,7 +52,7 @@ public class OrderCreationService {
           .originalPrice(originalPrice)
           .price(discountedPrice)
           .totalPrice(totalPrice)
-          .discountPercentage(discount)
+          .discount(discount)
           .order(order)
           .build();
     }).toList();
@@ -78,7 +78,9 @@ public class OrderCreationService {
   }
 
   public OrderResponse getOrderById(Long orderId) {
-    Order order = orderRepository.findById(orderId).orElseThrow(() -> new OrderNotFoundException(orderId));
-    return new OrderResponse(order.getId(), order.getUserId(), order.getStatus(),order.getTotalAmount());
+    Order order = orderRepository.findById(orderId)
+        .orElseThrow(() -> new OrderNotFoundException(orderId));
+    return new OrderResponse(order.getId(), order.getUserId(), order.getStatus(),
+        order.getTotalAmount());
   }
 }

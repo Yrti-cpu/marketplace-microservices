@@ -1,6 +1,7 @@
 package org.yrti.order.service;
 
 import jakarta.transaction.Transactional;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +42,7 @@ public class PaymentProcessingService {
       Set<Long> sellerIds = inventoryClient.getSellersId(order.getItems().stream()
           .map(OrderItem::getProductId).collect(Collectors.toList()));
 
-      Set<String> sellersEmails = userClient.getUsersBatch(sellerIds);
+      List<String> sellersEmails = userClient.getUsersBatch(sellerIds.stream().toList());
 
       if (sellersEmails.size() != sellerIds.size()) {
         log.warn("Не все пользователи найдены! Запрошено: {}, найдено: {}",

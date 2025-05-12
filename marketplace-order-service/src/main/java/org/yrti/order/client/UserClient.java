@@ -1,6 +1,6 @@
 package org.yrti.order.client;
 
-import java.util.Set;
+import java.util.List;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,5 +13,5 @@ public interface UserClient {
   UserResponse getUserById(@PathVariable("userId") Long userId);
 
   @GetMapping("/api/users/{userIds}/sellers")
-  Set<String> getUsersBatch(@PathVariable Set<Long> userIds);
+  List<String> getUsersBatch(@PathVariable List<Long> userIds);
 }

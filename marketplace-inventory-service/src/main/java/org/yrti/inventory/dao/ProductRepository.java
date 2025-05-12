@@ -21,7 +21,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
       "AND (p.quantity - p.reservedQuantity) >= :reserveQty")
   int tryReserveProduct(@Param("productId") Long productId, @Param("reserveQty") int reserveQty);
 
-  @Query("SELECT p.seller FROM Product p WHERE p.id IN :productIds")
+  @Query("SELECT p.sellerId FROM Product p WHERE p.id IN :productIds")
   Set<Long> findSellerIdsByProductIds(@Param("productIds") List<Long> productIds);
 
 }

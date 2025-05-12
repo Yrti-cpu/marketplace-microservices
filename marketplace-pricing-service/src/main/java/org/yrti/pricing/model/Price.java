@@ -10,19 +10,18 @@ import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @Table(name = "prices",
     indexes = @Index(name = "idx_price_product", columnList = "product_id"))
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class Price {
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;

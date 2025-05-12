@@ -7,17 +7,13 @@
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.29.xsd">
 
   <include file="/db/changelog/04-24-sequences-changelog.xml"/>
+  <include file="/db/changelog/04-24-user-changelog.xml"/>
   <include file="/db/changelog/04-24-product-changelog.xml"/>
   <include file="/db/changelog/04-24-order-changelog.xml"/>
-  <include file="/db/changelog/04-24-user-changelog.xml"/>
-  <include file="/db/changelog/05-01-add-order-address-column.xml"/>
+  <include file="db/changelog/data/05-08-users-data.xml"/>
   <include file="/db/changelog/data/05-01-products-data.xml"/>
-  <include file="/db/changelog/05-08-add-user-constraints.xml"/>
   <include file="db/changelog/05-08-prices-changelog.xml"/>
   <include file="db/changelog/05-08-discount-changelog.xml"/>
   <include file="/db/changelog/data/05-08-discount-data.xml"/>
   <include file="db/changelog/data/05-08-prices-data.xml"/>
-  <include file="db/changelog/data/05-08-users-data.xml"/>
-  <include file="db/changelog/05-08-add-seller-to-products.xml"/>
-
 </databaseChangeLog>

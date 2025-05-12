@@ -11,7 +11,7 @@
       <column name="description" value="256GB, Titanium"/>
       <column name="quantity" valueNumeric="100"/>
       <column name="reserved_quantity" valueNumeric="0"/>
-      <column name="seller" value="AppleStore"/>
+      <column name="seller_id" valueNumeric="2"/>
     </insert>
 
     <insert tableName="products">
@@ -20,7 +20,7 @@
       <column name="description" value="Sony, 1TB"/>
       <column name="quantity" valueNumeric="50"/>
       <column name="reserved_quantity" valueNumeric="0"/>
-      <column name="seller" value="SonyCenter"/>
+      <column name="seller_id" valueNumeric="2"/>
     </insert>
 
     <insert tableName="products">
@@ -29,7 +29,7 @@
       <column name="description" value="13'', 512GB"/>
       <column name="quantity" valueNumeric="30"/>
       <column name="reserved_quantity" valueNumeric="0"/>
-      <column name="seller" value="AppleStore"/>
+      <column name="seller_id" valueNumeric="2"/>
     </insert>
 
     <insert tableName="products">
@@ -38,7 +38,7 @@
       <column name="description" value="256GB, Phantom Black"/>
       <column name="quantity" valueNumeric="60"/>
       <column name="reserved_quantity" valueNumeric="0"/>
-      <column name="seller" value="SamsungStore"/>
+      <column name="seller_id" valueNumeric="2"/>
     </insert>
 
     <insert tableName="products">
@@ -47,7 +47,7 @@
       <column name="description" value="27'' QHD, 165Hz"/>
       <column name="quantity" valueNumeric="20"/>
       <column name="reserved_quantity" valueNumeric="0"/>
-      <column name="seller" value="LG"/>
+      <column name="seller_id" valueNumeric="2"/>
     </insert>
   </changeSet>
 

@@ -4,7 +4,7 @@ import java.io.Serializable;
 import lombok.Builder;
 
 @Builder
-public record SellerEvent (String email) implements
+public record SellerEvent(String email) implements
     Serializable {
 
 }

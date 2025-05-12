@@ -77,7 +77,7 @@ public class ProductService {
     product.setName(updated.getName());
     product.setDescription(updated.getDescription());
     product.setQuantity(updated.getQuantity());
-    product.setSeller(updated.getSeller());
+    product.setSellerId(updated.getSellerId());
     product.setReservedQuantity(updated.getReservedQuantity());
     log.debug("Обновление товара: {} ", updated.getName());
     return repository.save(product);

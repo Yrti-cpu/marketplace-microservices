@@ -1,7 +1,7 @@
 package org.yrti.user.service;
 
 import java.util.Collections;
-import java.util.Set;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -17,12 +17,6 @@ public class UserService {
 
   private final UserRepository userRepository;
 
-//  public User getCurrentUser() {
-//    String email = SecurityContextHolder.getContext().getAuthentication().getName();
-//    return userRepository.findByEmail(email)
-//        .orElseThrow(() -> new RuntimeException("Пользователь не найден"));
-//  }
-
   public UserResponse getUserById(Long id) {
     log.debug("Запрос профиля клиента: userId={}", id);
     User user = userRepository.findById(id)
@@ -31,11 +25,11 @@ public class UserService {
   }
 
   @Transactional
-  public Set<String> getUsersBatch(Set<Long> userIds) {
+  public List<String> getUsersBatch(List<Long> userIds) {
     log.debug("Запрос почт продавцов: {}", userIds);
 
     if (userIds == null || userIds.isEmpty()) {
-      return Collections.emptySet();
+      return Collections.emptyList();
     }
     return userRepository.findSellerEmailByIds(userIds);
 

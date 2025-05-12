@@ -33,7 +33,7 @@ public class Discount {
   private Long productId;
 
   @Column(nullable = false, precision = 3, scale = 2)
-  private BigDecimal percent;
+  private BigDecimal discount;
 
   @Column(name = "start_date", nullable = false)
   private LocalDateTime startDate;
