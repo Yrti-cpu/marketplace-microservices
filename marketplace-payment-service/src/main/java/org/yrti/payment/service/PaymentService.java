@@ -20,9 +20,9 @@ public class PaymentService {
   private final PaymentEventPublisher eventPublisher;
   private final OrderClient orderClient;
 
-  public boolean processPayment(PaymentRequest request) {
+  public boolean processPayment(PaymentRequest request, Long orderId) {
     try {
-      OrderRequest order = orderClient.getOrderById(request.getOrderId());
+      OrderRequest order = orderClient.getOrderById(orderId);
 
       if (!order.getCustomerId().equals(request.getUserId())) {
         throw new PaymentException("Заказ принадлежит другому пользователю");
@@ -36,10 +36,10 @@ public class PaymentService {
         throw new PaymentException("Сумма оплаты не соответствует стоимости заказа");
       }
 
-      boolean isSuccess = processPaymentWithProvider(request);
+      boolean isSuccess = processPaymentWithProvider(request, orderId);
 
       PaymentEvent event = PaymentEvent.builder()
-          .orderId(request.getOrderId())
+          .orderId(orderId)
           .userId(request.getUserId())
           .success(isSuccess)
           .amount(request.getAmount())
@@ -54,11 +54,11 @@ public class PaymentService {
     }
   }
 
-  private boolean processPaymentWithProvider(PaymentRequest request) {
+  private boolean processPaymentWithProvider(PaymentRequest request, Long orderId) {
     boolean isSuccess = Math.random() > 0.1;
     log.info("Платеж {} для заказа {}. Сумма: {}. Статус: {}",
         isSuccess ? "принят" : "отклонен",
-        request.getOrderId(),
+        orderId,
         request.getAmount(),
         isSuccess ? "success" : "failed");
     return isSuccess;

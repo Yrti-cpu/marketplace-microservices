@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.yrti.order.dto.CreateOrderRequest;
+import org.yrti.order.dto.OrderResponse;
 import org.yrti.order.model.Order;
 
 
@@ -22,7 +23,7 @@ public class OrderService {
   public Order createOrder(CreateOrderRequest request) {
     return orderCreationService.createOrder(request);
   }
-  public Order getOrder(Long orderId) {
+  public OrderResponse getOrder(Long orderId) {
     return orderCreationService.getOrderById(orderId);
   }
 

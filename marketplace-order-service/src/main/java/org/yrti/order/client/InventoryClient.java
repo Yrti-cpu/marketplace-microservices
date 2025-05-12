@@ -1,5 +1,7 @@
 package org.yrti.order.client;
 
+import java.util.List;
+import java.util.Set;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +21,6 @@ public interface InventoryClient {
   @PostMapping("/api/products/decrease")
   void decreaseProduct(@RequestBody ProductReserveRequest request);
 
-  @GetMapping("/api/products/{productId}/seller-id")
-  Long getSellerId(@PathVariable Long productId);
+  @GetMapping("/api/products/{productIds}/sellers")
+  Set<Long> getSellersId(@PathVariable List<Long> productIds);
 }

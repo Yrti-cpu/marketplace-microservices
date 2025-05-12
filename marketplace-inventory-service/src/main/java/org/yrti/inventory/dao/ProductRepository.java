@@ -1,5 +1,7 @@
 package org.yrti.inventory.dao;
 
+import java.util.List;
+import java.util.Set;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -18,5 +20,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
       "WHERE p.id = :productId " +
       "AND (p.quantity - p.reservedQuantity) >= :reserveQty")
   int tryReserveProduct(@Param("productId") Long productId, @Param("reserveQty") int reserveQty);
+
+  @Query("SELECT p.seller FROM Product p WHERE p.id IN :productIds")
+  Set<Long> findSellerIdsByProductIds(@Param("productIds") List<Long> productIds);
 
 }

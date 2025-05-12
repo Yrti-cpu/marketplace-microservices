@@ -15,6 +15,7 @@ import org.yrti.order.events.SellerEvent;
 import org.yrti.order.kafka.OrderPaidEventPublisher;
 import org.yrti.order.kafka.SellerEventPublisher;
 import org.yrti.order.model.Order;
+import org.yrti.order.model.OrderItem;
 
 @Slf4j
 @Service
@@ -36,17 +37,24 @@ public class PaymentProcessingService {
 
     try {
       Order order = orderService.markOrderAsPaid(event.orderId());
-      Set<Long> sellerIds = order.getItems().stream()
-          .map(item -> inventoryClient.getSellerId(item.getProductId()))
-          .collect(Collectors.toSet());
-      sellerIds.forEach(sellerId -> {
-        UserResponse userResponse = userClient.getUserById(sellerId);
 
-        SellerEvent sellerEvent = SellerEvent.builder()
-            .email(userResponse.getEmail())
-            .build();
-        sellerEventPublisher.publish(sellerEvent);
+      Set<Long> sellerIds = inventoryClient.getSellersId(order.getItems().stream()
+          .map(OrderItem::getProductId).collect(Collectors.toList()));
+
+      Set<String> sellersEmails = userClient.getUsersBatch(sellerIds);
+
+      if (sellersEmails.size() != sellerIds.size()) {
+        log.warn("Не все пользователи найдены! Запрошено: {}, найдено: {}",
+            sellerIds.size(), sellersEmails.size());
+      }
+      sellersEmails.forEach(email -> {
+        sellerEventPublisher.publish(
+            SellerEvent.builder()
+                .email(email)
+                .build()
+        );
       });
+
       UserResponse user = userClient.getUserById(event.userId());
 
       OrderPaidEvent paidEvent = OrderPaidEvent.builder()

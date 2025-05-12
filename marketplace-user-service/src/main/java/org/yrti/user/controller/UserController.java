@@ -1,6 +1,7 @@
 package org.yrti.user.controller;
 
 
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,5 +25,10 @@ public class UserController {
   @GetMapping("/{id}")
   public UserResponse getUserById(@PathVariable Long id) {
     return userService.getUserById(id);
+  }
+
+  @GetMapping("/{userIds}/sellers")
+  public Set<String> getUsersBatch(@PathVariable Set<Long> userIds) {
+    return userService.getUsersBatch(userIds);
   }
 }

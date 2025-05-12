@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -72,9 +73,9 @@ public class ProductController {
     return ResponseEntity.noContent().build();
   }
   
-  @GetMapping("/{id}/seller-id")
-  public Long getSeller(@PathVariable Long id) {
-    return productService.getProductSeller(id);
+  @GetMapping("/{productIds}/sellers")
+  public Set<Long> getSellersId(@PathVariable List<Long> productIds) {
+    return productService.getSellersId(productIds);
   }
 
 }

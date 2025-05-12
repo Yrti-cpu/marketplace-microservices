@@ -11,10 +11,12 @@ import org.yrti.order.client.PricingClient;
 import org.yrti.order.client.UserClient;
 import org.yrti.order.dao.OrderRepository;
 import org.yrti.order.dto.CreateOrderRequest;
+import org.yrti.order.dto.OrderResponse;
 import org.yrti.order.dto.PricingResponse;
 import org.yrti.order.dto.ProductReserveRequest;
 import org.yrti.order.dto.UserResponse;
 import org.yrti.order.events.OrderCreatedEvent;
+import org.yrti.order.exception.OrderNotFoundException;
 import org.yrti.order.kafka.OrderEventPublisher;
 import org.yrti.order.model.Order;
 import org.yrti.order.model.OrderItem;
@@ -75,7 +77,8 @@ public class OrderCreationService {
     return savedOrder;
   }
 
-  public Order getOrderById(Long orderId) {
-    return orderRepository.findById(orderId).orElse(null);
+  public OrderResponse getOrderById(Long orderId) {
+    Order order = orderRepository.findById(orderId).orElseThrow(() -> new OrderNotFoundException(orderId));
+    return new OrderResponse(order.getId(), order.getUserId(), order.getStatus(),order.getTotalAmount());
   }
 }

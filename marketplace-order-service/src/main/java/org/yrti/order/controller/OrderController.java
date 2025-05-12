@@ -50,7 +50,6 @@ public class OrderController {
 
   @GetMapping("/{id}")
   public OrderResponse getOrder(@PathVariable Long id) {
-    Order order = orderService.getOrder(id);
-    return new OrderResponse(order.getId(), order.getUserId(), order.getStatus(),order.getTotalAmount());
+    return orderService.getOrder(id);
   }
 }

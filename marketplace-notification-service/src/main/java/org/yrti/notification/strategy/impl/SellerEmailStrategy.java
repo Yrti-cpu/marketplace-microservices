@@ -23,7 +23,7 @@ public class SellerEmailStrategy implements EmailStrategy<SellerEvent> {
   public void sendEmail(SellerEvent event) {
     String to = event.email();
     String subject = "Товар куплен";
-    String body = "Ваш товар преобрели!";
+    String body = "Ваш товар приобрели!";
     emailService.send(to, subject, body);
     log.debug("Отправлено уведомление продавцу о покупке товара на {}", to);
 

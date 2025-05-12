@@ -1,8 +1,11 @@
 package org.yrti.user.service;
 
+import java.util.Collections;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.yrti.user.dao.UserRepository;
 import org.yrti.user.dto.UserResponse;
 import org.yrti.user.model.User;
@@ -25,5 +28,16 @@ public class UserService {
     User user = userRepository.findById(id)
         .orElseThrow(() -> new RuntimeException("Клиент с id: " + id + " не найден"));
     return new UserResponse(id, user.getEmail(), user.getName());
+  }
+
+  @Transactional
+  public Set<String> getUsersBatch(Set<Long> userIds) {
+    log.debug("Запрос почт продавцов: {}", userIds);
+
+    if (userIds == null || userIds.isEmpty()) {
+      return Collections.emptySet();
+    }
+    return userRepository.findSellerEmailByIds(userIds);
+
   }
 }
