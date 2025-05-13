@@ -2,7 +2,6 @@ package org.yrti.order.service;
 
 import jakarta.transaction.Transactional;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,7 +38,7 @@ public class PaymentProcessingService {
     try {
       Order order = orderService.markOrderAsPaid(event.orderId());
 
-      Set<Long> sellerIds = inventoryClient.getSellersId(order.getItems().stream()
+      List<Long> sellerIds = inventoryClient.getSellersId(order.getItems().stream()
           .map(OrderItem::getProductId).collect(Collectors.toList()));
 
       List<String> sellersEmails = userClient.getUsersBatch(sellerIds.stream().toList());

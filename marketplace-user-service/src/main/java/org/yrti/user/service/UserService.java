@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.yrti.user.dao.UserRepository;
@@ -17,6 +18,9 @@ public class UserService {
 
   private final UserRepository userRepository;
 
+  private static final String USER_CACHE = "user";
+
+  @Cacheable(value = USER_CACHE, key = "#id")
   public UserResponse getUserById(Long id) {
     log.debug("Запрос профиля клиента: userId={}", id);
     User user = userRepository.findById(id)

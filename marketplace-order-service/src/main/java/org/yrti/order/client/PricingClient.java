@@ -1,13 +1,15 @@
 package org.yrti.order.client;
 
+import java.util.List;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.yrti.order.dto.PricingResponse;
 
 @FeignClient(name = "PRICING-SERVICE")
 public interface PricingClient {
 
-  @GetMapping("/api/pricing/{productId}")
-  PricingResponse getProductPrice(@PathVariable Long productId);
+  @PostMapping("/api/pricing/batch")
+  ResponseEntity<List<PricingResponse>> getProductPriceBatch(@RequestBody List<Long> productIds);
 }

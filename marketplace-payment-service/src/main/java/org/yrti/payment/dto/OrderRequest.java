@@ -10,7 +10,7 @@ public class OrderRequest {
 
   private Long orderId;
   private Long customerId;
-  private OrderStatus status;
+  private String status;
   private BigDecimal totalPrice;
 
 }

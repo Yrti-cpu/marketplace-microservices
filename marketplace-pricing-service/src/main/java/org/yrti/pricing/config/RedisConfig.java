@@ -1,4 +1,4 @@
-package org.yrti.inventory.config;
+package org.yrti.pricing.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
@@ -45,7 +45,8 @@ public class RedisConfig {
   public CacheManager cacheManager(RedisConnectionFactory connectionFactory) {
     return RedisCacheManager.builder(connectionFactory)
         .cacheDefaults(RedisCacheConfiguration.defaultCacheConfig()
-            .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer())))
+            .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(
+                new GenericJackson2JsonRedisSerializer())))
         .build();
   }
 

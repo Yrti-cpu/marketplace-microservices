@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.yrti.order.client.InventoryClient;
 import org.yrti.order.client.UserClient;
 import org.yrti.order.dao.OrderRepository;
@@ -50,13 +52,15 @@ class OrderCancellationServiceTest {
 
     when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
     when(userClient.getUserById(1L)).thenReturn(new UserResponse(1L, "mail@mail.com", "Daniil"));
-
+    when(inventoryClient.decreaseProductsForOrder(
+        List.of(new ProductReserveRequest(1L, 2), new ProductReserveRequest(2L, 1)))).thenReturn(
+        new ResponseEntity<>(HttpStatus.OK));
     // Выполнение
     service.cancelOrder(1L);
 
     // Проверка
     assertThat(order.getStatus()).isEqualTo(OrderStatus.CANCELLED);
-    verify(inventoryClient, times(2)).decreaseProduct(any(ProductReserveRequest.class));
+    verify(inventoryClient, times(1)).decreaseProductsForOrder(any());
     verify(orderRepository).save(order);
     verify(eventPublisher).publish(any());
   }

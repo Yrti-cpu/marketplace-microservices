@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.yrti.order.client.InventoryClient;
 import org.yrti.order.dao.OrderRepository;
 import org.yrti.order.dto.ProductReserveRequest;
@@ -37,10 +39,14 @@ class OrderDispatchServiceTest {
 
     when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
 
+    when(inventoryClient.releaseProductsForOrder(
+        List.of(new ProductReserveRequest(1L, 2)))).thenReturn(
+        new ResponseEntity<>(HttpStatus.OK));
+
     service.dispatchOrder(1L);
 
     assertThat(order.getStatus()).isEqualTo(OrderStatus.DISPATCHED);
-    verify(inventoryClient).releaseProduct(any(ProductReserveRequest.class));
+    verify(inventoryClient).releaseProductsForOrder(any());
     verify(orderRepository).save(order);
   }
 

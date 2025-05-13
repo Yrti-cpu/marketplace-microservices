@@ -21,6 +21,7 @@ services:
   #Редис для кэша
   redis:
     image: redis:alpine
+    container_name: redis
     ports:
       - "6379:6379"
     healthcheck:
@@ -94,8 +95,6 @@ services:
         condition: service_healthy
       eureka-server:
         condition: service_started
-      redis:
-        condition: service_healthy
     networks:
       - microservices
 
@@ -173,8 +172,12 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/marketplace_inventory
       GRADLE_OPTS: "-Dcheckstyle.skip=true -Dpmd.skip=true"
     depends_on:
+      postgres:
+        condition: service_healthy
       eureka-server:
         condition: service_started
+      redis:
+        condition: service_healthy
     networks:
       - microservices
 
@@ -195,6 +198,8 @@ services:
         condition: service_healthy
       eureka-server:
         condition: service_started
+      redis:
+        condition: service_healthy
     networks:
       - microservices
 

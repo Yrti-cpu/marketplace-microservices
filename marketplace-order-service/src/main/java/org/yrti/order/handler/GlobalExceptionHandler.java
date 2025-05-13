@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.yrti.order.exception.ClientRequestException;
 import org.yrti.order.exception.InventoryServiceException;
 import org.yrti.order.exception.OrderCreationException;
 import org.yrti.order.exception.OrderNotFoundException;
@@ -27,6 +28,11 @@ public class GlobalExceptionHandler {
 
   @ExceptionHandler(OrderNotFoundException.class)
   public ResponseEntity<?> handleOrderError(OrderNotFoundException ex) {
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        .body(error(ex.getMessage(), HttpStatus.BAD_REQUEST));
+  }
+  @ExceptionHandler(ClientRequestException.class)
+  public ResponseEntity<?> handleClientRequest(ClientRequestException ex) {
     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
         .body(error(ex.getMessage(), HttpStatus.BAD_REQUEST));
   }
