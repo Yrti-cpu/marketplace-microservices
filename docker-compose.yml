@@ -18,6 +18,20 @@ services:
       - pgdata:/var/lib/postgresql/data
     networks:
       - microservices
+  #Редис для кэша
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 5s
+      timeout: 10s
+      retries: 5
+    networks:
+      - microservices
+    volumes:
+      - redisdata:/data
   #Kafka
   zookeeper:
     image: confluentinc/cp-zookeeper:7.9.0
@@ -80,6 +94,8 @@ services:
         condition: service_healthy
       eureka-server:
         condition: service_started
+      redis:
+        condition: service_healthy
     networks:
       - microservices
 
@@ -205,6 +221,7 @@ volumes:
   pgdata:
   kafka-data:
   zookeeper-data:
+  redisdata:
 
 networks:
   microservices:
