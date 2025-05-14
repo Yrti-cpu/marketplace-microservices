@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.yrti.payment.client.OrderClient;
 import org.yrti.payment.dto.OrderRequest;
-import org.yrti.payment.dto.OrderStatus;
 import org.yrti.payment.dto.PaymentRequest;
 import org.yrti.payment.events.PaymentEvent;
 import org.yrti.payment.exception.PaymentException;
@@ -28,7 +27,7 @@ public class PaymentService {
         throw new PaymentException("Заказ принадлежит другому пользователю");
       }
 
-      if (order.getStatus() != OrderStatus.NEW) {
+      if (!order.getStatus().equals("NEW")) {
         throw new PaymentException("Заказ уже оплачен или отменен");
       }
 

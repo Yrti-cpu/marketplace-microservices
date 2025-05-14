@@ -10,14 +10,12 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @Table(name = "products")
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -37,6 +35,7 @@ public class Product {
 
   @Column(nullable = false)
   @Min(0)
+  @Builder.Default
   private Integer reservedQuantity = 0;
 
   @Column(name = "seller_id", nullable = false)

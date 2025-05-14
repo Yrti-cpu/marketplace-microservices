@@ -1,13 +1,17 @@
 package org.yrti.inventory.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
+import java.util.function.Consumer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.yrti.inventory.dao.ProductRepository;
+import org.yrti.inventory.dto.ProductActionRequest;
 import org.yrti.inventory.exception.NotEnoughStockException;
 import org.yrti.inventory.exception.ProductNotFoundException;
 import org.yrti.inventory.model.Product;
@@ -18,42 +22,44 @@ import org.yrti.inventory.model.Product;
 public class ProductService {
 
   private final ProductRepository repository;
+  private final ObjectMapper objectMapper;
 
-  public void reserveProduct(Long id, int reservedQuantity) {
-    if (reservedQuantity <= 0) {
-      throw new IllegalArgumentException("Количество должно быть  больше 0");
-    }
-    int updated = repository.tryReserveProduct(id, reservedQuantity);
-    log.debug("Резервируем товар: id={}, запрошено={}", id, reservedQuantity);
+  @Transactional
+  public void reserveBatch(List<ProductActionRequest> request) {
+    log.debug("Резервируем товары: {} ", request);
 
-    if (updated == 0) {
-      throw new NotEnoughStockException("Недостаточное количество для резервирования товара");
-    }
+    checkProductBatchExist(request);
+    executeProductAction(request, repository::reserveProductsBatch, "резервирование товаров");
   }
 
-  public void releaseProduct(Long id, int reservedQuantity) {
-    Product product = repository.findById(id)
-        .orElseThrow(() -> new ProductNotFoundException(id));
+  @Transactional
+  public void releaseBatch(List<ProductActionRequest> request) {
+    log.debug("Списываем товары со склада: {}", request);
 
-    if (reservedQuantity <= 0 || product.getReservedQuantity() < reservedQuantity) {
-      throw new IllegalArgumentException("Неверное количество резерва");
-    }
-    log.debug("Отправка товара со склада: id={}, запрошено={}", id, reservedQuantity);
-    product.setReservedQuantity(Math.max(0, product.getReservedQuantity() - reservedQuantity));
-    product.setQuantity(product.getQuantity() - reservedQuantity);
-    repository.save(product);
+    checkProductBatchExist(request);
+    executeProductAction(request, repository::releaseProductsBatch, "отправка товаров");
   }
 
-  public void decreaseStock(Long id, int reservedQuantity) {
-    Product product = repository.findById(id)
-        .orElseThrow(() -> new ProductNotFoundException(id));
+  @Transactional
+  public void cancelReserveBatch(List<ProductActionRequest> request) {
+    log.debug("Отменяем резерв товаров: {}", request);
 
-    if (reservedQuantity <= 0 || product.getReservedQuantity() < reservedQuantity) {
-      throw new IllegalArgumentException("Неверное количество резерва");
+    checkProductBatchExist(request);
+    executeProductAction(request, repository::cancelReserveBatch, "отмена резерва");
+  }
+
+  private <T> void executeProductAction(List<T> requests,
+      Consumer<String> dbFunction,
+      String actionDescription) {
+    try {
+      String json = objectMapper.writeValueAsString(requests);
+      dbFunction.accept(json);
+    } catch (JsonProcessingException e) {
+      throw new IllegalStateException("Ошибка сериализации JSON", e);
+    } catch (DataAccessException e) {
+      throw new NotEnoughStockException(
+          "Ошибка при операции: " + actionDescription + " — " + e.getMessage());
     }
-    product.setReservedQuantity(product.getReservedQuantity() - reservedQuantity);
-    log.debug("Отмена резерва товара id: {}, количество: {}", id, reservedQuantity);
-    repository.save(product);
   }
 
   public Product createProduct(Product product) {
@@ -61,19 +67,23 @@ public class ProductService {
     return repository.save(product);
   }
 
+
   public Product getProduct(Long id) {
     log.debug("Получение товара по id: {}", id);
     return repository.findById(id)
         .orElseThrow(() -> new ProductNotFoundException(id));
   }
 
+
   public List<Product> getAllProducts() {
     log.debug("Получение всех товаров");
     return repository.findAll();
   }
 
+
   public Product updateProduct(Long id, Product updated) {
-    Product product = getProduct(id);
+    Product product = repository.findById(id)
+        .orElseThrow(() -> new ProductNotFoundException(id));
     product.setName(updated.getName());
     product.setDescription(updated.getDescription());
     product.setQuantity(updated.getQuantity());
@@ -83,17 +93,30 @@ public class ProductService {
     return repository.save(product);
   }
 
+
   public void deleteProduct(Long id) {
     log.debug("Удаление товара: {} ", id);
     repository.deleteById(id);
   }
 
   @Transactional
-  public Set<Long> getSellersId(List<Long> productIds) {
+  public List<Long> getSellersId(List<Long> productIds) {
     log.debug("Получение sellerIds  товаров: {} ", productIds);
     if (productIds == null || productIds.isEmpty()) {
-      return Collections.emptySet();
+      return Collections.emptyList();
     }
-    return repository.findSellerIdsByProductIds(productIds);
+    return repository.findSellerIdsByProductIds(productIds).stream().distinct().toList(); //важно убрать дубликаты (у разных товаров, могут быть один и тот же продавец
+  }
+
+  private void checkProductBatchExist(List<ProductActionRequest> request) {
+    if (request == null || request.isEmpty()) {
+      throw new IllegalArgumentException("Список товаров не может быть пустым");
+    }
+
+    for (ProductActionRequest r : request) {
+      if (r.getQuantity() <= 0) {
+        throw new IllegalArgumentException("Количество должно быть больше 0");
+      }
+    }
   }
 }

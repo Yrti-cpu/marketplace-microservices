@@ -17,6 +17,7 @@ spring:
   cloud:
     discovery:
       enabled: true
+
 eureka:
   client:
     serviceUrl:

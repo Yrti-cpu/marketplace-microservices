@@ -11,6 +11,14 @@ spring:
   jpa:
     hibernate:
       ddl-auto: none
+  data:
+    redis:
+      host: redis
+      port: 6379
+      database: 0
+  cache:
+    redis:
+      time-to-live: 60m
 eureka:
   client:
     serviceUrl:

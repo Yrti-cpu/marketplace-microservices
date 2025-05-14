@@ -4,7 +4,6 @@ import jakarta.validation.Valid;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -26,23 +25,25 @@ public class ProductController {
 
   private final ProductService productService;
 
-  @PostMapping("/reserve")
-  public ResponseEntity<?> reserve(@Valid @RequestBody ProductActionRequest request) {
-    productService.reserveProduct(request.getProductId(), request.getQuantity());
+  @PostMapping("/reserve/batch")
+  public ResponseEntity<String> reserveBatch(
+      @Valid @RequestBody List<ProductActionRequest> request) {
+    productService.reserveBatch(request);
     return ResponseEntity.ok("Дата брони: " + LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
-
   }
 
-  @PostMapping("/release")
-  public ResponseEntity<?> release(@Valid @RequestBody ProductActionRequest request) {
-    productService.releaseProduct(request.getProductId(), request.getQuantity());
+  @PostMapping("/release/batch")
+  public ResponseEntity<String> releaseBatch(
+      @Valid @RequestBody List<ProductActionRequest> request) {
+    productService.releaseBatch(request);
     return ResponseEntity.ok(
         "Дата выгрузки со склада: " + LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
   }
 
-  @PostMapping("/decrease")
-  public ResponseEntity<?> decrease(@Valid @RequestBody ProductActionRequest request) {
-    productService.decreaseStock(request.getProductId(), request.getQuantity());
+  @PostMapping("/decrease/batch")
+  public ResponseEntity<String> decreaseBatch(
+      @Valid @RequestBody List<ProductActionRequest> request) {
+    productService.cancelReserveBatch(request);
     return ResponseEntity.ok(
         "Дата отмены брони: " + LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
   }
@@ -74,7 +75,7 @@ public class ProductController {
   }
 
   @GetMapping("/{productIds}/sellers")
-  public Set<Long> getSellersId(@PathVariable List<Long> productIds) {
+  public List<Long> getSellersId(@PathVariable List<Long> productIds) {
     return productService.getSellersId(productIds);
   }
 

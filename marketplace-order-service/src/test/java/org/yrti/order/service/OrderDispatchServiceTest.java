@@ -11,9 +11,12 @@ import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.yrti.order.client.InventoryClient;
 import org.yrti.order.dao.OrderRepository;
 import org.yrti.order.dto.ProductReserveRequest;
+import org.yrti.order.handler.ClientResponseHandle;
 import org.yrti.order.model.Order;
 import org.yrti.order.model.OrderItem;
 import org.yrti.order.model.OrderStatus;
@@ -22,9 +25,10 @@ class OrderDispatchServiceTest {
 
   private final OrderRepository orderRepository = mock(OrderRepository.class);
   private final InventoryClient inventoryClient = mock(InventoryClient.class);
+  private final ClientResponseHandle clientResponseHandle = mock(ClientResponseHandle.class);
 
   private final OrderDispatchService service = new OrderDispatchService(orderRepository,
-      inventoryClient);
+      inventoryClient, clientResponseHandle);
 
   @Test
   @DisplayName("Успешная отправка заказа")
@@ -37,10 +41,14 @@ class OrderDispatchServiceTest {
 
     when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
 
+    when(inventoryClient.releaseProductsForOrder(
+        List.of(new ProductReserveRequest(1L, 2)))).thenReturn(
+        new ResponseEntity<>(HttpStatus.OK));
+
     service.dispatchOrder(1L);
 
     assertThat(order.getStatus()).isEqualTo(OrderStatus.DISPATCHED);
-    verify(inventoryClient).releaseProduct(any(ProductReserveRequest.class));
+    verify(inventoryClient).releaseProductsForOrder(any());
     verify(orderRepository).save(order);
   }
 
