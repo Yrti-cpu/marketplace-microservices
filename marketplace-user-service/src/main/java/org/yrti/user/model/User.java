@@ -1,5 +1,6 @@
 package org.yrti.user.model;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -16,6 +17,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "users")
 @Data
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS)
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

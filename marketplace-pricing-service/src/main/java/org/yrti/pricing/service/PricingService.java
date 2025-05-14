@@ -2,8 +2,11 @@ package org.yrti.pricing.service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,14 +31,6 @@ public class PricingService {
   private static final String PRICE_CACHE = "price";
   private static final String DISCOUNT_CACHE = "discount";
   private static final String FINAL_PRICE_CACHE = "final_price";
-
-  public List<PricingResponse> getPriceBatch(List<Long> productIds) {
-    if (productIds.isEmpty()) {
-      return List.of();
-    }
-
-    return productIds.stream().map(this::getPrice).collect(Collectors.toList());
-  }
 
   @Cacheable(value = PRICE_CACHE, key = "#productId")
   public Price getRawPrice(Long productId) {
@@ -68,6 +63,50 @@ public class PricingService {
         .discount(activeDiscount.map(Discount::getDiscount).orElse(null))
         .build();
 
+  }
+
+  @Transactional(readOnly = true)
+  @Cacheable(
+      value = "pricing:priceCache",
+      key = "{#root.methodName, #productIds.hashCode()}",
+      unless = "#result.isEmpty()"
+  )
+  public List<PricingResponse> getPriceBatch(List<Long> productIds) {
+    log.debug("Запрос цены: productIds={}", productIds);
+    if (productIds.isEmpty()) {
+      return List.of();
+    }
+
+    List<Price> prices = priceRepository.findByProductIdIn(productIds);
+    LocalDateTime now = LocalDateTime.now();
+    List<Discount> activeDiscounts = discountRepository
+        .findByProductIdInAndIsActiveTrueAndStartDateBeforeAndEndDateAfter(
+            productIds, now, now
+        );
+
+    Map<Long, Discount> discountMap = activeDiscounts.stream()
+        .collect(Collectors.toMap(Discount::getProductId, Function.identity()));
+
+    return productIds.stream()
+        .map(productId -> {
+          Price price = prices.stream()
+              .filter(p -> p.getProductId().equals(productId))
+              .findFirst()
+              .orElseThrow(() -> new PriceNotFoundException(productId));
+
+          Discount discount = discountMap.get(productId);
+          BigDecimal finalPrice = discount != null
+              ? applyDiscount(price.getAmount(), discount.getDiscount())
+              : price.getAmount();
+
+          return PricingResponse.builder()
+              .productId(productId)
+              .originalPrice(price.getAmount())
+              .discountedPrice(finalPrice)
+              .discount(discount != null ? discount.getDiscount() : null)
+              .build();
+        })
+        .toList();
   }
 
   private BigDecimal applyDiscount(BigDecimal price, BigDecimal discountPercent) {

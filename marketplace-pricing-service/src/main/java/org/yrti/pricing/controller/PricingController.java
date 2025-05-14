@@ -29,6 +29,4 @@ public class PricingController {
       @RequestBody List<Long> productIds) {
     return ResponseEntity.ok(pricingService.getPriceBatch(productIds));
   }
-
-
 }

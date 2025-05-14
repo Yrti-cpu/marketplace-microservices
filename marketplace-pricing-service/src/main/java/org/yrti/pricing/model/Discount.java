@@ -1,5 +1,6 @@
 package org.yrti.pricing.model;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -18,6 +19,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "discounts",
     indexes = @Index(name = "idx_discount_product", columnList = "product_id"))
 @Data
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS)
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
