@@ -35,6 +35,7 @@ public class Product {
 
   @Column(nullable = false)
   @Min(0)
+  @Builder.Default
   private Integer reservedQuantity = 0;
 
   @Column(name = "seller_id", nullable = false)

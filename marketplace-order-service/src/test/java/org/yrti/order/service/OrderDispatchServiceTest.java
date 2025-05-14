@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.yrti.order.client.InventoryClient;
 import org.yrti.order.dao.OrderRepository;
 import org.yrti.order.dto.ProductReserveRequest;
+import org.yrti.order.handler.ClientResponseHandle;
 import org.yrti.order.model.Order;
 import org.yrti.order.model.OrderItem;
 import org.yrti.order.model.OrderStatus;
@@ -24,9 +25,10 @@ class OrderDispatchServiceTest {
 
   private final OrderRepository orderRepository = mock(OrderRepository.class);
   private final InventoryClient inventoryClient = mock(InventoryClient.class);
+  private final ClientResponseHandle clientResponseHandle = mock(ClientResponseHandle.class);
 
   private final OrderDispatchService service = new OrderDispatchService(orderRepository,
-      inventoryClient);
+      inventoryClient, clientResponseHandle);
 
   @Test
   @DisplayName("Успешная отправка заказа")

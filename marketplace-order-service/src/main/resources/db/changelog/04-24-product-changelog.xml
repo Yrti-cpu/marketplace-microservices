@@ -40,4 +40,22 @@
       onDelete="RESTRICT"/>
 
   </changeSet>
+
+  <changeSet  author="daniladotsenko" id="create-reserve-products-func">
+    <sqlFile path="sql/reserve_products.sql"
+      relativeToChangelogFile="true"
+      splitStatements="false"/>
+  </changeSet>
+
+  <changeSet  author="daniladotsenko" id="create-release-products-func">
+    <sqlFile path="sql/release_products.sql"
+      relativeToChangelogFile="true"
+      splitStatements="false"/>
+  </changeSet>
+
+  <changeSet  author="daniladotsenko" id="create-cancel-reserve-products-func">
+    <sqlFile path="sql/cancel_reserve_products.sql"
+      relativeToChangelogFile="true"
+      splitStatements="false"/>
+  </changeSet>
 </databaseChangeLog>

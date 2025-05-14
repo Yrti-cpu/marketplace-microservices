@@ -24,18 +24,35 @@ public class OrderDeliveryService {
 
   @Transactional
   public void markOrderAsDelivered(Long orderId) {
-    Order order = orderRepository.findById(orderId)
-        .orElseThrow(() -> new OrderNotFoundException(orderId));
+    Order order = findOrderById(orderId);
+    ensureOrderCanBeDelivered(order);
+    updateOrderStatusToDelivered(order);
+    UserResponse user = fetchUser(order);
+    publishOrderDeliveredEvent(order, user);
+    logDelivery(order);
+  }
 
+  private Order findOrderById(Long orderId) {
+    return orderRepository.findById(orderId)
+        .orElseThrow(() -> new OrderNotFoundException(orderId));
+  }
+
+  private void ensureOrderCanBeDelivered(Order order) {
     if (order.getStatus() != OrderStatus.DISPATCHED) {
       throw new IllegalStateException("Невозможно доставить заказ, который ещё не отправлен.");
     }
+  }
 
+  private void updateOrderStatusToDelivered(Order order) {
     order.setStatus(OrderStatus.DELIVERED);
     orderRepository.save(order);
+  }
 
-    UserResponse user = userClient.getUserById(order.getUserId());
+  private UserResponse fetchUser(Order order) {
+    return userClient.getUserById(order.getUserId());
+  }
 
+  private void publishOrderDeliveredEvent(Order order, UserResponse user) {
     OrderDeliveredEvent event = OrderDeliveredEvent.builder()
         .orderId(order.getId())
         .userId(order.getUserId())
@@ -43,6 +60,10 @@ public class OrderDeliveryService {
         .build();
 
     orderDeliveredEventPublisher.publish(event);
-    log.info("Заказ #{} доставлен. Событие отправлено в Kafka", order.getId());
   }
+
+  private void logDelivery(Order order) {
+    log.debug("Заказ #{} доставлен. Событие отправлено в Kafka", order.getId());
+  }
+
 }

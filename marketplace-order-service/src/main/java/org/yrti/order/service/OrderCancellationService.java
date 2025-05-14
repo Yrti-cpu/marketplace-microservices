@@ -12,8 +12,8 @@ import org.yrti.order.dao.OrderRepository;
 import org.yrti.order.dto.ProductReserveRequest;
 import org.yrti.order.dto.UserResponse;
 import org.yrti.order.events.OrderCancelledEvent;
-import org.yrti.order.exception.ClientRequestException;
 import org.yrti.order.exception.OrderNotFoundException;
+import org.yrti.order.handler.ClientResponseHandle;
 import org.yrti.order.kafka.OrderCancelledEventPublisher;
 import org.yrti.order.model.Order;
 import org.yrti.order.model.OrderStatus;
@@ -27,41 +27,63 @@ public class OrderCancellationService {
   private final InventoryClient inventoryClient;
   private final UserClient userClient;
   private final OrderCancelledEventPublisher orderCancelledEventPublisher;
+  private final ClientResponseHandle clientResponseHandle;
 
   @Transactional
   public void cancelOrder(Long orderId) {
-    Order order = orderRepository.findById(orderId)
-        .orElseThrow(() -> new OrderNotFoundException(orderId));
+    Order order = findOrderOrThrow(orderId);
+    validateOrderCanBeCancelled(order);
 
+    cancelProductReservations(order);
+    updateOrderStatusToCancelled(order);
+    publishCancellationEvent(order);
+  }
+
+  private Order findOrderOrThrow(Long orderId) {
+    return orderRepository.findById(orderId)
+        .orElseThrow(() -> new OrderNotFoundException(orderId));
+  }
+
+  private void validateOrderCanBeCancelled(Order order) {
     if (order.getStatus() != OrderStatus.NEW) {
       throw new IllegalStateException("Заказ можно отменить только до оплаты");
     }
+  }
 
-    List<ProductReserveRequest> cancellRequests = order.getItems().stream()
+  private void cancelProductReservations(Order order) {
+    List<ProductReserveRequest> cancelRequests = order.getItems().stream()
         .map(item -> new ProductReserveRequest(item.getProductId(), item.getQuantity()))
         .toList();
 
-    ResponseEntity<String> inventoryResponse = inventoryClient.decreaseProductsForOrder(cancellRequests);
+    ResponseEntity<String> inventoryResponse = inventoryClient.decreaseProductsForOrder(
+        cancelRequests);
+    clientResponseHandle.handleResponse(inventoryResponse, "Inventory");
+  }
 
-    if (!inventoryResponse.getStatusCode().is2xxSuccessful()) {
-      assert inventoryResponse.getBody() != null;
-      throw new ClientRequestException("Inventory", inventoryResponse.getBody());
-    }
-
+  private void updateOrderStatusToCancelled(Order order) {
     order.setStatus(OrderStatus.CANCELLED);
     orderRepository.save(order);
     log.debug("Заказ #{} отменён", order.getId());
+  }
 
-    UserResponse user = userClient.getUserById(order.getUserId());
+  private void publishCancellationEvent(Order order) {
+    UserResponse user = getUserInfo(order.getUserId());
+    OrderCancelledEvent event = buildCancellationEvent(order, user);
 
-    OrderCancelledEvent event = OrderCancelledEvent.builder()
+    orderCancelledEventPublisher.publish(event);
+    log.info("Отправлено Kafka-событие об отмене заказа: {}", event);
+  }
+
+  private UserResponse getUserInfo(Long userId) {
+    return userClient.getUserById(userId);
+  }
+
+  private OrderCancelledEvent buildCancellationEvent(Order order, UserResponse user) {
+    return OrderCancelledEvent.builder()
         .orderId(order.getId())
         .userId(order.getUserId())
         .email(user.getEmail())
         .message("Ваш заказ #" + order.getId() + " был отменён.")
         .build();
-
-    orderCancelledEventPublisher.publish(event);
-    log.info("Отправлено Kafka-событие об отмене заказа: {}", event);
   }
 }

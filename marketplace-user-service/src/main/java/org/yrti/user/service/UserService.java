@@ -18,7 +18,9 @@ public class UserService {
 
   private final UserRepository userRepository;
 
-  @Cacheable(value = "user:userCache", key = "{#root.methodName, #id.hashCode()}")
+  @Cacheable(value = "user:userCache",
+      key = "{#root.methodName, #id.hashCode()}",
+      unless = "#result == null")
   public UserResponse getUserById(Long id) {
     log.debug("Запрос профиля клиента: userId={}", id);
     User user = userRepository.findById(id)
@@ -27,11 +29,6 @@ public class UserService {
   }
 
   @Transactional
-  @Cacheable(
-      value = "user:usersCache",
-      key = "{#root.methodName, #userIds.hashCode()}",
-      unless = "#result.isEmpty()"
-  )
   public List<String> getUsersBatch(List<Long> userIds) {
     log.debug("Запрос почт продавцов: {}", userIds);
 

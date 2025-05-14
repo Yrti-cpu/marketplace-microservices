@@ -25,5 +25,13 @@ public class GlobalExceptionHandler {
     return ResponseEntity.badRequest().body(ex.getMessage());
   }
 
+  @ExceptionHandler(IllegalStateException.class)
+  public ResponseEntity<String> handleJson(IllegalStateException ex) {
+    return ResponseEntity.badRequest().body(ex.getMessage());
+  }
 
+  @ExceptionHandler(Exception.class)
+  public ResponseEntity<String> handleGenericException() {
+    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Что-то пошло не так");
+  }
 }

@@ -19,8 +19,8 @@ import org.yrti.order.dto.PricingResponse;
 import org.yrti.order.dto.ProductReserveRequest;
 import org.yrti.order.dto.UserResponse;
 import org.yrti.order.events.OrderCreatedEvent;
-import org.yrti.order.exception.ClientRequestException;
 import org.yrti.order.exception.OrderNotFoundException;
+import org.yrti.order.handler.ClientResponseHandle;
 import org.yrti.order.kafka.OrderEventPublisher;
 import org.yrti.order.model.Order;
 import org.yrti.order.model.OrderItem;
@@ -35,61 +35,85 @@ public class OrderCreationService {
   private final PricingClient pricingClient;
   private final InventoryClient inventoryClient;
   private final OrderEventPublisher orderEventPublisher;
+  private final ClientResponseHandle clientResponseHandle;
 
   @Transactional
   public Order createOrder(CreateOrderRequest request) {
-    Order order = Order.builder().userId(request.getUserId()).address(request.getAddress()).build();
+    Order order = createOrderFromRequest(request);
 
-    List<ProductReserveRequest> reserveRequests = new ArrayList<>();
-    List<Long> productIds = new ArrayList<>();
+    reserveProductsInInventory(request);
+    List<PricingResponse> prices = getProductPrices(request);
 
-    for (OrderItemRequest item : request.getItems()) {
-      reserveRequests.add(new ProductReserveRequest(item.getProductId(), item.getQuantity()));
-      productIds.add(item.getProductId());
-    }
+    List<OrderItem> items = createOrderItems(request, prices, order);
+    order.setItems(items);
+    order.setTotalAmount(calculateTotalAmount(items));
 
-    ResponseEntity<String> inventoryResponse = inventoryClient.reserveProductsForOrder(reserveRequests);
-    log.debug("Получили ответ со статусом: " + inventoryResponse.getStatusCode());
-    if (!inventoryResponse.getStatusCode().is2xxSuccessful()) {
-      assert inventoryResponse.getBody() != null;
-      throw new ClientRequestException("Inventory", inventoryResponse.getBody());
-    }
+    Order savedOrder = orderRepository.save(order);
+    publishOrderCreatedEvent(savedOrder);
+
+    return savedOrder;
+  }
+
+  private Order createOrderFromRequest(CreateOrderRequest request) {
+    return Order.builder()
+        .userId(request.getUserId())
+        .address(request.getAddress())
+        .build();
+  }
+
+  private void reserveProductsInInventory(CreateOrderRequest request) {
+    List<ProductReserveRequest> reserveRequests = request.getItems().stream()
+        .map(item -> new ProductReserveRequest(item.getProductId(), item.getQuantity()))
+        .toList();
+
+    ResponseEntity<String> inventoryResponse = inventoryClient.reserveProductsForOrder(
+        reserveRequests);
+    clientResponseHandle.handleResponse(inventoryResponse, "Inventory");
+  }
+
+  private List<PricingResponse> getProductPrices(CreateOrderRequest request) {
+    List<Long> productIds = request.getItems().stream()
+        .map(OrderItemRequest::getProductId)
+        .toList();
 
     ResponseEntity<List<PricingResponse>> pricingResponse = pricingClient.getProductPriceBatch(
         productIds);
-    log.debug("Получили ответ со статусом: " + pricingResponse.getStatusCode());
-    assert pricingResponse.getBody() != null;
-    if (!pricingResponse.getStatusCode().is2xxSuccessful()) {
-      throw new ClientRequestException("Pricing", pricingResponse.getBody().toString());
-    }
+    return clientResponseHandle.handleResponse(pricingResponse, "Pricing");
+  }
 
-    List<PricingResponse> prices = pricingResponse.getBody();
-
+  private List<OrderItem> createOrderItems(CreateOrderRequest request,
+      List<PricingResponse> prices,
+      Order order) {
     List<OrderItem> items = new ArrayList<>();
+
     for (int i = 0; i < prices.size(); i++) {
-      BigDecimal originalPrice = prices.get(i).getOriginalPrice();
-      BigDecimal discountedPrice = prices.get(i).getDiscountedPrice();
-      BigDecimal discount = prices.get(i).getDiscount();
-      BigDecimal totalPrice = discountedPrice.multiply(
-          BigDecimal.valueOf(request.getItems().get(i).getQuantity()));
+      PricingResponse price = prices.get(i);
+      OrderItemRequest itemRequest = request.getItems().get(i);
+
+      BigDecimal totalPrice = price.getDiscountedPrice()
+          .multiply(BigDecimal.valueOf(itemRequest.getQuantity()));
 
       items.add(OrderItem.builder()
-          .productId(productIds.get(i))
-          .quantity(request.getItems().get(i).getQuantity())
-          .originalPrice(originalPrice)
-          .price(discountedPrice)
+          .productId(itemRequest.getProductId())
+          .quantity(itemRequest.getQuantity())
+          .originalPrice(price.getOriginalPrice())
+          .price(price.getDiscountedPrice())
           .totalPrice(totalPrice)
-          .discount(discount)
+          .discount(price.getDiscount())
           .order(order)
           .build());
-
     }
 
-    order.setItems(items);
-    order.setTotalAmount(
-        items.stream().map(OrderItem::getTotalPrice).reduce(BigDecimal.ZERO, BigDecimal::add));
-    Order savedOrder = orderRepository.save(order);
+    return items;
+  }
 
+  private BigDecimal calculateTotalAmount(List<OrderItem> items) {
+    return items.stream()
+        .map(OrderItem::getTotalPrice)
+        .reduce(BigDecimal.ZERO, BigDecimal::add);
+  }
+
+  private void publishOrderCreatedEvent(Order order) {
     UserResponse user = userClient.getUserById(order.getUserId());
 
     OrderCreatedEvent event = OrderCreatedEvent.builder()
@@ -101,8 +125,6 @@ public class OrderCreationService {
 
     orderEventPublisher.publish(event);
     log.debug("Заказ #{} создан", order.getId());
-
-    return savedOrder;
   }
 
   public OrderResponse getOrderById(Long orderId) {

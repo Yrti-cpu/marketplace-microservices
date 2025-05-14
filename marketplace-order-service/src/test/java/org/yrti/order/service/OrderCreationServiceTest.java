@@ -21,6 +21,7 @@ import org.yrti.order.dto.CreateOrderRequest;
 import org.yrti.order.dto.PricingResponse;
 import org.yrti.order.dto.ProductReserveRequest;
 import org.yrti.order.dto.UserResponse;
+import org.yrti.order.handler.ClientResponseHandle;
 import org.yrti.order.kafka.OrderEventPublisher;
 import org.yrti.order.model.Order;
 
@@ -31,9 +32,10 @@ class OrderCreationServiceTest {
   private final PricingClient pricingClient = mock(PricingClient.class);
   private final UserClient userClient = mock(UserClient.class);
   private final OrderEventPublisher orderEventPublisher = mock(OrderEventPublisher.class);
+  private final ClientResponseHandle clientResponseHandle = mock(ClientResponseHandle.class);
 
   private final OrderCreationService orderCreateService = new OrderCreationService(
-      orderRepository, userClient, pricingClient, inventoryClient, orderEventPublisher
+      orderRepository, userClient, pricingClient, inventoryClient, orderEventPublisher, clientResponseHandle
   );
 
   @Test

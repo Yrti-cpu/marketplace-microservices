@@ -2,7 +2,6 @@ package org.yrti.order.service;
 
 import jakarta.transaction.Transactional;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -31,44 +30,83 @@ public class PaymentProcessingService {
   @Transactional
   public void processPaymentEvent(PaymentEvent event) {
     if (!event.success()) {
-      log.warn("Оплата заказа #{} не прошла", event.orderId());
+      handleFailedPayment(event);
       return;
     }
 
     try {
-      Order order = orderService.markOrderAsPaid(event.orderId());
+      Order order = processSuccessfulPayment(event);
+      notifySellers(order);
+      publishOrderPaidEvent(event);
+    } catch (Exception e) {
+      log.error("Ошибка при обработке события оплаты: {}", e.getMessage(), e);
+    }
+  }
 
-      List<Long> sellerIds = inventoryClient.getSellersId(order.getItems().stream()
-          .map(OrderItem::getProductId).collect(Collectors.toList()));
+  private void handleFailedPayment(PaymentEvent event) {
+    log.warn("Оплата заказа #{} не прошла", event.orderId());
+  }
 
-      List<String> sellersEmails = userClient.getUsersBatch(sellerIds.stream().toList());
+  private Order processSuccessfulPayment(PaymentEvent event) {
+    return orderService.markOrderAsPaid(event.orderId());
+  }
 
-      if (sellersEmails.size() != sellerIds.size()) {
-        log.warn("Не все пользователи найдены! Запрошено: {}, найдено: {}",
-            sellerIds.size(), sellersEmails.size());
-      }
-      sellersEmails.forEach(email -> {
+  private void notifySellers(Order order) {
+    List<Long> sellerIds = getSellerIds(order);
+    List<String> sellerEmails = getSellerEmails(sellerIds);
+
+    validateSellerEmails(sellerIds, sellerEmails);
+    publishSellerNotifications(sellerEmails);
+  }
+
+  private List<Long> getSellerIds(Order order) {
+    return inventoryClient.getSellersId(
+        order.getItems().stream()
+            .map(OrderItem::getProductId)
+            .toList()
+    );
+  }
+
+  private List<String> getSellerEmails(List<Long> sellerIds) {
+    return userClient.getUsersBatch(sellerIds);
+  }
+
+  private void validateSellerEmails(List<Long> sellerIds, List<String> sellerEmails) {
+    if (sellerEmails.size() != sellerIds.size()) {
+      log.warn("Не все пользователи найдены! Запрошено: {}, найдено: {}",
+          sellerIds.size(), sellerEmails.size());
+    }
+  }
+
+  private void publishSellerNotifications(List<String> sellerEmails) {
+    sellerEmails.forEach(email ->
         sellerEventPublisher.publish(
             SellerEvent.builder()
                 .email(email)
                 .build()
-        );
-      });
+        )
+    );
+  }
 
-      UserResponse user = userClient.getUserById(event.userId());
+  private void publishOrderPaidEvent(PaymentEvent event) {
+    UserResponse user = getUserInfo(event.userId());
 
-      OrderPaidEvent paidEvent = OrderPaidEvent.builder()
-          .orderId(event.orderId())
-          .userId(event.userId())
-          .email(user.getEmail())
-          .amount(event.amount())
-          .build();
+    OrderPaidEvent paidEvent = buildOrderPaidEvent(event, user);
+    orderPaidEventPublisher.publish(paidEvent);
 
-      orderPaidEventPublisher.publish(paidEvent);
-      log.info("Событие оплаты заказа отправлено в Kafka: {}", paidEvent);
+    log.info("Событие оплаты заказа отправлено в Kafka: {}", paidEvent);
+  }
 
-    } catch (Exception e) {
-      log.error("Ошибка при обработке события оплаты: {}", e.getMessage(), e);
-    }
+  private UserResponse getUserInfo(Long userId) {
+    return userClient.getUserById(userId);
+  }
+
+  private OrderPaidEvent buildOrderPaidEvent(PaymentEvent event, UserResponse user) {
+    return OrderPaidEvent.builder()
+        .orderId(event.orderId())
+        .userId(event.userId())
+        .email(user.getEmail())
+        .amount(event.amount())
+        .build();
   }
 }

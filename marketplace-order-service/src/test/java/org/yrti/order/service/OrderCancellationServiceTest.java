@@ -19,6 +19,7 @@ import org.yrti.order.client.UserClient;
 import org.yrti.order.dao.OrderRepository;
 import org.yrti.order.dto.ProductReserveRequest;
 import org.yrti.order.dto.UserResponse;
+import org.yrti.order.handler.ClientResponseHandle;
 import org.yrti.order.kafka.OrderCancelledEventPublisher;
 import org.yrti.order.model.Order;
 import org.yrti.order.model.OrderItem;
@@ -31,9 +32,10 @@ class OrderCancellationServiceTest {
   private final UserClient userClient = mock(UserClient.class);
   private final OrderCancelledEventPublisher eventPublisher = mock(
       OrderCancelledEventPublisher.class);
+  private final ClientResponseHandle clientResponseHandle = mock(ClientResponseHandle.class);
 
   private final OrderCancellationService service = new OrderCancellationService(
-      orderRepository, inventoryClient, userClient, eventPublisher
+      orderRepository, inventoryClient, userClient, eventPublisher, clientResponseHandle
   );
 
   @Test

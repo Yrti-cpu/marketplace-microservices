@@ -8,9 +8,19 @@ import org.springframework.stereotype.Repository;
 import org.yrti.inventory.model.Product;
 
 @Repository
-public interface ProductRepository extends JpaRepository<Product, Long>, ProductCustomRepository {
+public interface ProductRepository extends JpaRepository<Product, Long> {
 
   @Query("SELECT p.sellerId FROM Product p WHERE p.id IN :productIds")
   List<Long> findSellerIdsByProductIds(@Param("productIds") List<Long> productIds);
 
+  @Query(value = "SELECT reserve_products(CAST(:json AS JSONB))", nativeQuery = true)
+  Integer reserveProductsBatch(
+      @Param("json") String json); // возвращаемое значение есть, но игнорируется
+
+
+  @Query(value = "SELECT release_products(CAST(:json AS JSONB))", nativeQuery = true)
+  Integer releaseProductsBatch(@Param("json") String json);
+
+  @Query(value = "SELECT cancel_reserve_products(CAST(:json AS JSONB))", nativeQuery = true)
+  Integer cancelReserveBatch(@Param("json") String json);
 }

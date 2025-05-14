@@ -1,5 +1,6 @@
 package org.yrti.user.config;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -50,6 +51,11 @@ public class RedisConfig {
 
     ObjectMapper objectMapper = new ObjectMapper();
     objectMapper.registerModule(new JavaTimeModule());
+    objectMapper.activateDefaultTyping(
+        objectMapper.getPolymorphicTypeValidator(),
+        ObjectMapper.DefaultTyping.EVERYTHING,
+        JsonTypeInfo.As.PROPERTY
+    );
     objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
 
     GenericJackson2JsonRedisSerializer serializer =
@@ -64,6 +70,11 @@ public class RedisConfig {
   public CacheManager cacheManager(RedisConnectionFactory connectionFactory) {
     ObjectMapper objectMapper = new ObjectMapper();
     objectMapper.registerModule(new JavaTimeModule());
+    objectMapper.activateDefaultTyping(
+        objectMapper.getPolymorphicTypeValidator(),
+        ObjectMapper.DefaultTyping.EVERYTHING,
+        JsonTypeInfo.As.PROPERTY
+    );
     objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
 
     RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig()
