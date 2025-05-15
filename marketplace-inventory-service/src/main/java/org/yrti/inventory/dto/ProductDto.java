@@ -1,23 +1,28 @@
 package org.yrti.inventory.dto;
 
-import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Hidden
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ProductActionRequest {
+public class ProductDto {
 
-  @NotNull(message = "ID товара обязателен")
-  private Long productId;
+  @NotBlank
+  private String name;
 
-  @Min(value = 1, message = "Количество должно быть не меньше 1")
+  private String description;
+
+  @Min(0)
   private Integer quantity;
+
+  @NotNull
+  private Long sellerId;
+
 }

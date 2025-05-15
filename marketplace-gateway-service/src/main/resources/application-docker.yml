@@ -11,6 +11,7 @@ spring:
           enabled: true
           lower-case-service-id: true
       routes:
+        # Основные маршруты API
         - id: inventory-service
           uri: lb://INVENTORY-SERVICE
           predicates:
@@ -27,10 +28,31 @@ spring:
           uri: lb://PAYMENT-SERVICE
           predicates:
             - Path=/api/payments/**
+
+        # Маршрут для API Docs
+        - id: inventory-service-api-docs
+          uri: lb://INVENTORY-SERVICE
+          predicates:
+            - Path=/inventory/v3/api-docs
+          filters:
+            - RewritePath=/inventory/v3/api-docs, /v3/api-docs
       httpclient:
         connect-timeout: 1000
         response-timeout: 5s
 
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    config-url: /v3/api-docs/swagger-config
+    urls:
+      - name: Inventory Service
+        url: /inventory/v3/api-docs
+      - name: Order Service
+        url: /order/v3/api-docs
+      - name: User Service
+        url: /user/v3/api-docs
+      - name: Payment Service
+        url: /payment/v3/api-docs
 eureka:
   client:
     serviceUrl:

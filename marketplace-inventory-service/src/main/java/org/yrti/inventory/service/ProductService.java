@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.yrti.inventory.dao.ProductRepository;
 import org.yrti.inventory.dto.ProductActionRequest;
+import org.yrti.inventory.dto.ProductDto;
 import org.yrti.inventory.exception.NotEnoughStockException;
 import org.yrti.inventory.exception.ProductNotFoundException;
 import org.yrti.inventory.model.Product;
@@ -62,9 +63,14 @@ public class ProductService {
     }
   }
 
-  public Product createProduct(Product product) {
+  public Product createProduct(ProductDto product) {
     log.debug("Создание товара: {}", product.getName());
-    return repository.save(product);
+    return repository.save(Product.builder()
+        .name(product.getName())
+        .description(product.getDescription())
+        .quantity(product.getQuantity())
+        .sellerId(product.getSellerId())
+        .build());
   }
 
 
@@ -81,14 +87,13 @@ public class ProductService {
   }
 
 
-  public Product updateProduct(Long id, Product updated) {
+  public Product updateProduct(Long id, ProductDto updated) {
     Product product = repository.findById(id)
         .orElseThrow(() -> new ProductNotFoundException(id));
     product.setName(updated.getName());
     product.setDescription(updated.getDescription());
     product.setQuantity(updated.getQuantity());
     product.setSellerId(updated.getSellerId());
-    product.setReservedQuantity(updated.getReservedQuantity());
     log.debug("Обновление товара: {} ", updated.getName());
     return repository.save(product);
   }
@@ -105,7 +110,9 @@ public class ProductService {
     if (productIds == null || productIds.isEmpty()) {
       return Collections.emptyList();
     }
-    return repository.findSellerIdsByProductIds(productIds).stream().distinct().toList(); //важно убрать дубликаты (у разных товаров, могут быть один и тот же продавец
+    return repository.findSellerIdsByProductIds(productIds)
+        .stream().distinct()
+        .toList(); // Важно убрать дубликаты (разные товары могут продаваться одним и тем же продавцом
   }
 
   private void checkProductBatchExist(List<ProductActionRequest> request) {
