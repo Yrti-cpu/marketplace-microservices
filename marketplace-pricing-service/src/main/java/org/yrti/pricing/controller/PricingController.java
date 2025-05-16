@@ -15,6 +15,12 @@ import org.springframework.web.bind.annotation.RestController;
 import org.yrti.pricing.dto.PricingResponse;
 import org.yrti.pricing.service.PricingService;
 
+/**
+ * Контроллер для управления ценами после применения скидок. Скрыт из публичной документации
+ * Swagger, так как предназначен исключительно для внутреннего взаимодействия между микросервисами.
+ * Доступ к этим endpoint'ам должен осуществляться только через сервисный вызов (через Feign
+ * Client).
+ */
 @Hidden
 @Tag(name = "Цены", description = "Управляет ценами после применения скидки на товары")
 @RestController
