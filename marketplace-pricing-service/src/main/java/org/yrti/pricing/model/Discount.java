@@ -1,5 +1,6 @@
 package org.yrti.pricing.model;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,6 +15,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Schema(description = "Сущность скидки")
 @Entity
 @Table(name = "discounts",
     indexes = @Index(name = "idx_discount_product", columnList = "product_id"))

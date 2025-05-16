@@ -15,4 +15,8 @@ public interface DiscountRepository extends JpaRepository<Discount, Long> {
   List<Discount> findByProductIdInAndIsActiveTrueAndStartDateBeforeAndEndDateAfter(List<Long> productIds,
       LocalDateTime startDate,
       LocalDateTime endDate);
+
+  boolean existsByProductId(Long productId);
+
+  void deleteByProductId(Long productId);
 }

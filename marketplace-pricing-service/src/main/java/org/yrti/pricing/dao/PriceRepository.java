@@ -13,4 +13,8 @@ public interface PriceRepository extends JpaRepository<Price, Long> {
 
   List<Price> findByProductIdIn(List<Long> productId);
 
+  boolean existsByProductId(Long productId);
+
+  void deleteByProductId(Long productId);
+
 }
