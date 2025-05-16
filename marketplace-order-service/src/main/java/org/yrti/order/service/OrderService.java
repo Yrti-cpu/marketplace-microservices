@@ -8,14 +8,16 @@ import org.yrti.order.dto.CreateOrderRequest;
 import org.yrti.order.dto.OrderResponse;
 import org.yrti.order.model.Order;
 
-
+/**
+ * Фасадный сервис для работы с заказами.
+ * Объединяет все операции с заказами в единый API.
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class OrderService {
 
   private final OrderCreationService orderCreationService;
-  private final OrderPaymentService orderPaymentService;
   private final OrderDispatchService orderDispatchService;
   private final OrderDeliveryService orderDeliveryService;
   private final OrderCancellationService orderCancellationService;
@@ -26,10 +28,6 @@ public class OrderService {
 
   public OrderResponse getOrder(Long orderId) {
     return orderCreationService.getOrderById(orderId);
-  }
-
-  public Order markOrderAsPaid(Long orderId) {
-    return orderPaymentService.markOrderAsPaid(orderId);
   }
 
   public String dispatchOrder(Long orderId) {

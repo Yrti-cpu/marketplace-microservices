@@ -3,9 +3,8 @@ package org.yrti.order.service;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.yrti.order.client.InventoryClient;
@@ -17,25 +16,39 @@ import org.yrti.order.dto.CreateOrderRequest.OrderItemRequest;
 import org.yrti.order.dto.OrderResponse;
 import org.yrti.order.dto.PricingResponse;
 import org.yrti.order.dto.ProductReserveRequest;
-import org.yrti.order.dto.UserResponse;
-import org.yrti.order.events.OrderCreatedEvent;
+import org.yrti.order.events.OrderEventType;
 import org.yrti.order.exception.OrderNotFoundException;
-import org.yrti.order.handler.ClientResponseHandle;
 import org.yrti.order.kafka.OrderEventPublisher;
 import org.yrti.order.model.Order;
 import org.yrti.order.model.OrderItem;
 
+/**
+ * Сервис для создания новых заказов.
+ * Обрабатывает полный цикл создания заказа:
+ * - Создание заказа из запроса
+ * - Резервирование товаров
+ * - Получение цен
+ * - Расчет итоговой суммы
+ * - Публикация события
+ */
 @Service
-@RequiredArgsConstructor
 @Slf4j
-public class OrderCreationService {
+public class OrderCreationService extends BaseOrderService {
 
-  private final OrderRepository orderRepository;
-  private final UserClient userClient;
   private final PricingClient pricingClient;
   private final InventoryClient inventoryClient;
-  private final OrderEventPublisher orderEventPublisher;
-  private final ClientResponseHandle clientResponseHandle;
+
+  @Autowired
+  public OrderCreationService(
+      OrderRepository orderRepository,
+      UserClient userClient,
+      OrderEventPublisher eventPublisher,
+      InventoryClient inventoryClient,
+      PricingClient pricingClient) {
+    super(orderRepository, userClient, eventPublisher);
+    this.inventoryClient = inventoryClient;
+    this.pricingClient = pricingClient;
+  }
 
   @Transactional
   public Order createOrder(CreateOrderRequest request) {
@@ -49,7 +62,8 @@ public class OrderCreationService {
     order.setTotalAmount(calculateTotalAmount(items));
 
     Order savedOrder = orderRepository.save(order);
-    publishOrderCreatedEvent(savedOrder);
+
+    publishEvent(savedOrder, OrderEventType.CREATED);
 
     return savedOrder;
   }
@@ -66,9 +80,7 @@ public class OrderCreationService {
         .map(item -> new ProductReserveRequest(item.getProductId(), item.getQuantity()))
         .toList();
 
-    ResponseEntity<String> inventoryResponse = inventoryClient.reserveProductsForOrder(
-        reserveRequests);
-    clientResponseHandle.handleResponse(inventoryResponse, "Inventory");
+    inventoryClient.reserveProductsForOrder(reserveRequests);
   }
 
   private List<PricingResponse> getProductPrices(CreateOrderRequest request) {
@@ -76,9 +88,7 @@ public class OrderCreationService {
         .map(OrderItemRequest::getProductId)
         .toList();
 
-    ResponseEntity<List<PricingResponse>> pricingResponse = pricingClient.getProductPriceBatch(
-        productIds);
-    return clientResponseHandle.handleResponse(pricingResponse, "Pricing");
+    return pricingClient.getProductPriceBatch(productIds);
   }
 
   private List<OrderItem> createOrderItems(CreateOrderRequest request,
@@ -111,20 +121,6 @@ public class OrderCreationService {
     return items.stream()
         .map(OrderItem::getTotalPrice)
         .reduce(BigDecimal.ZERO, BigDecimal::add);
-  }
-
-  private void publishOrderCreatedEvent(Order order) {
-    UserResponse user = userClient.getUserById(order.getUserId());
-
-    OrderCreatedEvent event = OrderCreatedEvent.builder()
-        .orderId(order.getId())
-        .userId(order.getUserId())
-        .email(user.getEmail())
-        .message("Заказ #" + order.getId() + " успешно оформлен")
-        .build();
-
-    orderEventPublisher.publish(event);
-    log.debug("Заказ #{} создан", order.getId());
   }
 
   public OrderResponse getOrderById(Long orderId) {

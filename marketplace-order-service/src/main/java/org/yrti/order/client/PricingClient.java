@@ -2,14 +2,13 @@ package org.yrti.order.client;
 
 import java.util.List;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.yrti.order.dto.PricingResponse;
 
 /**
- * Feign-клиент для взаимодействия с сервисом ценообразования (PRICING-SERVICE).
- * Предоставляет методы для получения цен на товары.
+ * Feign-клиент для взаимодействия с сервисом ценообразования (PRICING-SERVICE). Предоставляет
+ * методы для получения цен на товары.
  */
 @FeignClient(name = "PRICING-SERVICE")
 public interface PricingClient {
