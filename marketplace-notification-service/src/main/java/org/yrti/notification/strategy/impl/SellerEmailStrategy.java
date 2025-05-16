@@ -1,31 +1,29 @@
 package org.yrti.notification.strategy.impl;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.yrti.notification.events.SellerEvent;
+import org.yrti.notification.events.OrderEvent;
+import org.yrti.notification.events.OrderEventType;
 import org.yrti.notification.service.EmailService;
-import org.yrti.notification.strategy.EmailStrategy;
 
-@Slf4j
+/**
+ * Специальная стратегия для отправки email-уведомлений продавцам. Не поддерживает стандартные
+ * события заказов, только специализированные уведомления для продавцов.
+ */
 @Component
-@RequiredArgsConstructor
-public class SellerEmailStrategy implements EmailStrategy<SellerEvent> {
+public class SellerEmailStrategy extends BaseEmailStrategy {
 
-  private final EmailService emailService;
-
-  @Override
-  public boolean supports(Class<?> eventType) {
-    return SellerEvent.class.equals(eventType);
+  public SellerEmailStrategy(EmailService emailService) {
+    super(emailService, null);
   }
 
   @Override
-  public void sendEmail(SellerEvent event) {
-    String to = event.email();
-    String subject = "Товар куплен";
-    String body = "Ваш товар приобрели!";
-    emailService.send(to, subject, body);
-    log.debug("Отправлено уведомление продавцу о покупке товара на {}", to);
+  public void sendEmail(OrderEvent event) {
+    throw new IllegalStateException("Не поддерживает тип событий +" + event.toString());
+  }
 
+
+  @Override
+  public boolean supports(OrderEventType eventType) {
+    return false;
   }
 }

@@ -7,6 +7,10 @@ import org.springframework.stereotype.Component;
 import org.yrti.notification.events.SellerEvent;
 import org.yrti.notification.strategy.EmailEventDispatcher;
 
+/**
+ * Kafka-слушатель для обработки событий, связанных с продавцами. Получает события из топика
+ * "product-sold" и уведомляет продавцов о продажах.
+ */
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -17,7 +21,7 @@ public class SellerEventListener {
   @KafkaListener(topics = "product-sold", groupId = "notification-product-sold")
   public void listen(SellerEvent event) {
     log.debug("[product-sold] Получено событие: {}", event);
-    dispatcher.dispatchEmail(event);
+    dispatcher.dispatchSellerEmail(event);
   }
 
 }
