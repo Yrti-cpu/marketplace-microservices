@@ -1,7 +1,7 @@
-CREATE OR REPLACE FUNCTION reserve_products(requests JSON)
+CREATE OR REPLACE FUNCTION reserve_products(requests JSONB)
     RETURNS INT AS $func$
 DECLARE
-    r JSON;
+    r JSONB;
     product_id BIGINT;
     qty_to_reserve INT;
     updated_rows INT := 0;

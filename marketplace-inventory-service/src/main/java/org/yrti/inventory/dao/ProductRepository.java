@@ -14,13 +14,13 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
   List<Long> findSellerIdsByProductIds(@Param("productIds") List<Long> productIds);
 
   //Возвращаемое значение есть, но игнорируется
-  @Query(value = "SELECT reserve_products(:json)", nativeQuery = true)
+  @Query(value = "SELECT reserve_products(CAST(:json AS jsonb))", nativeQuery = true)
   Integer reserveProductsBatch(@Param("json") String json);
 
 
-  @Query(value = "SELECT release_products(:json )", nativeQuery = true)
+  @Query(value = "SELECT release_products(CAST(:json AS jsonb))", nativeQuery = true)
   Integer releaseProductsBatch(@Param("json") String json);
 
-  @Query(value = "SELECT cancel_reserve_products(:json)", nativeQuery = true)
+  @Query(value = "SELECT cancel_reserve_products(CAST(:json AS jsonb))", nativeQuery = true)
   Integer cancelReserveBatch(@Param("jsonb") String json);
 }
