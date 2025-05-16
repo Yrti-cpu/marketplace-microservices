@@ -36,10 +36,10 @@ public class ProductController {
       description = "Позволяет зарезервировать товары из заказа пользователя"
   )
   @PostMapping("/reserve/batch")
-  public ResponseEntity<String> reserveBatch(
+  public String reserveBatch(
       @Valid @RequestBody List<ProductActionRequest> request) {
     productService.reserveBatch(request);
-    return ResponseEntity.ok("Дата брони: " + LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
+    return "Дата брони: " + LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
   }
 
   @Hidden // Скрываем из публичной документации, так как это внутренний эндпоинт
@@ -48,11 +48,10 @@ public class ProductController {
       description = "Позволяет отправить товары из заказа пользователя со склада"
   )
   @PostMapping("/release/batch")
-  public ResponseEntity<String> releaseBatch(
+  public String releaseBatch(
       @Valid @RequestBody List<ProductActionRequest> request) {
     productService.releaseBatch(request);
-    return ResponseEntity.ok(
-        "Дата выгрузки со склада: " + LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
+    return "Дата выгрузки со склада: " + LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
   }
 
   @Hidden // Скрываем из публичной документации, так как это внутренний эндпоинт
@@ -61,11 +60,10 @@ public class ProductController {
       description = "Позволяет отменить резерв товаров из заказа пользователя"
   )
   @PostMapping("/decrease/batch")
-  public ResponseEntity<String> decreaseBatch(
+  public String decreaseBatch(
       @Valid @RequestBody List<ProductActionRequest> request) {
     productService.cancelReserveBatch(request);
-    return ResponseEntity.ok(
-        "Дата отмены брони: " + LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
+    return "Дата отмены брони: " + LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS);
   }
 
   @Operation(
