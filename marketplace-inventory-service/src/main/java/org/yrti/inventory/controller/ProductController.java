@@ -30,7 +30,7 @@ public class ProductController {
 
   private final ProductService productService;
 
-  @Hidden
+  @Hidden // Скрываем из публичной документации, так как это внутренний эндпоинт
   @Operation(
       summary = "Резерв товаров",
       description = "Позволяет зарезервировать товары из заказа пользователя"
@@ -42,7 +42,7 @@ public class ProductController {
     return ResponseEntity.ok("Дата брони: " + LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
   }
 
-  @Hidden
+  @Hidden // Скрываем из публичной документации, так как это внутренний эндпоинт
   @Operation(
       summary = "Отправка товаров",
       description = "Позволяет отправить товары из заказа пользователя со склада"
@@ -55,7 +55,7 @@ public class ProductController {
         "Дата выгрузки со склада: " + LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
   }
 
-  @Hidden
+  @Hidden // Скрываем из публичной документации, так как это внутренний эндпоинт
   @Operation(
       summary = "Отмена резерва",
       description = "Позволяет отменить резерв товаров из заказа пользователя"
@@ -100,7 +100,9 @@ public class ProductController {
       description = "Позволяет изменить информацию о товаре"
   )
   @PutMapping("/{id}")
-  public ResponseEntity<Product> update(@PathVariable Long id, @Valid @RequestBody ProductDto product) {
+  public ResponseEntity<Product> update(
+      @PathVariable Long id,
+      @Valid @RequestBody ProductDto product) {
     return ResponseEntity.ok(productService.updateProduct(id, product));
   }
 

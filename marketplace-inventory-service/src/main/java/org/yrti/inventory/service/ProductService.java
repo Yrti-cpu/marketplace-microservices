@@ -30,7 +30,7 @@ public class ProductService {
     log.debug("Резервируем товары: {} ", request);
 
     checkProductBatchExist(request);
-    executeProductAction(request, repository::reserveProductsBatch, "резервирование товаров");
+    executeProductAction(request, repository::reserveProductsBatch, ProductActionType.RESERVE);
   }
 
   @Transactional
@@ -38,7 +38,7 @@ public class ProductService {
     log.debug("Списываем товары со склада: {}", request);
 
     checkProductBatchExist(request);
-    executeProductAction(request, repository::releaseProductsBatch, "отправка товаров");
+    executeProductAction(request, repository::releaseProductsBatch, ProductActionType.RELEASE);
   }
 
   @Transactional
@@ -46,15 +46,17 @@ public class ProductService {
     log.debug("Отменяем резерв товаров: {}", request);
 
     checkProductBatchExist(request);
-    executeProductAction(request, repository::cancelReserveBatch, "отмена резерва");
+    executeProductAction(request, repository::cancelReserveBatch, ProductActionType.CANCEL_RESERVE);
   }
 
-  private <T> void executeProductAction(List<T> requests,
+  private void executeProductAction(
+      List<ProductActionRequest> requests,
       Consumer<String> dbFunction,
-      String actionDescription) {
+      ProductActionType actionDescription) {
     try {
-      String json = objectMapper.writeValueAsString(requests);
-      dbFunction.accept(json);
+      String json =
+          objectMapper.writeValueAsString(requests); //Преобразовываем список в строку для бд
+      dbFunction.accept(json); //Вызов функции, переданной в параметре метода
     } catch (JsonProcessingException e) {
       throw new IllegalStateException("Ошибка сериализации JSON", e);
     } catch (DataAccessException e) {
@@ -112,18 +114,12 @@ public class ProductService {
     }
     return repository.findSellerIdsByProductIds(productIds)
         .stream().distinct()
-        .toList(); // Важно убрать дубликаты (разные товары могут продаваться одним и тем же продавцом
+        .toList(); //Важно убрать дубликаты (разные товары могут продаваться одним и тем же продавцом)
   }
 
   private void checkProductBatchExist(List<ProductActionRequest> request) {
     if (request == null || request.isEmpty()) {
       throw new IllegalArgumentException("Список товаров не может быть пустым");
-    }
-
-    for (ProductActionRequest r : request) {
-      if (r.getQuantity() <= 0) {
-        throw new IllegalArgumentException("Количество должно быть больше 0");
-      }
     }
   }
 }
