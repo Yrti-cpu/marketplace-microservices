@@ -10,11 +10,11 @@ import lombok.Data;
 @AllArgsConstructor
 public class PricingResponse {
 
-  @NotNull(message = "Product ID is required")
+  @NotNull(message = "ID товара обязательно")
   private Long productId;
-  @Min(value = 1, message = "Price must be at least 1")
+  @Min(value = 1, message = "Цена не меньше 1")
   private BigDecimal originalPrice;
-  @Min(value = 1, message = "Price must be at least 1")
+  @Min(value = 1, message = "Цена со скидкой не меньше 1")
   private BigDecimal discountedPrice;
   private BigDecimal discount;
 }

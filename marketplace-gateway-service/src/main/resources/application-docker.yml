@@ -28,6 +28,10 @@ spring:
           uri: lb://PAYMENT-SERVICE
           predicates:
             - Path=/api/payments/**
+        - id: pricing-service
+          uri: lb://PRICING-SERVICE
+          predicates:
+            - Path=/api/pricing/**
 
         # Маршрут для API Docs
         - id: inventory-service-api-docs
@@ -36,6 +40,30 @@ spring:
             - Path=/inventory/v3/api-docs
           filters:
             - RewritePath=/inventory/v3/api-docs, /v3/api-docs
+        - id: order-service-api-docs
+          uri: lb://ORDER-SERVICE
+          predicates:
+            - Path=/order/v3/api-docs
+          filters:
+            - RewritePath=/order/v3/api-docs, /v3/api-docs
+        - id: user-service-api-docs
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user/v3/api-docs
+          filters:
+            - RewritePath=/user/v3/api-docs, /v3/api-docs
+        - id: payment-service-api-docs
+          uri: lb://PAYMENT-SERVICE
+          predicates:
+            - Path=/payment/v3/api-docs
+          filters:
+            - RewritePath=/payment/v3/api-docs, /v3/api-docs
+        - id: pricing-service-api-docs
+          uri: lb://PRICING-SERVICE
+          predicates:
+            - Path=/pricing/v3/api-docs
+          filters:
+            - RewritePath=/pricing/v3/api-docs, /v3/api-docs
       httpclient:
         connect-timeout: 1000
         response-timeout: 5s
@@ -53,6 +81,8 @@ springdoc:
         url: /user/v3/api-docs
       - name: Payment Service
         url: /payment/v3/api-docs
+      - name: Pricing Service
+        url: /pricing/v3/api-docs
 eureka:
   client:
     serviceUrl:

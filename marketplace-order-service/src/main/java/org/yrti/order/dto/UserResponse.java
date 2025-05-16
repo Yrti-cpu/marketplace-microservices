@@ -8,10 +8,10 @@ import lombok.Data;
 @AllArgsConstructor
 public class UserResponse {
 
-  @NotNull(message = "User ID is required")
+  @NotNull(message = "ID пользователя обязателен")
   private Long id;
-  @NotNull(message = "User email is required")
+  @NotNull(message = "email пользователя обязателен")
   private String email;
-  @NotNull(message = "User name is required")
+  @NotNull(message = "имя пользователя обязательно")
   private String name;
 }

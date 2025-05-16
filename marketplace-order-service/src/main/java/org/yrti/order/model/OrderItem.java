@@ -2,6 +2,7 @@ package org.yrti.order.model;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -16,6 +17,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Schema(description = "Сущность деталей заказа")
 @Entity
 @Table(name = "order_items")
 @Data
