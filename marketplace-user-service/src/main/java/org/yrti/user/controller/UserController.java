@@ -54,14 +54,14 @@ public class UserController {
 
 
   @Operation(summary = "Удалить пользователя")
-  @DeleteMapping("{userId}")
+  @DeleteMapping("/{userId}")
   public ResponseEntity<String> deleteDiscount(@PathVariable Long userId) {
     userService.deleteUser(userId);
     return ResponseEntity.ok("Пользователья с id:" + userId + "удален");
   }
 
   @Operation(summary = "Обновить пароль")
-  @PatchMapping("{userId}")
+  @PatchMapping("/{userId}")
   public ResponseEntity<String> deactivateDiscount(@PathVariable Long userId,
       @RequestBody String newPassword) {
     userService.updateUserPassword(userId, newPassword);

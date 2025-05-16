@@ -40,7 +40,7 @@ public class DiscountController {
   }
 
   @Operation(summary = "Обновить скидку")
-  @PutMapping("{productId}")
+  @PutMapping("/{productId}")
   public ResponseEntity<Discount> updateDiscount(
       @PathVariable Long productId,
       @Valid @RequestBody DiscountRequest discount) {
@@ -48,14 +48,14 @@ public class DiscountController {
   }
 
   @Operation(summary = "Удалить скидку")
-  @DeleteMapping("{productId}")
+  @DeleteMapping("/{productId}")
   public ResponseEntity<String> deleteDiscount(@PathVariable Long productId) {
     discountService.deleteDiscount(productId);
     return ResponseEntity.ok("Скидка для товара с id:" + productId + "удалена");
   }
 
   @Operation(summary = "Деактивировать скидку")
-  @PatchMapping("{productId}")
+  @PatchMapping("/{productId}")
   public ResponseEntity<String> deactivateDiscount(@PathVariable Long productId) {
     discountService.deactivateDiscount(productId);
     return ResponseEntity.ok("Скидка для товара с id:" + productId + "деактивирована");
