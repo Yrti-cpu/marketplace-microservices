@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ProductReserveRequest {
 
-  @NotNull(message = "Product ID is required")
+  @NotNull(message = "ID товара обязательно")
   private Long productId;
-  @Min(value = 1, message = "Quantity must be at least 1")
+  @Min(value = 1, message = "Количество не меньше 1")
   private Integer quantity;
 }

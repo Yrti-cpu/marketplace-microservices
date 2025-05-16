@@ -24,10 +24,10 @@ public class CreateOrderRequest {
   @AllArgsConstructor
   public static class OrderItemRequest {
 
-    @NotNull(message = "Product ID is required")
+    @NotNull(message = "ID продукта обязателен")
     private Long productId;
 
-    @Min(value = 1, message = "Quantity must be at least 1")
+    @Min(value = 1, message = "Количество не меньше 1")
     private Integer quantity;
   }
 
