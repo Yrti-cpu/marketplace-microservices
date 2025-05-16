@@ -36,7 +36,9 @@ public class UserController {
     return userService.getUserById(id);
   }
 
-  @Hidden
+
+
+  @Hidden // Скрываем из публичной документации, так как это внутренний эндпоинт
   @Operation(
       summary = "Получение почт продавцов"
   )
