@@ -8,19 +8,17 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.yrti.order.client.InventoryClient;
 import org.yrti.order.client.UserClient;
 import org.yrti.order.dao.OrderRepository;
-import org.yrti.order.dto.ProductReserveRequest;
 import org.yrti.order.dto.UserResponse;
-import org.yrti.order.handler.ClientResponseHandle;
-import org.yrti.order.kafka.OrderCancelledEventPublisher;
+import org.yrti.order.kafka.OrderEventPublisher;
 import org.yrti.order.model.Order;
 import org.yrti.order.model.OrderItem;
 import org.yrti.order.model.OrderStatus;
@@ -30,12 +28,10 @@ class OrderCancellationServiceTest {
   private final OrderRepository orderRepository = mock(OrderRepository.class);
   private final InventoryClient inventoryClient = mock(InventoryClient.class);
   private final UserClient userClient = mock(UserClient.class);
-  private final OrderCancelledEventPublisher eventPublisher = mock(
-      OrderCancelledEventPublisher.class);
-  private final ClientResponseHandle clientResponseHandle = mock(ClientResponseHandle.class);
+  private final OrderEventPublisher eventPublisher = mock(OrderEventPublisher.class);
 
   private final OrderCancellationService service = new OrderCancellationService(
-      orderRepository, inventoryClient, userClient, eventPublisher, clientResponseHandle
+      orderRepository, userClient, eventPublisher, inventoryClient
   );
 
   @Test
@@ -54,9 +50,8 @@ class OrderCancellationServiceTest {
 
     when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
     when(userClient.getUserById(1L)).thenReturn(new UserResponse(1L, "mail@mail.com", "Daniil"));
-    when(inventoryClient.decreaseProductsForOrder(
-        List.of(new ProductReserveRequest(1L, 2), new ProductReserveRequest(2L, 1)))).thenReturn(
-        new ResponseEntity<>(HttpStatus.OK));
+    when(inventoryClient.decreaseProductsForOrder(any()))
+        .thenReturn("Дата отмены брони: " + LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
     // Выполнение
     service.cancelOrder(1L);
 
@@ -77,6 +72,6 @@ class OrderCancellationServiceTest {
     //Проверка
     assertThatThrownBy(() -> service.cancelOrder(1L))
         .isInstanceOf(IllegalStateException.class)
-        .hasMessageContaining("Заказ можно отменить только до оплаты");
+        .hasMessageContaining(String.format("Заказ должен быть %s", OrderStatus.NEW));
   }
 }
