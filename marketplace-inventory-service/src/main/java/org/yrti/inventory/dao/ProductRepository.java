@@ -22,5 +22,5 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
   Integer releaseProductsBatch(@Param("json") String json);
 
   @Query(value = "SELECT cancel_reserve_products(CAST(:json AS jsonb))", nativeQuery = true)
-  Integer cancelReserveBatch(@Param("jsonb") String json);
+  Integer cancelReserveBatch(@Param("json") String json);
 }
