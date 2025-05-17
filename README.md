@@ -10,13 +10,13 @@
 
 ## 🛠️ Технологический стек
 
-| Категория          | Технологии                                                                                                   |
-|--------------------|--------------------------------------------------------------------------------------------------------------|
-| **Backend**        | Java 17, Spring Boot 3, Spring Cloud (Gateway, Eureka, OpenFeign), Spring Data (JPA, Redis), ORM (Hibernate) |
-| **Базы данных**    | PostgreSQL, Liquibase, Redis                                                                                 |
-| **Тестирование**   | JUnit 5, Mockito                                                                                             |
-| **Инфраструктура** | Docker,  Kafka, Swagger API                                                                                  |
-| **Инструменты**    | Lombok, SLF4J, PMD, Checkstyle, JaCoCo                                                                       |
+| Категория          | Технологии                                                                                  |
+|--------------------|---------------------------------------------------------------------------------------------|
+| **Backend**        | Java 17, Spring Boot 3, Spring Cloud (Gateway, Eureka, OpenFeign), Spring Data (JPA, Redis) |
+| **Базы данных**    | PostgreSQL, Liquibase, Redis                                                                |
+| **Тестирование**   | JUnit 5, Mockito                                                                            |
+| **Инфраструктура** | Docker,  Kafka, Swagger API                                                                 |
+| **Инструменты**    | Lombok, SLF4J, PMD, Checkstyle, JaCoCo                                                      |
 
 ---
 
