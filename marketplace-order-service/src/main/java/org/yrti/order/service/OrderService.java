@@ -41,5 +41,4 @@ public class OrderService {
   public void cancelOrder(Long orderId) {
     orderCancellationService.cancelOrder(orderId);
   }
-
 }

@@ -57,5 +57,4 @@ public class OrderCancellationService extends BaseOrderService {
 
     inventoryClient.decreaseProductsForOrder(cancelRequests);
   }
-
 }

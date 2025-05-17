@@ -102,13 +102,13 @@ public class PricingService {
     BigDecimal finalPrice = activeDiscount
         .map(discount -> applyDiscount(price.getAmount(), discount.getDiscount()))
         .orElse(price.getAmount());
+
     return PricingResponse.builder()
         .productId(productId)
         .originalPrice(price.getAmount())
         .discountedPrice(finalPrice)
         .discount(activeDiscount.map(Discount::getDiscount).orElse(null))
         .build();
-
   }
 
   /**

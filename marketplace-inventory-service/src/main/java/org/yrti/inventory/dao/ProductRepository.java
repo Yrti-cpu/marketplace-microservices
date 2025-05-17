@@ -17,7 +17,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
   @Query(value = "SELECT reserve_products(CAST(:json AS jsonb))", nativeQuery = true)
   Integer reserveProductsBatch(@Param("json") String json);
 
-
   @Query(value = "SELECT release_products(CAST(:json AS jsonb))", nativeQuery = true)
   Integer releaseProductsBatch(@Param("json") String json);
 

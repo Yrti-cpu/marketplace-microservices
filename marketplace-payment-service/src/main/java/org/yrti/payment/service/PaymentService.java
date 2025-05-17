@@ -66,7 +66,7 @@ public class PaymentService {
       throw new PaymentException("Заказ принадлежит другому пользователю");
     }
 
-    if (!order.getStatus().equals("NEW")) {
+    if (!"NEW".equals(order.getStatus())) {
       throw new PaymentException("Заказ уже оплачен или отменен");
     }
 

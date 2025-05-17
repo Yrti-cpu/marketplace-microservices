@@ -39,7 +39,6 @@ public class UserService {
       return Collections.emptyList();
     }
     return userRepository.findSellerEmailByIds(userIds);
-
   }
 
   public UserResponse createUser(UserRequest userRequest) {
