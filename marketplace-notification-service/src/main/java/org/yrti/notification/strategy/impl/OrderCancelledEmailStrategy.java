@@ -1,31 +1,27 @@
 package org.yrti.notification.strategy.impl;
 
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.yrti.notification.events.OrderCancelledEvent;
+import org.yrti.notification.events.OrderEvent;
+import org.yrti.notification.events.OrderEventType;
 import org.yrti.notification.service.EmailService;
-import org.yrti.notification.strategy.EmailStrategy;
 
-@Slf4j
+/**
+ * Стратегия для отправки email-уведомлений об отмене заказов.
+ * Генерирует и отправляет письма клиентам при отмене их заказов.
+ */
 @Component
-@RequiredArgsConstructor
-public class OrderCancelledEmailStrategy implements EmailStrategy<OrderCancelledEvent> {
+public class OrderCancelledEmailStrategy extends BaseEmailStrategy {
 
-  private final EmailService emailService;
-
-  @Override
-  public boolean supports(Class<?> eventType) {
-    return OrderCancelledEvent.class.equals(eventType);
+  public OrderCancelledEmailStrategy(EmailService emailService) {
+    super(emailService, OrderEventType.CANCELLED);
   }
 
   @Override
-  public void sendEmail(OrderCancelledEvent event) {
-    String to = event.email();
-    String subject = "Заказ отменен";
-    String body = "Ваш заказ №" + event.orderId() + " успешно отменен. Ждем Вас снова!";
-    emailService.send(to, subject, body);
-    log.debug("Отправлено уведомление об отмене заказа на {}", to);
+  public void sendEmail(OrderEvent event) {
+    String body = String.format(
+        "Ваш заказ №%d был отменен. Если это ошибка, свяжитесь с поддержкой.",
+        event.orderId()
+    );
+    emailService.send(event.email(), "Заказ отменен", body);
   }
 }

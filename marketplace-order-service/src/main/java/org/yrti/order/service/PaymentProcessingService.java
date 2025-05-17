@@ -2,30 +2,46 @@ package org.yrti.order.service;
 
 import jakarta.transaction.Transactional;
 import java.util.List;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.yrti.order.client.InventoryClient;
 import org.yrti.order.client.UserClient;
-import org.yrti.order.dto.UserResponse;
-import org.yrti.order.events.OrderPaidEvent;
+import org.yrti.order.dao.OrderRepository;
+import org.yrti.order.events.OrderEventType;
 import org.yrti.order.events.PaymentEvent;
 import org.yrti.order.events.SellerEvent;
-import org.yrti.order.kafka.OrderPaidEventPublisher;
+import org.yrti.order.kafka.OrderEventPublisher;
 import org.yrti.order.kafka.SellerEventPublisher;
 import org.yrti.order.model.Order;
 import org.yrti.order.model.OrderItem;
+import org.yrti.order.model.OrderStatus;
 
+/**
+ * Сервис обработки платежей.
+ * Обрабатывает события об оплате заказов:
+ * - Успешные платежи
+ * - Неудачные платежи
+ * - Уведомления продавцов
+ */
 @Slf4j
 @Service
-@RequiredArgsConstructor
-public class PaymentProcessingService {
+public class PaymentProcessingService extends BaseOrderService {
 
-  private final OrderService orderService;
-  private final UserClient userClient;
-  private final OrderPaidEventPublisher orderPaidEventPublisher;
   private final InventoryClient inventoryClient;
   private final SellerEventPublisher sellerEventPublisher;
+
+  @Autowired
+  public PaymentProcessingService(
+      InventoryClient inventoryClient,
+      SellerEventPublisher sellerEventPublisher,
+      OrderRepository orderRepository,
+      UserClient userClient,
+      OrderEventPublisher orderEventPublisher) {
+    super(orderRepository, userClient, orderEventPublisher);
+    this.inventoryClient = inventoryClient;
+    this.sellerEventPublisher = sellerEventPublisher;
+  }
 
   @Transactional
   public void processPaymentEvent(PaymentEvent event) {
@@ -37,7 +53,7 @@ public class PaymentProcessingService {
     try {
       Order order = processSuccessfulPayment(event);
       notifySellers(order);
-      publishOrderPaidEvent(event);
+      publishEvent(order, OrderEventType.PAID);
     } catch (Exception e) {
       log.error("Ошибка при обработке события оплаты: {}", e.getMessage(), e);
     }
@@ -48,7 +64,10 @@ public class PaymentProcessingService {
   }
 
   private Order processSuccessfulPayment(PaymentEvent event) {
-    return orderService.markOrderAsPaid(event.orderId());
+    Order order = findOrderOrThrow(event.orderId());
+    markOrderAsState(order, OrderStatus.PAID);
+    order.setStatus(OrderStatus.PAID);
+    return order;
   }
 
   private void notifySellers(Order order) {
@@ -86,27 +105,5 @@ public class PaymentProcessingService {
                 .build()
         )
     );
-  }
-
-  private void publishOrderPaidEvent(PaymentEvent event) {
-    UserResponse user = getUserInfo(event.userId());
-
-    OrderPaidEvent paidEvent = buildOrderPaidEvent(event, user);
-    orderPaidEventPublisher.publish(paidEvent);
-
-    log.info("Событие оплаты заказа отправлено в Kafka: {}", paidEvent);
-  }
-
-  private UserResponse getUserInfo(Long userId) {
-    return userClient.getUserById(userId);
-  }
-
-  private OrderPaidEvent buildOrderPaidEvent(PaymentEvent event, UserResponse user) {
-    return OrderPaidEvent.builder()
-        .orderId(event.orderId())
-        .userId(event.userId())
-        .email(user.getEmail())
-        .amount(event.amount())
-        .build();
   }
 }

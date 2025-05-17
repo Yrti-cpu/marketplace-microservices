@@ -5,11 +5,9 @@ import java.math.BigDecimal;
 import lombok.Builder;
 
 @Builder
-public record PaymentEvent(
+public record OrderEvent(
     Long orderId,
-    Long userId,
-    boolean success,
-    BigDecimal amount,
-    String message) implements Serializable {
-
-}
+    String email,
+    OrderEventType eventType,
+    BigDecimal amount
+) implements Serializable {}

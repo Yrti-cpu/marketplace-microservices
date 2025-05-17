@@ -7,16 +7,17 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.yrti.order.client.InventoryClient;
+import org.yrti.order.client.UserClient;
 import org.yrti.order.dao.OrderRepository;
 import org.yrti.order.dto.ProductReserveRequest;
-import org.yrti.order.handler.ClientResponseHandle;
+import org.yrti.order.kafka.OrderEventPublisher;
 import org.yrti.order.model.Order;
 import org.yrti.order.model.OrderItem;
 import org.yrti.order.model.OrderStatus;
@@ -25,10 +26,11 @@ class OrderDispatchServiceTest {
 
   private final OrderRepository orderRepository = mock(OrderRepository.class);
   private final InventoryClient inventoryClient = mock(InventoryClient.class);
-  private final ClientResponseHandle clientResponseHandle = mock(ClientResponseHandle.class);
+  private final UserClient userClient = mock(UserClient.class);
+  private final OrderEventPublisher orderEventPublisher = mock(OrderEventPublisher.class);
 
-  private final OrderDispatchService service = new OrderDispatchService(orderRepository,
-      inventoryClient, clientResponseHandle);
+  private final OrderDispatchService service = new OrderDispatchService(inventoryClient,
+      orderRepository, userClient, orderEventPublisher);
 
   @Test
   @DisplayName("Успешная отправка заказа")
@@ -43,7 +45,9 @@ class OrderDispatchServiceTest {
 
     when(inventoryClient.releaseProductsForOrder(
         List.of(new ProductReserveRequest(1L, 2)))).thenReturn(
-        new ResponseEntity<>(HttpStatus.OK));
+        "Дата выгрузки со склада: " + LocalDateTime.now().truncatedTo(
+            ChronoUnit.SECONDS)
+    );
 
     service.dispatchOrder(1L);
 
@@ -64,6 +68,6 @@ class OrderDispatchServiceTest {
 
     assertThatThrownBy(() -> service.dispatchOrder(1L))
         .isInstanceOf(IllegalStateException.class)
-        .hasMessageContaining("не может быть отгружен");
+        .hasMessageContaining(String.format("Заказ должен быть %s", OrderStatus.PAID));
   }
 }

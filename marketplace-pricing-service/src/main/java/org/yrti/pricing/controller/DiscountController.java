@@ -60,6 +60,4 @@ public class DiscountController {
     discountService.deactivateDiscount(productId);
     return ResponseEntity.ok("Скидка для товара с id:" + productId + "деактивирована");
   }
-
-
 }

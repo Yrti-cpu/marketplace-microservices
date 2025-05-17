@@ -1,8 +1,16 @@
 package org.yrti.notification.strategy;
 
-public interface EmailStrategy<T> {
+import org.yrti.notification.events.OrderEvent;
+import org.yrti.notification.events.OrderEventType;
+import org.yrti.notification.events.SellerEvent;
 
-  boolean supports(Class<?> eventType);
+/**
+ * Интерфейс стратегии для отправки email-уведомлений.
+ * Определяет контракт для различных типов email-уведомлений.
+ */
+public interface EmailStrategy{
 
-  void sendEmail(T event);
+  void sendEmail(OrderEvent event); // Для событий заказа
+  void sendSellerEmail(SellerEvent event); // Для событий продавца
+  boolean supports(OrderEventType eventType); // Поддержка типа события
 }

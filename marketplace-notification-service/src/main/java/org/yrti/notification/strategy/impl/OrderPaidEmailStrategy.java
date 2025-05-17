@@ -1,33 +1,28 @@
 package org.yrti.notification.strategy.impl;
 
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.yrti.notification.events.OrderPaidEvent;
+import org.yrti.notification.events.OrderEvent;
+import org.yrti.notification.events.OrderEventType;
 import org.yrti.notification.service.EmailService;
-import org.yrti.notification.strategy.EmailStrategy;
 
-@Slf4j
+/**
+ * Стратегия для отправки email-уведомлений об оплате заказов.
+ * Отправляет клиентам подтверждение успешной оплаты заказа.
+ */
 @Component
-@RequiredArgsConstructor
-public class OrderPaidEmailStrategy implements EmailStrategy<OrderPaidEvent> {
+public class OrderPaidEmailStrategy extends BaseEmailStrategy {
 
-  private final EmailService emailService;
-
-  @Override
-  public boolean supports(Class<?> eventType) {
-    return OrderPaidEvent.class.equals(eventType);
+  public OrderPaidEmailStrategy(EmailService emailService) {
+    super(emailService, OrderEventType.PAID);
   }
 
   @Override
-  public void sendEmail(OrderPaidEvent event) {
-    String to = event.email();
-    String subject = "Заказ оплачен";
-    String body = "Ваш заказ №" + event.orderId() + " успешно оплачен на сумму: " + event.amount()
-        + ". Спасибо за покупку!";
-    emailService.send(to, subject, body);
-    log.debug("Отправлено уведомление об оплате заказа на {}", to);
-
+  public void sendEmail(OrderEvent event) {
+    String body = String.format(
+        "Ваш заказ №%d успешно оплачен на сумму: %s. Спасибо за покупку!",
+        event.orderId(),
+        event.amount()
+    );
+    emailService.send(event.email(), "Заказ оплачен", body);
   }
 }

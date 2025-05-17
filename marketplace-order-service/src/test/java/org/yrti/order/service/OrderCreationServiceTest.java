@@ -8,11 +8,11 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.yrti.order.client.InventoryClient;
 import org.yrti.order.client.PricingClient;
 import org.yrti.order.client.UserClient;
@@ -21,7 +21,6 @@ import org.yrti.order.dto.CreateOrderRequest;
 import org.yrti.order.dto.PricingResponse;
 import org.yrti.order.dto.ProductReserveRequest;
 import org.yrti.order.dto.UserResponse;
-import org.yrti.order.handler.ClientResponseHandle;
 import org.yrti.order.kafka.OrderEventPublisher;
 import org.yrti.order.model.Order;
 
@@ -32,10 +31,9 @@ class OrderCreationServiceTest {
   private final PricingClient pricingClient = mock(PricingClient.class);
   private final UserClient userClient = mock(UserClient.class);
   private final OrderEventPublisher orderEventPublisher = mock(OrderEventPublisher.class);
-  private final ClientResponseHandle clientResponseHandle = mock(ClientResponseHandle.class);
 
   private final OrderCreationService orderCreateService = new OrderCreationService(
-      orderRepository, userClient, pricingClient, inventoryClient, orderEventPublisher, clientResponseHandle
+      orderRepository, userClient, orderEventPublisher, inventoryClient, pricingClient
   );
 
   @Test
@@ -47,14 +45,16 @@ class OrderCreationServiceTest {
             new CreateOrderRequest.OrderItemRequest(2L, 2)), "test address");
 
     when(pricingClient.getProductPriceBatch(List.of(1L, 2L))).thenReturn(
-        new ResponseEntity<> (List.of( new PricingResponse(1L, new BigDecimal("100.00"), new BigDecimal("80.00"),
-           new BigDecimal("0.2")),  new PricingResponse(2L, new BigDecimal("150.00"), new BigDecimal("145.00"),
-           new BigDecimal("0.2"))), HttpStatus.OK
-   ));
+        (List.of(new PricingResponse(1L, new BigDecimal("100.00"), new BigDecimal("80.00"),
+                new BigDecimal("0.2")),
+            new PricingResponse(2L, new BigDecimal("150.00"), new BigDecimal("145.00"),
+                new BigDecimal("0.2")))
+        ));
 
     when(inventoryClient.decreaseProductsForOrder(
         List.of(new ProductReserveRequest(1L, 1), new ProductReserveRequest(2L, 2)))).thenReturn(
-        new ResponseEntity<>(HttpStatus.OK));
+        "Дата брони: " + LocalDateTime.now().truncatedTo(
+            ChronoUnit.SECONDS));
 
     when(orderRepository.save(any(Order.class))).thenAnswer(
         invocation -> invocation.getArgument(0));
