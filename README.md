@@ -15,7 +15,7 @@
 | **Backend**        | Java 17, Spring Boot 3, Spring Cloud (Gateway, Eureka, OpenFeign), Spring Data (JPA, Redis), ORM (Hibernate) |
 | **Базы данных**    | PostgreSQL, Liquibase, Redis                                                                                 |
 | **Тестирование**   | JUnit 5, Mockito                                                                                             |
-| **Инфраструктура** | Docker,  Kafka, Zookeeper, Service Discovery (Eureka), Swagger API                                           |
+| **Инфраструктура** | Docker,  Kafka, Swagger API                                                                                  |
 | **Инструменты**    | Lombok, SLF4J, PMD, Checkstyle, JaCoCo                                                                       |
 
 ---
@@ -84,8 +84,8 @@ docker-compose up -d --build
 
 ### Архитектурные паттерны
 
-| Паттерн             | Применение                                                         |
-|---------------------|--------------------------------------------------------------------|
-| **Event-Driven**    | Асинхронная обработка событий через Kafka                          |
-| **Repository**      | Абстракция доступа к данным                                        |
+| Паттерн          | Применение                                |
+|------------------|-------------------------------------------|
+| **Event-Driven** | Асинхронная обработка событий через Kafka |
+| **Repository**   | Абстракция доступа к данным               |
 
