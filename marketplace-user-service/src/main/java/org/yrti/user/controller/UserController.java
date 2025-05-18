@@ -36,7 +36,7 @@ public class UserController {
     return userService.getUserById(id);
   }
 
-  @Hidden
+  @Hidden // Скрываем из публичной документации, так как это внутренний эндпоинт
   @Operation(
       summary = "Получение почт продавцов"
   )
@@ -45,13 +45,11 @@ public class UserController {
     return userService.getUsersBatch(userIds);
   }
 
-
   @Operation(summary = "Создать пользователя")
   @PostMapping()
   public ResponseEntity<UserResponse> createDiscount(@Valid @RequestBody UserRequest discount) {
     return ResponseEntity.ok(userService.createUser(discount));
   }
-
 
   @Operation(summary = "Удалить пользователя")
   @DeleteMapping("/{userId}")

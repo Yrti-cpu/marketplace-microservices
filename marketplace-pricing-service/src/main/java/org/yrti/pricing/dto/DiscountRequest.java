@@ -31,5 +31,4 @@ public class DiscountRequest {
 
   @Future
   private LocalDateTime endDate;
-
 }

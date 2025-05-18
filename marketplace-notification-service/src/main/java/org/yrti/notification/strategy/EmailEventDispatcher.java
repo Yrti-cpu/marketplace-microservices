@@ -1,41 +1,33 @@
 package org.yrti.notification.strategy;
 
-import jakarta.annotation.PostConstruct;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.yrti.notification.events.OrderEvent;
+import org.yrti.notification.events.SellerEvent;
 
-@Slf4j
+import java.util.List;
+import org.yrti.notification.strategy.impl.SellerEmailStrategy;
+
+/**
+ * Диспетчер для обработки и маршрутизации email-уведомлений.
+ * Выбирает подходящую стратегию для обработки каждого типа события.
+ */
 @Component
 @RequiredArgsConstructor
 public class EmailEventDispatcher {
 
+  private final List<EmailStrategy> strategies;
+  private final SellerEmailStrategy sellerEmailStrategy;
 
-  private final List<EmailStrategy<?>> strategies;
-  private Map<Class<?>, EmailStrategy<?>> strategyMap;
-
-  @PostConstruct
-  public void init() {
-    strategyMap = strategies.stream()
-        .collect(Collectors.toMap(
-            strategy -> strategy.getClass().getGenericInterfaces()[0]
-                .getClass(),
-            strategy -> strategy,
-            (s1, s2) -> s1 // в случае дубликатов
-        ));
+  public void dispatchEmail(OrderEvent event) {
+    strategies.stream()
+        .filter(s -> s.supports(event.eventType()))
+        .findFirst()
+        .orElseThrow(() -> new IllegalArgumentException("Неизвестный тип"))
+        .sendEmail(event);
   }
 
-  @SuppressWarnings("unchecked")
-  public <T> void dispatchEmail(T event) {
-    EmailStrategy<T> strategy = (EmailStrategy<T>) strategies.stream()
-        .filter(s -> s.supports(event.getClass()))
-        .findFirst()
-        .orElseThrow(() -> new IllegalStateException(
-            "Стратегия не найдена для события: " + event.getClass()));
-
-    strategy.sendEmail(event);
+  public void dispatchSellerEmail(SellerEvent event) {
+    sellerEmailStrategy.sendSellerEmail(event);
   }
 }

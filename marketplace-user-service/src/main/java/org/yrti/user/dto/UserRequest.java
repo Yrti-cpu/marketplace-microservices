@@ -18,5 +18,4 @@ public class UserRequest {
   private String name;
   @NotBlank
   private String password;
-
 }

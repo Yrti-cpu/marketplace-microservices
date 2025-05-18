@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.yrti.order.client.UserClient;
 import org.yrti.order.dao.OrderRepository;
 import org.yrti.order.dto.UserResponse;
-import org.yrti.order.kafka.OrderDeliveredEventPublisher;
+import org.yrti.order.kafka.OrderEventPublisher;
 import org.yrti.order.model.Order;
 import org.yrti.order.model.OrderStatus;
 
@@ -21,7 +21,7 @@ class OrderDeliveryServiceTest {
 
   private final OrderRepository orderRepository = mock(OrderRepository.class);
   private final UserClient userClient = mock(UserClient.class);
-  private final OrderDeliveredEventPublisher publisher = mock(OrderDeliveredEventPublisher.class);
+  private final OrderEventPublisher publisher = mock(OrderEventPublisher.class);
 
   private final OrderDeliveryService service = new OrderDeliveryService(orderRepository, userClient,
       publisher);
@@ -58,6 +58,6 @@ class OrderDeliveryServiceTest {
 
     assertThatThrownBy(() -> service.markOrderAsDelivered(1L))
         .isInstanceOf(IllegalStateException.class)
-        .hasMessageContaining("Невозможно доставить заказ");
+        .hasMessageContaining(String.format("Заказ должен быть %s", OrderStatus.DISPATCHED));
   }
 }

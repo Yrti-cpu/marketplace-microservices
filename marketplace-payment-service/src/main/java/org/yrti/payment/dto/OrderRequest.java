@@ -8,9 +8,8 @@ import lombok.Data;
 @AllArgsConstructor
 public class OrderRequest {
 
-  private Long orderId;
   private Long customerId;
-  private String status;
+  private String status; //Статус заказа
   private BigDecimal totalPrice;
 
 }

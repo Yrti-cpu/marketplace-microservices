@@ -7,6 +7,10 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+/**
+ * Сервис для отправки email-уведомлений.
+ * Обеспечивает базовые функции отправки электронных писем через SMTP.
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor

@@ -1,30 +1,27 @@
 package org.yrti.notification.strategy.impl;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.yrti.notification.events.OrderDeliveredEvent;
+import org.yrti.notification.events.OrderEvent;
+import org.yrti.notification.events.OrderEventType;
 import org.yrti.notification.service.EmailService;
-import org.yrti.notification.strategy.EmailStrategy;
 
-@Slf4j
+/**
+ * Стратегия для отправки email-уведомлений о доставке заказов. Информирует клиентов об успешной
+ * доставке их заказов.
+ */
 @Component
-@RequiredArgsConstructor
-public class OrderDeliveredEmailStrategy implements EmailStrategy<OrderDeliveredEvent> {
+public class OrderDeliveredEmailStrategy extends BaseEmailStrategy {
 
-  private final EmailService emailService;
-
-  @Override
-  public boolean supports(Class<?> eventType) {
-    return OrderDeliveredEvent.class.equals(eventType);
+  public OrderDeliveredEmailStrategy(EmailService emailService) {
+    super(emailService, OrderEventType.DELIVERED);
   }
 
   @Override
-  public void sendEmail(OrderDeliveredEvent event) {
-    String to = event.email();
-    String subject = "Заказ доставлен";
-    String body = "Ваш заказ №" + event.orderId() + " успешно доставлен. Спасибо за покупку!";
-    emailService.send(to, subject, body);
-    log.debug("Отправлено уведомление о доставке заказа на {}", to);
+  public void sendEmail(OrderEvent event) {
+    String body = String.format(
+        "Ваш заказ №%d успешно доставлен!",
+        event.orderId()
+    );
+    emailService.send(event.email(), "Заказ доставлен", body);
   }
 }
